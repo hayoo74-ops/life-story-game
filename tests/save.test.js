@@ -1,24 +1,11 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {freshSave,normalizeSave,loadSave,writeSave,loadSettings,writeSettings,SAVE_KEY} from '../src/save.js';
-const storage=()=>{const values=new Map();return {getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)};};
-test('전체 진행 및 설정이 저장 후 동일하게 복원된다',()=>{
-  const store=storage();const state={...freshSave(),stage:'school',x:1340,events:['opening-complete','greet-grandma','chapter-1-complete'],memories:['photo','bag'],quests:['greeting','neighborhood-walk'],visited:['home','alley','playground','store','school'],settings:{sound:true,ambience:'rain',largeText:true,reducedMotion:false}};
-  assert.equal(writeSave(state,store),true);assert.deepEqual(loadSave(store).state,state);
-  writeSettings(state.settings,store);assert.deepEqual(loadSettings(store),state.settings);
-});
-test('손상된 좌표·스테이지·중복 데이터는 안전하게 정규화된다',()=>{
-  const state=normalizeSave({...freshSave(),stage:'missing',x:Infinity,memories:['photo','missing','photo'],events:['a','a',null],visited:['home','bad']});
-  assert.equal(state.stage,'home');assert.equal(state.x,280);assert.deepEqual(state.memories,['photo']);assert.deepEqual(state.events,['a']);assert.deepEqual(state.visited,['home']);
-  assert.equal(normalizeSave({...freshSave(),stage:'school',x:100000}).x,1610);
-  assert.equal(normalizeSave({...freshSave(),x:-100}).x,40);
-});
-test('새 버전과 손상된 저장은 덮어쓰지 않고 오류를 반환한다',()=>{
-  const store=storage();store.setItem(SAVE_KEY,'{');assert.equal(loadSave(store).error,'unavailable');assert.equal(store.getItem(SAVE_KEY),'{');
-  store.setItem(SAVE_KEY,JSON.stringify({version:999}));assert.equal(loadSave(store).error,'future-version');
-  assert.equal(loadSave(storage()).state,null);
-});
-test('저장 공간 차단 및 용량 오류는 게임을 중단시키지 않는다',()=>{
-  const blocked={getItem(){throw Error('blocked');},setItem(){throw Error('quota');}};
-  assert.equal(loadSave(blocked).state,null);assert.equal(writeSave(freshSave(),blocked),false);assert.equal(writeSettings({},blocked),false);
-});
+import {freshSave,normalizeSave,loadSave,writeSave,loadSettings,writeSettings,SAVE_KEY,BACKUP_KEY} from '../src/save.js';
+const storage=()=>{const values=new Map();return {getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)};};
+test('v2 progresses and settings round trip together',()=>{const store=storage(),state={...freshSave(),storyScene:9,stage:'study',x:600,events:['story:hero','story:door'],memories:['hero','door'],inspected:['desk'],quests:['scene:1'],choices:{photo:'記録'},settings:{sound:true,ambience:'rain',largeText:true,reducedMotion:false}};assert.ok(writeSave(state,store));assert.deepEqual(loadSave(store).state,state);writeSettings(state.settings,store);assert.deepEqual(loadSettings(store),state.settings);});
+test('v1 migration preserves exact backup, collected IDs and settings without asserting old story facts',()=>{const store=storage(),old={version:1,stage:'school',x:900,events:['greet-grandma'],memories:['photo','tv','bag'],quests:['greeting'],playtime:350,settings:{ambience:'night',sound:true}};const original=JSON.stringify(old);store.setItem(SAVE_KEY,original);const loaded=loadSave(store);assert.ok(loaded.migrated);assert.equal(store.getItem(BACKUP_KEY),original);assert.equal(store.getItem(SAVE_KEY),original);assert.equal(loaded.state.storyScene,0);assert.equal(loaded.state.stage,'present');assert.deepEqual(loaded.state.memories,[]);assert.deepEqual(loaded.state.legacyArchive.memories,old.memories);assert.equal(loaded.state.playtime,350);assert.equal(loaded.state.settings.ambience,'night');writeSave(loaded.state,store);assert.equal(store.getItem(BACKUP_KEY),original);assert.deepEqual(loadSave(store).state.legacyArchive.memories,old.memories);});
+test('invalid IDs, position and duplicates normalize safely',()=>{const state=normalizeSave({...freshSave(),storyScene:9,stage:'bad',x:Infinity,memories:['door','bad','door'],events:['a','a',null],visited:['study','bad']});assert.equal(state.stage,'study');assert.equal(state.x,300);assert.deepEqual(state.memories,['door']);assert.deepEqual(state.events,['a']);assert.equal(normalizeSave({...freshSave(),x:-100}).x,40);});
+test('future or corrupt saves are never automatically overwritten',()=>{const store=storage();store.setItem(SAVE_KEY,'{');assert.equal(loadSave(store).error,'unavailable');assert.equal(store.getItem(SAVE_KEY),'{');store.setItem(SAVE_KEY,'{"version":99}');assert.equal(loadSave(store).error,'future-version');});
+test('blocked storage and quota errors do not throw',()=>{const blocked={getItem(){throw Error('blocked');},setItem(){throw Error('quota');}};assert.equal(loadSave(blocked).state,null);assert.equal(writeSave(freshSave(),blocked),false);assert.equal(writeSettings({},blocked),false);});
+test('resuming outside the optional exploration period returns to canonical scene',()=>{const state=normalizeSave({...freshSave(),storyScene:7,stage:'alley'});assert.equal(state.stage,'father-home');});
+test('a failed v1 backup cannot cause the old save to be overwritten',()=>{const original=JSON.stringify({version:1,memories:['photo']});let saved=original;const store={getItem:k=>k===SAVE_KEY?saved:null,setItem(k,v){if(k===BACKUP_KEY)throw Error('quota');if(k===SAVE_KEY)saved=v;}};const result=loadSave(store);assert.ok(result.backupError);assert.equal(writeSave(result.state,store),false);assert.equal(saved,original);});

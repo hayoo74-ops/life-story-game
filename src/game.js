@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
-import { createBackdrops, createStageArt, createCharacters, createObjectArt, createParticleArt } from './art.js';
+import { createBackdrops, createStageArt, createCharacters, createObjectArt, createParticleArt, createNarrativeArt } from './art.js';
 import { stageById } from './story.js';
 
 const FLOOR=458;
 export class LifeScene extends Phaser.Scene{
   constructor(bridge){super('Life');this.bridge=bridge;this.controls={left:false,right:false,jump:false};this.jumpQueued=false;this.nearest=null;this.stage=null;this.isTitle=true;}
   create(){
-    this.bridge.portraits=createCharacters(this);createObjectArt(this);createParticleArt(this);createBackdrops(this);
+    this.bridge.portraits=createCharacters(this);createObjectArt(this);createNarrativeArt(this);createParticleArt(this);createBackdrops(this);
     this.sky=this.add.tileSprite(0,0,4096,540,'sky').setOrigin(0).setScrollFactor(0).setDepth(-30);
     this.hills=this.add.tileSprite(0,0,4096,540,'hillside').setOrigin(0).setScrollFactor(0).setDepth(-20);
     this.keys=this.input.keyboard.addKeys({left:'LEFT',right:'RIGHT',a:'A',d:'D',jump:'SPACE',w:'W',up:'UP',interact:'E'});
@@ -23,7 +23,7 @@ export class LifeScene extends Phaser.Scene{
   setControl(key,value){if(key==='jump'&&value&&!this.controls.jump)this.jumpQueued=true;this.controls[key]=value;}
   clearControls(){this.controls={left:false,right:false,jump:false};this.jumpQueued=false;if(this.player?.body)this.player.setVelocityX(0);}
   loadStage(id,x,title=false){
-    this.clearControls();this.isTitle=title;this.nearest=null;this.bridge.onNearest(null);
+    this.visualGeneration=(this.visualGeneration||0)+1;this.tweens.killAll();this.visualActive=false;this.clearControls();this.isTitle=title;this.nearest=null;this.bridge.onNearest(null);
     this.collider?.destroy();this.stageObjects?.forEach(o=>o.destroy());this.stageObjects=[];this.floor?.destroy();this.player?.destroy();this.playerName?.destroy();this.playerShadow?.destroy();this.entities=[];
     this.stage=stageById(id);const stage=this.stage;
     const add=o=>{this.stageObjects.push(o);return o;};
@@ -31,15 +31,16 @@ export class LifeScene extends Phaser.Scene{
     this.floor=this.add.zone(stage.width/2,FLOOR+12,stage.width,24);this.physics.add.existing(this.floor,true);
     this.physics.world.setBounds(0,-100,stage.width,FLOOR+100);
     this.playerShadow=this.add.ellipse(x,FLOOR+3,39,9,0x344e35,.20).setDepth(3);
-    this.player=this.physics.add.sprite(x,FLOOR,'char-child',0).setScale(2).setOrigin(.5,1).setDepth(5);
+    this.playerKey=stage.player||(!title&&this.bridge.state?.storyScene===3?'hero':'child');
+    this.player=this.physics.add.sprite(x,FLOOR,'char-'+this.playerKey,0).setScale(2).setOrigin(.5,1).setDepth(5);
     this.player.body.setSize(14,31).setOffset(9,8);this.player.setCollideWorldBounds(true);this.player.setMaxVelocity(250,650);
-    this.collider=this.physics.add.collider(this.player,this.floor);this.player.anims.play('child-idle');
+    this.collider=this.physics.add.collider(this.player,this.floor);this.player.anims.play(this.playerKey+'-idle');
     this.playerName=this.add.text(x,FLOOR-89,'재원',{fontFamily:'sans-serif',fontSize:'11px',color:'#f9f1d3',stroke:'#617156',strokeThickness:3}).setOrigin(.5).setDepth(7);
     for(const data of stage.entities){
       let sprite;let top;
       if(data.type==='npc'){
         add(this.add.ellipse(data.x,FLOOR+3,35,8,0x344e35,.17).setDepth(2));
-        sprite=add(this.add.sprite(data.x,FLOOR,'char-'+data.character,0).setScale(2).setOrigin(.5,1).setDepth(4));sprite.anims.play(data.character+'-idle');top=FLOOR-86;
+        sprite=add(this.add.sprite(data.x,FLOOR,'char-'+data.character,0).setScale(2).setOrigin(.5,1).setDepth(4));sprite.anims.play(data.character+'-idle');top=FLOOR-86;if(stage.variant==='family'&&['father','mother'].includes(data.id)){sprite.setCrop(0,0,32,32);sprite.setFlipX(data.id==='mother');}
       }else{
         const art=data.art||(data.type==='event'?'finish':'portal');
         sprite=add(this.add.image(data.x,FLOOR,'obj-'+art).setOrigin(.5,1).setDepth(2));top=FLOOR-sprite.height-12;
@@ -47,7 +48,7 @@ export class LifeScene extends Phaser.Scene{
       const label=add(this.add.text(data.x,top,data.label,{fontFamily:'sans-serif',fontSize:'11px',color:'#f9f2d9',backgroundColor:'#4b6247d9',padding:{left:7,right:7,top:4,bottom:4}}).setOrigin(.5,1).setDepth(7));
       const indicator=add(this.add.text(data.x,top-32,data.type==='npc'?'···':'✦',{fontFamily:'sans-serif',fontSize:'16px',color:'#fff1bc',stroke:'#63704b',strokeThickness:3}).setOrigin(.5,1).setDepth(7));
       indicator.setVisible(false);
-      let sparkle=null;if(data.type==='memory')sparkle=add(this.add.image(data.x+18,top+20,'spark').setAlpha(.8).setDepth(6));
+      let sparkle=null;if(data.type==='object')sparkle=add(this.add.image(data.x+18,top+20,'spark').setAlpha(.8).setDepth(6));
       this.entities.push({data,sprite,label,indicator,sparkle,top});
     }
     const interior=['interior','shop'].includes(stage.kind);this.sky.setVisible(!interior);this.hills.setVisible(!interior);
@@ -58,16 +59,53 @@ export class LifeScene extends Phaser.Scene{
     else{this.bridge.onStage(stage);this.cameras.main.fadeIn(this.bridge.settings.reducedMotion?0:420,241,229,199);}
     this.updateSettings();this.refreshMemories();
   }
-  refreshMemories(){for(const e of this.entities||[]){if(e.sparkle)e.sparkle.setVisible(!this.bridge.state?.memories.includes(e.data.memory));}}
+  refreshMemories(){for(const e of this.entities||[]){if(e.sparkle)e.sparkle.setVisible(!this.bridge.state?.inspected.includes(e.data.id));}}
+  equipMask(){
+    const mask=this.add.image(this.player.x,this.player.y-115,'mask-worn').setScale(2).setDepth(9);
+    this.stageObjects.push(mask);this.tweens.add({targets:mask,y:this.player.y-52,duration:this.bridge.settings.reducedMotion?80:450,onComplete:()=>{mask.destroy();this.playerKey='hero';this.player.setTexture('char-hero',0);}});
+  }
+  async playVisual(kind){
+    this.visualActive=true;const generation=this.visualGeneration,reduced=this.bridge.settings.reducedMotion;
+    const wait=ms=>new Promise(resolve=>this.time.delayedCall(ms,resolve));
+    if(kind==='mask'){this.equipMask();await wait(reduced?100:500);return;}
+    this.player.anims.stop();this.cameras.main.stopFollow();
+    if(kind==='hero'){
+      const father=this.entities.find(e=>e.data.id==='father')?.sprite;
+      this.player.setPosition(570,FLOOR);this.playerKey='hero';this.player.setTexture('char-hero',6).setFlipX(false);
+      if(father){father.setCrop();father.setY(FLOOR);this.tweens.add({targets:father,y:FLOOR-3,yoyo:true,repeat:3,duration:120});}
+      this.cameras.main.setScroll(Phaser.Math.Clamp(660-this.scale.width/2,0,this.stage.width-this.scale.width),0);
+      const warm=this.add.rectangle(0,0,4096,540,0xffcf7c,.10).setOrigin(0).setScrollFactor(0).setDepth(13);this.stageObjects.push(warm);
+      const laugh=this.add.text(650,340,'하 하 하',{fontSize:'15px',color:'#fff2c8',stroke:'#817f55',strokeThickness:3}).setDepth(14);this.stageObjects.push(laugh);
+      this.tweens.add({targets:laugh,y:320,alpha:.5,yoyo:true,repeat:2,duration:220});this.bridge.sound.effect('laugh');await wait(reduced?160:760);
+    }else if(kind==='door'){
+      const door=this.entities.find(e=>e.data.id==='door')?.sprite,fatherEntity=this.entities.find(e=>e.data.id==='father-door'),father=fatherEntity?.sprite;
+      this.player.setPosition(1020,FLOOR).setFrame(0).setFlipX(false);
+      this.cameras.main.setScroll(Phaser.Math.Clamp(1150-this.scale.width/2,0,this.stage.width-this.scale.width),0);
+      if(father){father.anims.stop();father.setPosition(1120,FLOOR);fatherEntity.label.setX(1140);}
+      if(!reduced)this.cameras.main.setZoom(1.04);
+      const leg=this.add.rectangle(1131,434,32,10,0x54665a).setOrigin(0,.5).setDepth(6);this.stageObjects.push(leg);
+      this.tweens.add({targets:leg,x:1170,angle:-12,duration:reduced?40:220});
+      if(father)this.tweens.add({targets:father,x:1140,duration:reduced?40:220});
+      await wait(reduced?50:230);if(generation!==this.visualGeneration)return;leg.setVisible(false);if(door)door.setTexture('obj-broken');
+      this.bridge.sound.effect('impact');
+      if(!reduced)this.cameras.main.shake(100,.002);
+      for(let i=0;i<7;i++){
+        const chip=this.add.rectangle(1190+i%3*13,345+i*10,7+i%2*4,20,0xb19a70).setDepth(6);this.stageObjects.push(chip);
+        this.tweens.add({targets:chip,x:1170+i*13,y:451,angle:i%2?35:-20,duration:reduced?50:350+i*20,ease:'Quad.easeIn'});
+      }
+      await wait(reduced?100:550); // Only animation length; no forced dramatic waiting.
+    }
+  }
+  endVisual(){this.visualActive=false;this.cameras.main.setZoom(1);this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);}
   updateSettings(){
     if(!this.atmosphere)return;const interior=['interior','shop'].includes(this.stage?.kind);const a=this.bridge.settings.ambience;
     this.atmosphere.setFillStyle(a==='rain'||a==='night'?0x253c59:0x9a623e,interior?0:(a==='night'?.48:a==='dusk'?.22:a==='rain'?.18:0));
     if(a==='day')this.rain.clear();if(this.player&&!this.isTitle)this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);
   }
   update(time,delta){
-    if(!this.player)return;const blocked=this.isTitle||this.bridge.locked();
+    if(!this.player)return;this.bridge.onTick?.(delta);const blocked=this.isTitle||this.bridge.locked();
     const body=this.player.body;
-    if(blocked){this.player.setVelocityX(0);this.jumpQueued=false;if(body.blocked.down||body.touching.down)this.player.anims.play('child-idle',true);}
+    if(blocked){this.player.setVelocityX(0);this.jumpQueued=false;if(!this.visualActive&&(body.blocked.down||body.touching.down))this.player.anims.play(this.playerKey+'-idle',true);}
     else{
       const left=this.controls.left||this.keys.left.isDown||this.keys.a.isDown;
       const right=this.controls.right||this.keys.right.isDown||this.keys.d.isDown;
@@ -77,7 +115,7 @@ export class LifeScene extends Phaser.Scene{
       this.jumpQueued=false;
       const grounded=body.blocked.down||body.touching.down;
       if(jump&&grounded){this.player.setVelocityY(-370);this.bridge.sound.effect('jump');}
-      if(!grounded){this.player.anims.stop();this.player.setFrame(6);}else this.player.anims.play(axis?'child-walk':'child-idle',true);
+      if(!grounded){this.player.anims.stop();this.player.setFrame(6);}else this.player.anims.play(this.playerKey+(axis?'-walk':'-idle'),true);
       if(this.player.y>FLOOR+90||!Number.isFinite(this.player.x)){this.player.setPosition(this.stage.spawn,FLOOR-10).setVelocity(0);}
       this.bridge.onPosition(this.player.x,delta);
     }

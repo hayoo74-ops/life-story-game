@@ -13,7 +13,7 @@
   <div id="app">
     <header class="masthead">
       <a class="brand" href="#" aria-label="타이틀 화면으로"><span class="brand-mark">✦</span><span>LIFE STORY<small>나의 인생</small></span></a>
-      <span class="header-caption">평범해서, 더 소중한 순간들.</span>
+      <span class="header-caption">기억을, 있는 그대로.</span>
       <nav aria-label="게임 메뉴">
         <button class="nav-button" id="album-button"><span aria-hidden="true">▤</span><span>추억 앨범</span><b id="album-count">0</b></button>
         <button class="icon-button" id="sound-button" aria-label="소리 켜기" title="소리 켜기">♪<i></i></button>
@@ -29,6 +29,7 @@
         <div id="game"></div>
         <div class="scene-vignette"></div>
         <div class="location-badge"><span class="live-dot"></span><span id="location-text">부산, 그 시절의 골목</span><span class="location-divider"></span><span id="year-text">1997 —</span></div>
+        <div id="scene-label" class="scene-label" hidden></div>
         <button id="pause-button" class="scene-pause" aria-label="일시정지" hidden>Ⅱ</button>
         <div id="title-screen" class="title-screen">
           <span class="eyebrow">A LITTLE LIFE, A LONG STORY</span>
@@ -47,7 +48,7 @@
       </section>
       <section class="play-dock" aria-label="게임 조작">
         <div class="movement-controls"><span class="control-label">MOVE / 이동</span><div class="button-row"><button class="control move" data-control="left" aria-label="왼쪽 이동">←</button><button class="control move" data-control="right" aria-label="오른쪽 이동">→</button></div></div>
-        <div class="journey-status"><div><span class="tiny-star">✧</span><span id="quest-label">첫 번째 페이지</span><span id="save-status">자동 저장</span></div><p id="quest-text">모든 이야기는 작은 골목에서 시작된다.</p><div class="journey-route"><i class="active"></i><span></span><i></i><span></span><i></i><span></span><i></i><span></span><i></i><b id="route-label">01 / 05</b></div></div>
+        <div class="journey-status"><div><span class="tiny-star">✧</span><span id="quest-label">첫 번째 페이지</span><span id="save-status">자동 저장</span></div><p id="quest-text">사진첩의 첫 장에서 시작되는 열두 장면.</p><div class="journey-route"><i class="active"></i><span></span><i></i><span></span><i></i><span></span><i></i><span></span><i></i><b id="route-label">00 / 12</b></div></div>
         <div class="action-controls"><span class="control-label">EXPLORE / 탐험</span><div class="button-row"><button class="control jump" data-control="jump" aria-label="점프"><span>↟</span><small>점프</small></button><button class="control interact" data-control="interact" aria-label="대화 또는 조사"><span>✦</span><small>대화 / 조사</small></button></div></div>
       </section>
       <footer class="page-footer"><span>당신이 지나온 모든 순간은, 한 편의 이야기.</span><span class="keyboard-hint">← → 이동 <b>SPACE</b> 점프 <b>E</b> 대화 / 조사</span><span class="edition">THE FIRST CHAPTER <i>✦</i></span></footer>
