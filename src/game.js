@@ -12,7 +12,7 @@ export class LifeScene extends Phaser.Scene{
     this.keys=this.input.keyboard.addKeys({left:'LEFT',right:'RIGHT',a:'A',d:'D',jump:'SPACE',w:'W',up:'UP',interact:'E'});
     this.input.keyboard.on('keydown-E',e=>{if(!e.repeat)this.bridge.interact();});
     this.input.keyboard.on('keydown-ESC',()=>this.bridge.escape());
-    this.input.keyboard.on('keydown-ENTER',e=>{if(!e.repeat)this.bridge.advance();});
+    this.input.keyboard.on('keydown-ENTER',e=>{if(!e.repeat&&this.bridge.advance())e.preventDefault();});
     this.input.keyboard.addCapture(['SPACE','UP','DOWN','LEFT','RIGHT']);
     this.rain=this.add.graphics().setScrollFactor(0).setDepth(11);this.atmosphere=this.add.rectangle(0,0,4096,540,0xad814e,0).setOrigin(0).setScrollFactor(0).setDepth(10);
     this.lampGlow=this.add.graphics().setScrollFactor(0).setDepth(12).setBlendMode(Phaser.BlendModes.ADD);
@@ -24,6 +24,7 @@ export class LifeScene extends Phaser.Scene{
   clearControls(){this.controls={left:false,right:false,jump:false};this.jumpQueued=false;if(this.player?.body)this.player.setVelocityX(0);}
   loadStage(id,x,title=false){
     this.visualGeneration=(this.visualGeneration||0)+1;this.tweens.killAll();this.visualActive=false;this.clearControls();this.isTitle=title;this.nearest=null;this.bridge.onNearest(null);
+    this.cameras.main.setZoom(1);
     this.collider?.destroy();this.stageObjects?.forEach(o=>o.destroy());this.stageObjects=[];this.floor?.destroy();this.player?.destroy();this.playerName?.destroy();this.playerShadow?.destroy();this.entities=[];
     this.stage=stageById(id);const stage=this.stage;
     const add=o=>{this.stageObjects.push(o);return o;};
@@ -60,6 +61,77 @@ export class LifeScene extends Phaser.Scene{
     this.updateSettings();this.refreshMemories();
   }
   refreshMemories(){for(const e of this.entities||[]){if(e.sparkle)e.sparkle.setVisible(!this.bridge.state?.inspected.includes(e.data.id));}}
+  startVisual(kind){
+    this.visualGeneration=(this.visualGeneration||0)+1;this.visualActive=true;this.visualKind=kind;this.visualObjects=[];
+    this.visualStart={x:this.player.x,y:this.player.y,key:this.playerKey};this.player.setVisible(true).setAngle(0).setY(FLOOR);this.player.anims.stop();
+    this.cameras.main.stopFollow();
+    if(kind==='hero'){
+      this.player.setPosition(540,FLOOR).setTexture('char-hero',0).setFlipX(false);
+      this.cameras.main.setScroll(Phaser.Math.Clamp(680-this.scale.width/2,0,this.stage.width-this.scale.width),0);
+    }else if(kind==='brother'){
+      this.player.setPosition(410,FLOOR).setFlipX(false);
+      this.cameras.main.setScroll(Phaser.Math.Clamp(540-this.scale.width/2,0,this.stage.width-this.scale.width),0);
+    }else if(kind==='door'){
+      this.player.setPosition(1020,FLOOR).setFlipX(false);
+      const father=this.entities.find(e=>e.data.id==='father-door');if(father){father.sprite.setX(1120);father.label.setX(1120);}
+      this.cameras.main.setScroll(Phaser.Math.Clamp(1150-this.scale.width/2,0,this.stage.width-this.scale.width),0);
+    }
+  }
+  async playBeat(action){
+    const gen=this.visualGeneration,reduced=this.bridge.settings.reducedMotion;
+    const actor=id=>this.entities.find(e=>e.data.id===id)?.sprite;
+    const add=o=>{this.stageObjects.push(o);if(this.visualActive)this.visualObjects.push(o);return o;};
+    const wait=ms=>new Promise(resolve=>this.time.delayedCall(reduced?Math.min(ms,80):ms,resolve));
+    if(action==='wear-mask'){await this.playVisual('mask');return;}
+    if(action==='door-impact'){await this.playVisual('door');return;}
+    let duration=0;
+    if(action==='watch-tv'){
+      const glow=add(this.add.rectangle(710,382,48,34,0xb9d7b0,.22).setDepth(3));
+      if(!reduced)this.tweens.add({targets:glow,alpha:.65,yoyo:true,repeat:-1,duration:450});
+      for(const id of ['father','mother']){const p=actor(id);if(p)this.tweens.add({targets:p,y:FLOOR-2,yoyo:true,duration:240});}
+      duration=260;
+    }else if(action==='step-forward'){
+      this.tweens.add({targets:this.player,x:570,duration:reduced?50:260});duration=270;
+    }else if(action==='hero-pose'){
+      this.player.setVisible(true).setTexture('char-hero',6);this.bridge.sound.effect('tap');duration=160;
+    }else if(action==='mother-look'||action==='mother-smile'){
+      const mother=actor('mother');if(mother){mother.setFrame(action==='mother-smile'?7:8);this.tweens.add({targets:mother,y:FLOOR-3,angle:-2,yoyo:true,duration:180});}duration=200;
+    }else if(action==='father-prank'){
+      const father=actor('father');if(father){father.setCrop();father.setFrame(7);this.tweens.add({targets:father,x:600,duration:200});}
+      this.player.setVisible(false);this.playerName.setVisible(false);this.playerShadow.setVisible(false);duration=210;
+    }else if(action==='tv-cutaway'){
+      this.player.setVisible(false);this.cameras.main.setZoom(reduced?1:1.25);
+      this.cameras.main.setScroll(Phaser.Math.Clamp(720-this.scale.width/2,0,this.stage.width-this.scale.width),0);
+      duration=160;
+    }else if(action==='family-laugh'){
+      const laugh=add(this.add.text(650,338,'하 하 하',{fontSize:'16px',color:'#fff0bd',stroke:'#7c8060',strokeThickness:3}).setDepth(14));
+      this.tweens.add({targets:laugh,y:322,alpha:0,duration:700});
+      for(const id of ['father','mother']){const p=actor(id);if(p){p.setFrame(7);this.tweens.add({targets:p,y:FLOOR-3,yoyo:true,repeat:2,duration:100});}}
+      this.bridge.sound.effect('laugh');duration=260;
+    }else if(action==='adjust-mask'){
+      this.cameras.main.setZoom(1);this.player.setVisible(true).setTexture('char-hero',0);this.playerName.setVisible(true);this.playerShadow.setVisible(true);
+      this.tweens.add({targets:this.player,angle:3,yoyo:true,duration:150});duration=180;
+    }else if(action==='warm-fade'){
+      const warm=add(this.add.rectangle(0,0,4096,540,0xffd18a,.05).setOrigin(0).setScrollFactor(0).setDepth(13));
+      this.tweens.add({targets:warm,alpha:.18,duration:300});duration=300;
+    }else if(action==='door-approach'){
+      if(!reduced)this.cameras.main.setZoom(1.04);duration=180;
+    }else if(action==='door-silence'){
+      this.bridge.sound.setMood('quiet');duration=0;
+    }else if(action==='brother-hold'){
+      const brother=actor('brother');if(brother)this.tweens.add({targets:brother,x:620,angle:-3,duration:220});duration=230;
+    }else if(action==='paper-fold'){
+      const shape=this.bridge.state?.choices['brother-shape'];const g=add(this.add.graphics().setDepth(6));
+      g.fillStyle(0xeee3b9,1);
+      if(shape==='비행기')g.fillTriangle(493,405,583,387,540,427);else{g.fillTriangle(496,402,581,402,552,426);g.fillRect(519,391,41,12);}
+      g.lineStyle(2,0xa0b096,1);g.lineBetween(516,405,560,400);
+      this.tweens.add({targets:g,y:-8,yoyo:true,duration:220});this.bridge.sound.effect('tap');duration=240;
+    }else if(action==='toy-roll'){
+      const toy=actor('toy');if(toy)this.tweens.add({targets:toy,x:toy.x+35,yoyo:true,duration:260});duration=0;
+    }
+    if(duration)await wait(duration);
+    if(gen!==this.visualGeneration)return;
+  }
   equipMask(){
     const mask=this.add.image(this.player.x,this.player.y-115,'mask-worn').setScale(2).setDepth(9);
     this.stageObjects.push(mask);this.tweens.add({targets:mask,y:this.player.y-52,duration:this.bridge.settings.reducedMotion?80:450,onComplete:()=>{mask.destroy();this.playerKey='hero';this.player.setTexture('char-hero',0);}});
@@ -96,7 +168,14 @@ export class LifeScene extends Phaser.Scene{
       await wait(reduced?100:550); // Only animation length; no forced dramatic waiting.
     }
   }
-  endVisual(){this.visualActive=false;this.cameras.main.setZoom(1);this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);}
+  endVisual(){
+    this.visualGeneration++;this.tweens.killAll();for(const o of this.visualObjects||[])o.destroy();this.visualObjects=[];
+    this.visualActive=false;this.player.setVisible(true).setAngle(0);this.playerName.setVisible(true);this.playerShadow.setVisible(true);
+    if(this.visualStart)this.player.setPosition(this.visualStart.x,FLOOR);
+    for(const e of this.entities){if(e.data.type!=='npc')continue;e.sprite.setPosition(e.data.x,FLOOR).setAngle(0).setFrame(0);e.label.setX(e.data.x);if(this.stage.variant==='family'&&['father','mother'].includes(e.data.id))e.sprite.setCrop(0,0,32,32);}
+    if(this.visualKind==='door')this.entities.find(e=>e.data.id==='door')?.sprite.setTexture('obj-broken');
+    this.cameras.main.setZoom(1);this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);
+  }
   updateSettings(){
     if(!this.atmosphere)return;const interior=['interior','shop'].includes(this.stage?.kind);const a=this.bridge.settings.ambience;
     this.atmosphere.setFillStyle(a==='rain'||a==='night'?0x253c59:0x9a623e,interior?0:(a==='night'?.48:a==='dusk'?.22:a==='rain'?.18:0));

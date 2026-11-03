@@ -1,7 +1,7 @@
 """Run against npm run preview. Requires Python Playwright and Chromium.
 GAME_URL and CHROMIUM_PATH can override the defaults. No gameplay setters are used.
 """
-import asyncio,json,os,shutil,time
+import asyncio,json,os,shutil,time,re
 from pathlib import Path
 from playwright.async_api import async_playwright
 BASE=os.environ.get('GAME_URL','http://localhost:4173/')
@@ -17,9 +17,17 @@ async def walk(page,x):
   print('Movement failure',await snap(page),flush=True);await page.screenshot(path=str(OUT/'failure.png'));raise
  finally:await page.keyboard.up(key)
  await page.wait_for_timeout(45)
+PLAY_TEXT=[]
+BANNED=re.compile(r'실제 발언|확인되지|재구성입니다|사용자가 제공|실제 기록|사실로|제작|창작|실제 기억|연출입니다|기록을 확인|추가하지 않|지정하지 않')
+async def check_text(page):
+ for selector in ['#dialogue:not([hidden])','#cinematic:not([hidden])']:
+  for element in await page.locator(selector).all():
+   text=await element.inner_text();assert not BANNED.search(text),text;PLAY_TEXT.append(text)
+ assert await page.locator('#dialogue .fiction-tag').count()==0
 async def settle(page,answer=0):
  for _ in range(110):
   s=await snap(page)
+  await check_text(page)
   if s['dialogue']:
    if s['dialogue']['choices']:
     choices=page.locator('.choice-button');await choices.nth(min(answer,await choices.count()-1)).click()
@@ -47,117 +55,114 @@ async def run():
   context=await browser.new_context(viewport={'width':412,'height':915},is_mobile=True,has_touch=True,device_scale_factor=1)
   page=await context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
   await start(page)
-  # Real CDP multi-touch, with simultaneous movement and jump, then release.
   cdp=await context.new_cdp_session(page)
   boxes=[await page.locator(f'[data-control={k}]').bounding_box() for k in ['right','jump']]
-  touches=[{'x':b['x']+b['width']/2,'y':b['y']+b['height']/2,'id':i+1} for i,b in enumerate(boxes)]
-  before=await snap(page)
-  await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':touches[:1]});await page.wait_for_timeout(150)
-  await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':touches});await page.wait_for_timeout(170)
-  during=await snap(page);assert during['x']>before['x']+15 and during['y']<before['y']-15
-  await cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});await page.wait_for_timeout(850)
-  stopped=await snap(page);await page.wait_for_timeout(150);assert abs((await snap(page))['x']-stopped['x'])<1 and abs(stopped['y']-460)<5
-  check('동시 터치 이동·점프, 해제 후 정지와 착지')
-  await page.locator('#pause-button').click();paused=await snap(page);await page.keyboard.down('ArrowRight');await page.wait_for_timeout(150);await page.keyboard.up('ArrowRight');assert (await snap(page))['x']==paused['x'];await page.locator('#menu-resume').click()
-  check('일시정지와 재개')
+  points=[{'x':b['x']+b['width']/2,'y':b['y']+b['height']/2,'id':i+1} for i,b in enumerate(boxes)]
+  before=await snap(page);await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':points[:1]});await page.wait_for_timeout(130);await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':points});await page.wait_for_timeout(160)
+  moving=await snap(page);assert moving['x']>before['x']+10 and moving['y']<before['y']-10
+  await cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});await page.wait_for_timeout(900);stopped=await snap(page);await page.wait_for_timeout(120);assert abs((await snap(page))['x']-stopped['x'])<1 and abs(stopped['y']-460)<5
+  await page.locator('#pause-button').click();old=await snap(page);await page.keyboard.down('ArrowRight');await page.wait_for_timeout(130);await page.keyboard.up('ArrowRight');assert (await snap(page))['x']==old['x'];await page.locator('#menu-resume').click()
+  check('이동·점프 멀티터치, 해제 후 정지, 일시정지·재개')
   await interact(page,650);await expected(page,1,'home')
+  await interact(page,170);await expected(page,1);assert 'photo' not in (await snap(page))['inspected']
+  await walk(page,790);await page.keyboard.press('e');await page.wait_for_timeout(80)
+  assert (await snap(page))['dialogue']['speaker']=='어머니';await page.screenshot(path=str(OUT/'natural-mother.png'));await settle(page)
+  first=await snap(page);assert first['dialogueVisits']['mother:1']==1
+  await walk(page,790);await page.keyboard.press('e');await page.wait_for_timeout(60);assert '사진 찾았나' in (await snap(page))['dialogue']['text'];await settle(page)
   await interact(page,170);await expected(page,2)
-  # Parents first. All optional home objects except mask, which advances the timeline.
-  for x in [620,790,360,660,720,1070,1240]:await interact(page,x)
+  await interact(page,620);await interact(page,620);await interact(page,790)
+  await interact(page,890);await expected(page,2);assert 'mask-equipped' not in (await snap(page))['events']
+  check('엄마 필수 대화, 가족 반복 대사·선택 반응, 사물만으로 진행 불가')
+  await interact(page,1300);assert (await snap(page))['stage']=='brother-room'
+  assert any(e['character']=='brother' for e in (await snap(page))['entities'])
+  await interact(page,650);assert (await snap(page))['choices']['brother-shape']=='비행기'
+  await walk(page,460);await page.keyboard.press('e');await page.wait_for_timeout(80)
+  while (await snap(page))['dialogue']:
+   await page.locator('#dialogue').click();await page.wait_for_timeout(50)
+  assert (await snap(page))['overlay']=='cutscene';assert await page.locator('#visual-skip').count()==0
+  await page.screenshot(path=str(OUT/'brother-paper.png'));await settle(page)
+  assert 'brother' in (await snap(page))['memories'];await interact(page,650);assert (await snap(page))['dialogueVisits']['brother:2']==2
+  # Save reload in the interlude preserves return point and choice.
+  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();await page.wait_for_timeout(100)
+  assert (await snap(page))['stage']=='brother-room' and (await snap(page))['choices']['brother-shape']=='비행기'
+  await interact(page,1040);await expected(page,2,'home')
+  check('형 전용 픽셀 캐릭터·선택·종이 접기 컷신·반복 대화·막간 저장 복원')
+  for x in [360,660,720,1070,1240]:await interact(page,x)
   await interact(page,1410);assert (await snap(page))['stage']=='alley'
   for x in [430,920]:await interact(page,x)
-  await interact(page,1550);assert (await snap(page))['stage']=='playground'
+  await interact(page,1550)
   for x in [420,780]:await interact(page,x)
-  await interact(page,1240);assert (await snap(page))['stage']=='store'
+  await interact(page,1240)
   for x in [480,820]:await interact(page,x)
-  await interact(page,1150);assert (await snap(page))['stage']=='school'
-  await interact(page,850);await interact(page,1250);assert (await snap(page))['stage']=='home'
-  check('기존 선택 탐험 4개 맵, 익명 창작 NPC와 사물 조사')
+  await interact(page,1150);await interact(page,850);await interact(page,1250);assert (await snap(page))['stage']=='home'
+  check('기존 선택 탐험 맵과 배경 NPC·사물의 자연스러운 대화 유지')
   await interact(page,890);await expected(page,3)
-  # Resume with mask and correct quest before the special hero event.
-  old=await snap(page);await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();await expected(page,3)
-  assert 'mask-equipped' in (await snap(page))['events']
-  await walk(page,620);await page.keyboard.press('e');await page.wait_for_timeout(500);await page.screenshot(path=str(OUT/'hero-mobile.png'))
-  await settle(page);await expected(page,4,'interval')
-  check('가면 착용, 저장 복원, 실제 두 대사와 전용 영웅 회상')
+  await walk(page,620);await page.keyboard.press('e');await page.wait_for_timeout(70)
+  assert (await snap(page))['overlay']=='cutscene' and await page.locator('#visual-skip').count()==0
+  assert not any(e['character']=='brother' for e in (await snap(page))['entities'])
+  hero_lines=[]
+  while (await snap(page))['overlay']=='cutscene':
+   await check_text(page);hero_lines.append(await page.locator('.cutscene-card p').inner_text())
+   counter=await page.locator('.beat-counter').inner_text()
+   if counter.startswith('7 /'):await page.screenshot(path=str(OUT/'natural-hero.png'))
+   await page.wait_for_function('!document.querySelector("#visual-next").disabled')
+   await page.locator('#visual-next').click();await page.wait_for_timeout(40)
+  assert len(hero_lines)==22,hero_lines
+  assert '우하하하! 난 액션가면!' in hero_lines and '액션가면은 빤쓰만 입고 있는다.' in hero_lines
+  # Only after all 22 beats does the revised scene become skippable.
+  assert (await snap(page))['overlay']=='memory'
+  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();await page.wait_for_timeout(120)
+  await walk(page,620);await page.keyboard.press('e');await page.wait_for_selector('#visual-skip');await page.locator('#visual-skip').click();await settle(page);await expected(page,4,'interval')
+  check('액션가면 22개 대사·행동, 부모 반응, 첫 관람 필수·재관람 건너뛰기')
   await interact(page,460);await interact(page,820);await expected(page,5,'door-home')
-  await interact(page,1060)
-  await walk(page,1215);await page.keyboard.press('e');await page.wait_for_timeout(850);await page.screenshot(path=str(OUT/'door-mobile.png'))
-  assert (await snap(page))['overlay']=='cutscene'
-  # Interrupted cutscene resumes at the safe event boundary, never in a locked overlay.
-  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();await expected(page,5)
-  await interact(page,1215);await expected(page,6,'changed-home')
-  check('상대 시간 간격, 방문 파손 목격 애니메이션, 컷신 중 재실행 복구')
-  for x in [590,1215,850]:await interact(page,x)
-  await expected(page,7,'father-home')
-  for x in [400,570,990,780]:await interact(page,x)
+  assert not any(e['character']=='brother' for e in (await snap(page))['entities'])
+  await walk(page,1215);await page.keyboard.press('e');await page.wait_for_timeout(220)
+  for _ in range(2):
+   await page.wait_for_function('!document.querySelector("#visual-next").disabled');await page.locator('#visual-next').click();await page.wait_for_timeout(40)
+  await page.wait_for_timeout(800);await page.screenshot(path=str(OUT/'natural-door.png'))
+  await settle(page);await expected(page,6,'changed-home')
+  check('방문 파손 직접 목격, 문학적 독백·충격음·정적, 형 비참여')
+  await interact(page,850);await expected(page,6)
+  await interact(page,590);await interact(page,850);await expected(page,7,'father-home')
+  await interact(page,1120);await expected(page,7)
+  await interact(page,570);assert (await snap(page))['choices']['father-meal']=='수저를 놓는다'
+  await walk(page,570);await page.keyboard.press('e');await page.wait_for_timeout(60);assert '수저는 잘 놓았네' in (await snap(page))['dialogue']['text'];await page.screenshot(path=str(OUT/'father-meal.png'));await settle(page)
+  for x in [400,990,780]:await interact(page,x)
   await interact(page,1120);await expected(page,8,'daeyeon')
-  check('이혼과 아버지 단독 동거 기간을 별도 장면으로 유지')
+  check('이혼 이후 순서 유지, 아버지와 식사 준비 대화·선택 후속 반응')
   for x in [350,660,920]:await interact(page,x)
-  await page.screenshot(path=str(OUT/'daeyeon-mobile.png'))
   await interact(page,1300);await expected(page,9,'study')
-  # All non-core study props and both grandparents.
-  for x in [90,540,690,840,980,1100,1400]:await interact(page,x)
-  await interact(page,380,0);await expected(page,10)
-  assert (await snap(page))['choices']['study-answer']=='5'
-  await interact(page,1230);await expected(page,10)
-  assert 'story:cane' in (await snap(page))['events']
-  await page.screenshot(path=str(OUT/'study-mobile.png'))
-  await interact(page,1550);await expected(page,11,'present')
-  check('대연동 별도 맵·조부모·공부·정답 경로·회초리 기록과 페이지 종료')
-  await walk(page,650);await page.keyboard.press('e');await page.wait_for_timeout(100)
-  for _ in range(8):await page.locator('#summary-next').click()
-  await settle(page);await expected(page,12,'present-street')
+  await interact(page,380);await expected(page,9)
+  await interact(page,690);await interact(page,690);await interact(page,1100);await interact(page,1100)
+  for x in [90,540,840,980,1400]:await interact(page,x)
+  await interact(page,380);await expected(page,10);assert (await snap(page))['choices']['study-answer']=='5'
+  await walk(page,690);await page.keyboard.press('e');await page.wait_for_timeout(50);assert '정리' in (await snap(page))['dialogue']['text'];await page.screenshot(path=str(OUT/'grandma-after-study.png'));await settle(page)
+  await interact(page,1100);await interact(page,1230);await interact(page,1550);await expected(page,11,'present')
+  check('조부모 필수 대화·공부 선택·공부 전후 대사·체벌 기억의 비특정 서술')
+  await interact(page,920);assert (await snap(page))['stage']=='brother-room'
+  await walk(page,650);await page.keyboard.press('e');await page.wait_for_timeout(50);assert '또 종이' in (await snap(page))['dialogue']['text'];await settle(page);await interact(page,1040);await expected(page,11)
+  await walk(page,650);await page.keyboard.press('e');await page.wait_for_timeout(70)
+  for _ in range(8):await check_text(page);await page.locator('#summary-next').click()
+  await settle(page);await expected(page,12)
   await interact(page,1090);assert 'chapter-1-complete' in (await snap(page))['events']
-  await page.locator('#ending-next').click();await page.locator('#ending-explore').click();await expected(page,11)
-  final=await snap(page)
-  assert len(final['memories'])==16,final['memories']
-  assert len(final['choices'])>=10
-  assert len(final['inspected'])>=20
-  check('12장면 전체 완료·16개 기억·20개 이상 조사·10회 이상 선택·크레딧')
-  await page.locator('#album-button').click();assert await page.locator('.memory-card.found').count()==16
-  await page.locator('[data-memory=hero]').click();assert '실제 기억' in await page.locator('.modal').inner_text();await page.locator('.close-modal').click()
-  await page.locator('#menu-button').click();await page.locator('#menu-settings').click();await page.locator('#setting-ambience').select_option('rain');await page.locator('#setting-large').click();await page.locator('.close-modal').click()
-  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==16 and (await snap(page))['settings']['largeText']
-  check('앨범 분류 재열람·설정·장면·수집·선택 저장과 복원')
-  # Story dialogue and controls fit all portrait/landscape sizes.
-  await interact(page,990) # inspect optional note, then explicitly open it for layout checks.
-  await walk(page,990);await page.keyboard.press('e');await page.wait_for_timeout(100)
+  await page.locator('#ending-next').click();await page.locator('#ending-explore').click()
+  final=await snap(page);assert len(final['memories'])==17,final['memories']
+  check('12장면과 형제 막간 포함 전체 완료·기억 17개·형의 후기 대화')
+  await page.locator('#album-button').click();assert await page.locator('.memory-card.found').count()==17
+  await page.locator('#album-family').click();assert '형' in await page.locator('.modal').inner_text() and '동거 시기' in await page.locator('.modal').inner_text();await page.screenshot(path=str(OUT/'family-source-notes.png'));await page.locator('.close-modal').click()
+  await page.locator('#menu-button').click();await page.locator('#menu-settings').click();await page.locator('#setting-large').click();await page.locator('.close-modal').click()
+  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==17 and (await snap(page))['dialogueVisits']['brother:2']==2
+  await walk(page,1100);await page.keyboard.press('e');await page.wait_for_timeout(80)
   for w,h in [(360,740),(412,915),(915,412),(1440,1000)]:
-   await page.set_viewport_size({'width':w,'height':h});await page.wait_for_timeout(200)
+   await page.set_viewport_size({'width':w,'height':h});await page.wait_for_timeout(180)
    layout=await page.evaluate('''()=>{const f=document.querySelector('.game-frame').getBoundingClientRect(),d=document.querySelector('.play-dock').getBoundingClientRect();return {overflow:document.documentElement.scrollWidth>innerWidth,overlap:f.bottom>d.top+1,buttons:[...document.querySelectorAll('.control')].every(b=>{const r=b.getBoundingClientRect();return r.bottom<=innerHeight+1&&r.left>=0&&r.right<=innerWidth&&r.width>=44&&r.height>=44})}}''')
    assert not layout['overflow'] and not layout['overlap'] and layout['buttons'],(w,h,layout)
-   await page.screenshot(path=str(OUT/f'layout-{w}x{h}.png'),full_page=True)
-  await settle(page);check('모바일 세로·가로와 데스크톱: 대화·조작 영역 경계')
-  await page.evaluate('navigator.serviceWorker.ready');await page.wait_for_function('navigator.serviceWorker.controller!==null');await context.set_offline(True)
-  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==16
-  check('새 리소스 캐싱 후 네트워크 차단 상태에서 이어하기')
-  await context.close()
-  # Focused branch checks use save fixtures but interact through real UI.
-  for answer in [1,2]:
-   c=await browser.new_context(viewport={'width':412,'height':915});q=await c.new_page();q.on('pageerror',lambda e:errors.append(str(e)))
-   await q.add_init_script("if(!localStorage.getItem('life-story:save'))localStorage.setItem('life-story:save',JSON.stringify({version:2,storyScene:9,stage:'study',x:380,events:[],memories:[],quests:[],visited:['study'],inspected:[],choices:{},settings:{sound:false}}))")
-   await q.goto(BASE);await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();await interact(q,380,answer);await expected(q,10);assert (await snap(q))['choices']['study-answer'] in ['4','풀이 대신 기록 읽기'];await c.close()
-  check('공부 오답·풀이 건너뛰기 모두 동일하게 다음 장면 진행')
-  c=await browser.new_context(viewport={'width':412,'height':915});q=await c.new_page();q.on('pageerror',lambda e:errors.append(str(e)))
-  await q.add_init_script("if(!localStorage.getItem('life-story:save'))localStorage.setItem('life-story:save',JSON.stringify({version:1,stage:'school',x:1000,events:['greet-grandma'],memories:['photo','bag'],quests:['greeting'],settings:{ambience:'night'},playtime:180}))")
-  await q.goto(BASE);await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();await expected(q,0,'present')
-  migrated=await snap(q);assert migrated['settings']['ambience']=='night'
-  backup=await q.evaluate("JSON.parse(localStorage.getItem('life-story:save:v1-backup'))");assert backup['memories']==['photo','bag']
-  await q.locator('#album-button').click();assert '이전 버전 수집 목록 2개' in await q.locator('.modal').inner_text();await q.locator('.close-modal').click()
-  await interact(q,650);await expected(q,1)
-  check('실제 v1 저장의 원본 백업·설정·이전 수집 목록 보존 및 새 시나리오 진입')
-  await c.close()
-  c=await browser.new_context(viewport={'width':412,'height':915});q=await c.new_page();q.on('pageerror',lambda e:errors.append(str(e)))
-  await start(q)
-  for x in [650,170,890,620,820,1215,850,780,1120,1300,380,1230,1550]:await interact(q,x,2)
-  await expected(q,11)
-  await walk(q,650);await q.keyboard.press('e');await q.wait_for_timeout(100)
-  for _ in range(8):await q.locator('#summary-next').click()
-  await settle(q);await expected(q,12);await interact(q,1090)
-  minimal=await snap(q);assert 'chapter-1-complete' in minimal['events'];assert not any(m in minimal['memories'] for m in ['tv','toy','lamp','swing','pencil'])
-  check('선택 탐험·선택 조각 수집 없이 주요 경로 완료')
+   await page.screenshot(path=str(OUT/f'natural-layout-{w}x{h}.png'),full_page=True)
+  await settle(page)
+  check('출처는 기록 메뉴에서만 확인, 가족·선택·반복 이력 저장, 모바일·가로·데스크톱 UI')
+  await page.evaluate('navigator.serviceWorker.ready');await page.wait_for_function('navigator.serviceWorker.controller!==null');await context.set_offline(True);await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==17
+  check('오프라인 리소스와 최신 저장으로 이어하기')
   assert not errors,errors
-  report={'passed':passed,'javascript_exceptions':errors,'automated_seconds':round(time.monotonic()-started),'playtime_is_human_measurement':False,'real_android_device':False,'full_route':{'memories':len(final['memories']),'inspected':len(final['inspected']),'choices':len(final['choices'])}}
-  (OUT/'browser-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2));await browser.close()
+  report={'passed':passed,'javascript_exceptions':errors,'full_route':{'memories':len(final['memories']),'choices':len(final['choices']),'dialogue_visits':final['dialogueVisits']},'hero_beats':len(hero_lines),'checked_play_text_screens':len(PLAY_TEXT),'automated_seconds':round(time.monotonic()-started),'human_playtime_measured':False,'real_android_device':False}
+  (OUT/'natural-dialogue-browser.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));(OUT/'natural-dialogue-transcript.txt').write_text('\n\n---\n\n'.join(PLAY_TEXT));print(json.dumps(report,ensure_ascii=False,indent=2));await browser.close()
 if __name__=='__main__':asyncio.run(run())

@@ -124,15 +124,18 @@ export function createStageArt(scene,stage){
     rect(g,0,0,w,456,'#c2c6b5');rect(g,0,90,w,10,'#7e8a76');
     for(let x=30;x<w;x+=180){rect(g,x,109,4,340,'#afb7a2');}
     windowArt(g,260,181,134,150);rect(g,228,336,197,9,'#8c9a82');
-    text(g,'아버지와 단둘이 · 구체적인 생활 기록은 아직 없습니다',w/2,140,16,'#5a6a59');ground(g,w,true);
+    text(g,'아버지와 단둘이',w/2,140,16,'#5a6a59');ground(g,w,true);
   }else if(stage.variant==='present'&&stage.kind==='interior'){
     rect(g,0,0,w,457,'#bdc8bd');rect(g,0,100,w,9,'#7d9484');
     for(let x=60;x<w;x+=370){windowArt(g,x,170,160,170);rect(g,x-8,342,180,7,'#7d9484');}
     rect(g,480,394,330,14,'#8b8066');rect(g,500,407,10,50,'#687b68');rect(g,780,407,10,50,'#687b68');
     for(let x=860;x<1120;x+=26){rect(g,x,270,18,100-(x%4)*9,['#7c9987','#9e9f7e','#a48876'][x%3]);}
     rect(g,850,368,290,12,'#788c78');ground(g,w,true);
+  }else if(stage.variant==='brother'){
+    rect(g,0,0,w,456,'#bcc5ba');for(let x=40;x<w;x+=250){rect(g,x,139,180,254,'#ece6cc');line(g,[[x+90,139],[x+90,393]],'#c6cdb6',2);line(g,[[x,266],[x+180,266]],'#d0d2bd',2);}
+    rect(g,300,394,520,12,'#a99c76');rect(g,322,406,12,50,'#7f886d');rect(g,780,406,12,50,'#7f886d');ground(g,w,true);
   }else if(stage.variant==='study'){
-    rect(g,0,110,w,340,'#77876c23');text(g,'대연동 · 공부 중심의 생활',w/2,145,16,'#647259');
+    rect(g,0,110,w,340,'#77876c23');text(g,'대연동 · 공부방',w/2,145,16,'#647259');
     rect(g,40,200,120,206,'#9b936f');for(let y=220;y<397;y+=55){for(let x=48;x<145;x+=16)rect(g,x,y,10,35,['#8d9a77','#b39c78','#729087'][x%3]);rect(g,44,y+37,112,5,'#817c5b');}
   }else if(['tension','changed','interval'].includes(stage.variant)){
     rect(g,0,0,w,540,stage.variant==='interval'?'#a5906a18':'#314b6236');
@@ -149,6 +152,7 @@ export function createCharacters(scene){
   const variants={
     child:{hair:'#3f4239',shirt:'#c78860',pants:'#596d61',skin:'#ebc49a'},
     hero:{hair:'#3f4239',shirt:'#c78860',pants:'#596d61',skin:'#ebc49a'},
+    brother:{hair:'#454d43',shirt:'#7c94a3',pants:'#596878',skin:'#e9c29a'},
     father:{hair:'#3c433c',shirt:'#77908b',pants:'#4d615b',skin:'#e5bd92'},
     mother:{hair:'#5a493d',shirt:'#be947f',pants:'#6b7761',skin:'#ebc7a1'},
     neighbor:{hair:'#615e4c',shirt:'#9caa7c',pants:'#6b7869',skin:'#d9b991'},
@@ -162,14 +166,17 @@ export function createCharacters(scene){
   };
   const portraits={};
   for(const [key,p] of Object.entries(variants)){
-    const {c,g}=surface(32*7,40);g.imageSmoothingEnabled=false;
-    for(let f=0;f<7;f++){
+    const {c,g}=surface(32*9,40);g.imageSmoothingEnabled=false;
+    for(let f=0;f<9;f++){
       g.save();g.translate(f*32,0);const bob=f===1?1:0;g.translate(0,bob);
       // Sprite pixels deliberately remain single pixels here.
       const r=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h);};
-      const tall=['teen','young','adult','grandpa','shopkeeper','father','mother','neighbor'].includes(key);const top=tall?1:4;const cy=tall?14:17;
+      const tall=['teen','young','adult','grandpa','shopkeeper','father','mother','neighbor','brother'].includes(key);const top=tall?1:4;const cy=tall?14:17;
       r(11,top,10,2,p.hair);r(9,top+2,15,7,p.hair);r(8,top+5,17,5,p.hair);r(10,top+7,13,9,p.skin);r(11,top+14,10,3,p.skin);r(9,top+9,2,5,p.skin);r(23,top+9,2,4,p.skin);
       r(10,top+7,3,3,p.hair);r(13,top+7,8,1,'#b58b67');r(15,top+10,1,2,'#3e493c');r(21,top+10,1,2,'#3e493c');r(19,top+14,3,1,'#bf8d70');r(12,top+12,2,2,'#e3ad8b');
+      if(f===7){r(18,top+13,1,1,'#ad7b63');r(19,top+14,4,1,'#ad7b63');r(23,top+13,1,1,'#ad7b63');}
+      if(f===8){r(19,top+13,3,3,'#a27963');r(20,top+14,1,1,'#ecc79c');}
+      if(key==='brother'){r(14,cy+2,5,2,'#d7e1d0');r(12,cy+8,10,2,'#607d91');}
       if(key==='mother'){r(8,top+6,2,13,p.hair);r(23,top+6,3,14,p.hair);}
       if(key==='hero'){r(9,top+8,16,6,'#527e63');r(11,top+9,4,2,'#f3ddb0');r(20,top+9,3,2,'#f3ddb0');r(16,top+6,3,3,'#e0c77b');}
       if(key==='grandma'){r(8,top+1,6,5,p.hair);r(7,top+3,5,4,'#bfc0ae');r(11,top+7,11,2,'#bab9a5');r(11,top+9,6,4,'#777f70');r(18,top+9,6,4,'#777f70');r(12,top+10,4,2,p.skin);r(19,top+10,4,2,p.skin);}
@@ -185,7 +192,7 @@ export function createCharacters(scene){
       if(jump){r(8,cy-1,3,5,p.shirt);r(24,cy-1,3,5,p.shirt);}
       g.restore();
     }
-    const tex=scene.textures.addCanvas('char-'+key,c);for(let f=0;f<7;f++)tex.add(f,0,f*32,0,32,40);
+    const tex=scene.textures.addCanvas('char-'+key,c);for(let f=0;f<9;f++)tex.add(f,0,f*32,0,32,40);
     scene.anims.create({key:key+'-idle',frames:[{key:'char-'+key,frame:0},{key:'char-'+key,frame:1}],frameRate:1.5,repeat:-1});
     scene.anims.create({key:key+'-walk',frames:[2,3,4,5].map(f=>({key:'char-'+key,frame:f})),frameRate:9,repeat:-1});
     const portrait=surface(32,40);portrait.g.drawImage(c,0,0,32,40,0,0,32,40);portraits[key]=portrait.c.toDataURL();
@@ -227,10 +234,11 @@ export function createParticleArt(scene){
 }
 
 export function createNarrativeArt(scene){
- const specs={mask:[80,108],sofa:[340,98],shelf:[114,150],window:[122,140],calendar:[80,132],album:[100,100],chairs:[125,85],notebook:[80,92],workbook:[88,105],eraser:[70,80],cane:[70,132],clock:[80,140],door:[120,270],broken:[120,270]};
+ const specs={mask:[80,108],sofa:[340,98],shelf:[114,150],window:[122,140],calendar:[80,132],album:[100,100],chairs:[125,85],notebook:[80,92],workbook:[88,105],eraser:[70,80],cane:[70,132],clock:[80,140],paper:[120,95],door:[120,270],broken:[120,270]};
  for(const [key,[w,h]]of Object.entries(specs)){
   const {c,g}=surface(w,h);const r=(x,y,a,b,col)=>rect(g,x,y,a,b,col);
-  if(['door','broken'].includes(key)){
+  if(key==='paper'){r(4,64,112,8,'#a39674');r(12,72,8,23,'#7e8068');r(101,72,8,23,'#7e8068');r(19,22,78,40,'#eee5bf');line(g,[[57,23],[57,61]],'#b7c1a2',2);for(let i=0;i<3;i++)r(92+i*6,7+i*3,4,32,['#a27964','#729585','#d2b578'][i]);}
+  else if(['door','broken'].includes(key)){
    r(0,0,w,h,'#796f55');r(7,7,w-14,h-7,'#baab83');r(14,16,91,238,'#ac9871');
    if(key==='door'){r(23,25,72,98,'#b5b899');r(22,137,73,100,'#c0ad82');r(91,141,7,7,'#6f7151');}
    else{poly(g,[[21,23],[91,17],[77,67],[94,107],[63,133],[83,175],[51,225],[23,235],[38,172],[21,137],[39,83]],'#455347');line(g,[[80,23],[62,73],[89,106],[53,133],[67,181],[45,229]],'#6e7055',6);r(15,257,70,10,'#8d7955');}

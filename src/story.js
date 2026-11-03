@@ -9,3 +9,6 @@ export function canPerform(action,state){
  if(action==='study-end')return state.storyScene===10&&state.events.includes('story:cane');
  return SCENES.find(s=>s.id===state.storyScene)?.action===action;
 }
+
+export {HERO_SEQUENCE,DOOR_SEQUENCE,BROTHER_SEQUENCE,SUMMARY_PAGES,say,narrate,SOURCE_TYPES} from './data/dialogue.js';
+export {FAMILY,REQUIRED_TALKS,missingTalk,questGoal} from './data/family.js';

@@ -1,3 +1,5 @@
+> v1.1의 변경 이력을 보관한 문서입니다. 최신 대사 정책과 형제 장면은 [v1.2 보고](NARRATIVE_V1_2.md)를 우선합니다.
+
 # 챕터 1 전면 보강 — 최종 변경 보고
 
 v1.1 · 2026-11-03. 기존 개발 원본 /workspace/sites/life-story는 변경하지 않았으며, GitHub 체크아웃의 작업 브랜치 feat/chapter-one-life-record에서 확장했습니다.

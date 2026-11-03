@@ -7,6 +7,7 @@ export const LIFE_RECORD={
   protagonist:{name:'안재원',gender:'남성',birth:'1997-01-26',birthplace:'부산광역시',adultHeightCm:174,
     personality:['내향적','감수성이 풍부함','관계와 추억을 중요하게 여김'],
     appearanceReference:null},
+  family:{brother:{exists:true,name:null,ageGap:null,residenceByPeriod:null,personality:null,witnessOfHero:null,witnessOfDoor:null}},
   childhood:{
     latestSource:'사용자가 제공한 챕터 1 보강 문서',
     sequence:[
