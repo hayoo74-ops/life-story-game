@@ -2,15 +2,15 @@
 
 ## 현재 공개 범위와 배포 상태
 
-2026-11-04 확인 시 `hayoo74-ops/life-story-game`은 **비공개**이고 `has_pages: false`였습니다. 저장소의 공개 범위를 변경하지 않았으며 실제 게임 사이트는 배포하지 않았습니다.
+2026-11-04 사용자는 게임 사이트 공개에 이어 **소스 저장소 공개도 별도로 승인**했습니다. 현재 `hayoo74-ops/life-story-game`은 Public이며, Pages가 활성화됐고 Source/build_type은 GitHub Actions/workflow입니다. 저장소 공개 범위를 코드나 배포 작업이 자동 변경하지는 않습니다.
 
-GitHub Pages 사이트의 공개 범위는 소스 저장소와 별개입니다. 개인 계정 소유 프로젝트의 Pages 사이트를 비공개로 제한하는 기능은 제공되지 않습니다. 비공개 사이트의 접근 제어는 GitHub Enterprise Cloud 조직 소유의 지원되는 프로젝트에 해당합니다. 현재 계정 요금제는 이 연결로 확인하지 못했습니다. 비공개 소스의 Pages 이용에 요금제 변경이 필요할 수 있으며, 소스 저장소를 공개로 바꾸는 방법은 사용하지 않습니다.
+소스 공개 승인 기록은 워크플로의 `PUBLIC_SOURCE_APPROVED: 'true'`에 명시합니다. 사이트 공개 동의는 수동 배포의 `approve_public_site`로 별도 확인합니다. 기본 정책 함수는 소스 공개 승인이 없는 Public 저장소나 알 수 없는 공개 범위를 계속 거부합니다.
 
-공개 Pages를 승인하면 방문자는 실명·개인/가족 이야기와 이를 포함한 JavaScript 리소스를 내려받을 수 있습니다. URL을 숨기거나 검색을 제한하는 방법은 로그인 접근 제어가 아닙니다. **현재는 공개 배포 동의가 없으므로 활성화하지 않았습니다.**
+공개 Pages의 방문자는 실명·개인/가족 이야기와 JavaScript 리소스를 내려받을 수 있고 Public 저장소의 소스도 볼 수 있습니다. URL 숨김이나 검색 제한은 접근 제어가 아닙니다. 두 공개 범위 모두 사용자 승인에 따라 사용합니다.
 
-공식 문서: [Pages 공개 범위](https://docs.github.com/en/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site), [Pages와 계정 요금제](https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages).
+공식 문서: [Pages 공개 범위](https://docs.github.com/en/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site).
 
-현재 연결에서 Pages 조회는 `403 Resource not accessible by integration`으로 거부됐습니다. 사이트가 꺼져 있다는 판단은 별도로 조회에 성공한 저장소 메타데이터의 `has_pages`를 근거로 했습니다. 설정 쓰기는 시도하지 않았습니다.
+이전 Private 상태에서 Pages API가 403을 반환해 배포를 보류했던 기록은 [기존 준비 검증](PAGES_VALIDATION.md)에 남아 있습니다. 현재 Pages API 조회는 성공하며 Source=workflow를 확인했습니다. 실제 배포 결과와 접속 주소는 Actions의 성공한 deploy 환경 URL로 확인합니다.
 
 ## 경로와 로컬 실행
 
@@ -35,23 +35,21 @@ VITE_BASE_PATH=/ npm run build
 
 `.github/workflows/pages.yml`은 다음과 같이 동작합니다.
 
-- `main` push: 비공개 저장소 확인 → Node 24 / `npm ci` → 단위 검사 → production build → 모바일 브라우저/프로젝트 경로/PWA 검사. **이 이벤트는 사이트를 배포하지 않습니다.**
+- `main` push: 실제 소스 공개 범위와 명시적 승인 확인 → Node 24 / `npm ci` → 단위 검사 → production build → 모바일 브라우저/프로젝트 경로/PWA 검사. **이 이벤트는 사이트를 배포하지 않습니다.**
 - 수동 `Run workflow`: 기본값은 검증만 합니다. `publish`를 체크해야 배포 작업을 요청합니다. main에서만 배포할 수 있습니다.
-- 배포 직전 실제 저장소와 Pages 설정을 API로 조회합니다. 소스가 비공개인지, 사이트의 public 값이 확인되는지 검사합니다.
+- 배포 직전 실제 저장소와 Pages 설정을 API로 조회합니다. Public 소스는 별도 승인 기록이 있어야 하며 사이트의 public 값도 확인돼야 합니다.
 - 사이트가 공개이면 `approve_public_site`를 명시적으로 체크해야 진행합니다. 확인된 비공개 사이트는 공개 동의 없이 배포할 수 있지만, 현재 개인 계정에서 제공되는 기능이라는 뜻은 아닙니다.
-- 조회 403/404, 알 수 없는 공개 범위, 비공개가 아닌 소스, 동의 없는 공개 사이트는 배포를 중단합니다. Pages를 자동 생성/활성화하거나 저장소 공개 범위를 바꾸지 않습니다.
+- 조회 403/404, 알 수 없는 공개 범위, 별도 승인이 없는 Public 소스, 동의 없는 공개 사이트는 배포를 중단합니다. Pages를 자동 생성/활성화하거나 저장소 공개 범위를 바꾸지 않습니다.
 - 배포 요청 시에만 private Actions artifact를 1일 보관합니다. 실제 publish 단계는 공식 configure-pages/deploy-pages 액션을 사용하며 Pages/ID token 쓰기 권한은 배포 job에만 부여합니다.
 
-공개 승인 전 자동 발행을 방지하기 위해 현재 main의 자동 작업은 검증까지만 합니다. 공개 또는 접근 제한 호스팅 방식을 확정한 뒤 배포 정책을 바꿀 수 있습니다.
+현재 main의 자동 작업은 검증까지만 합니다. 공개 승인이 있어도 매 배포는 수동 요청하며, 요청한 커밋을 다시 빌드·검사한 뒤 배포합니다.
 
-## 공개를 승인한 뒤 필요한 설정
+## 배포 실행
 
-1. 저장소는 계속 Private로 유지합니다. Settings → Pages에서 현재 요금제로 이 비공개 저장소의 Pages를 사용할 수 있는지 확인합니다. 사용이 불가하면 소스를 Public으로 바꾸지 말고 지원 요금제 또는 인증이 있는 다른 호스팅을 선택합니다.
-2. 공개 사이트가 되는 것에 동의한 경우에만 Pages의 Build and deployment → Source를 GitHub Actions로 설정합니다. 연결 권한이 부족하면 GitHub 연결의 Pages/Workflows 권한을 별도로 허용해야 합니다.
-3. Actions → Verify and deploy LIFE STORY Pages → Run workflow → main을 선택합니다. `publish`를 체크하고 공개 사이트이면 `approve_public_site`도 체크합니다.
-4. build/deploy 성공 뒤 환경의 실제 `page_url`을 확인합니다. Galaxy Chrome에서 게임·터치·대화·이동을 확인하고, 외부 접속이 확인된 주소만 배포 완료 주소로 공유합니다.
-
-현재는 위 공개 승인/설정 과정을 수행하지 않았으므로, 접속 가능한 Pages 주소를 발급됐다고 보고하지 않습니다.
+1. Pages Source가 GitHub Actions인지 확인합니다. 현재 설정을 확인했으며 워크플로가 저장소의 공개 범위를 변경하지 않습니다.
+2. Actions → Verify and deploy LIFE STORY Pages → Run workflow → main에서 `publish`와 `approve_public_site`를 체크합니다.
+3. build/deploy가 성공하면 해당 환경의 실제 `page_url`을 엽니다. 외부 HTTP 접속과 게임 실행을 확인한 주소만 배포 성공 주소로 공유합니다.
+4. 다시 비공개 소스를 원하면 계정의 비공개 Pages 지원 여부를 먼저 확인하고 저장소 설정과 `PUBLIC_SOURCE_APPROVED` 기록을 함께 조정해야 합니다. 워크플로 플래그만 끄는 것으로 이미 공개된 저장소나 사이트가 비공개가 되지는 않습니다.
 
 ## 기존 저장 옮기기
 

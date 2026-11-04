@@ -102,7 +102,7 @@ HTML5/CSS3/JavaScript, Phaser 3, Vite, Web Audio, LocalStorage, PWA를 사용합
 
 기본 배포 경로는 GitHub 프로젝트 Pages의 `/life-story-game/`입니다. `npm ci`, `npm run build`로 만든 `dist/`를 해당 경로에 서비스합니다. 사이트 루트에서 서비스할 경우에는 `VITE_BASE_PATH=/ npm run build`를 사용합니다.
 
-**소스 저장소는 비공개로 유지합니다. 개인 계정의 Pages 게임 사이트는 공개될 수 있으므로 현재는 배포를 활성화하지 않았습니다.** main push의 Actions는 빌드·검사만 합니다. 실제 배포는 main의 수동 실행과 실제 공개 범위 검증을 거치며, 공개 사이트에는 명시적 공개 동의가 필요합니다. [Pages 설정과 승인 절차](docs/GITHUB_PAGES.md)를 먼저 읽어 주세요.
+**2026-11-04에 게임 사이트 공개와 소스 저장소 공개를 각각 승인받았습니다.** 현재 Public 저장소의 Pages Source는 GitHub Actions입니다. main push는 검증만 하며 실제 배포는 main에서 수동 요청합니다. `PUBLIC_SOURCE_APPROVED` 기록과 실제 공개 범위 검사, 공개 사이트 배포 동의를 모두 확인합니다. [Pages 설정과 승인 정책](docs/GITHUB_PAGES.md)을 참조하세요.
 
 PWA scope/start_url도 프로젝트 경로를 사용합니다. 최초 온라인 리소스 캐싱 뒤에는 오프라인으로 이어할 수 있습니다. HTTPS 또는 localhost가 필요하며, 실제 Galaxy Chrome 설치는 별도 실기기 확인이 필요합니다.
 

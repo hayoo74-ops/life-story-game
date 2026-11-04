@@ -24,6 +24,9 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  # Explicit source-publication approval received on 2026-11-04.
+  # This does not replace the separate public-site deployment input below.
+  PUBLIC_SOURCE_APPROVED: 'true'
   VITE_BASE_PATH: /life-story-game/
   GAME_URL: http://127.0.0.1:4173/life-story-game/
 
@@ -32,15 +35,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Require private source repository
-        env:
-          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
-        run: test "$REPOSITORY_PRIVATE" = true
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
+      - name: Verify approved repository visibility
+        env:
+          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+        run: |
+          node --input-type=module <<'JS'
+          import {assertRepositoryVisibilityAllowed} from './scripts/pages-policy.mjs';
+          const raw = process.env.REPOSITORY_PRIVATE;
+          assertRepositoryVisibilityAllowed({
+            repositoryPrivate: raw === 'true' ? true : raw === 'false' ? false : undefined,
+            publicSourceApproved: process.env.PUBLIC_SOURCE_APPROVED === 'true'
+          });
+          JS
       - run: npm ci
       - run: npm test
       - run: npm run build
@@ -87,6 +98,7 @@ jobs:
             const { data: site } = await github.rest.repos.getPages(context.repo);
             assertPagesDeploymentAllowed({
               repositoryPrivate: repository.private,
+              publicSourceApproved: process.env.PUBLIC_SOURCE_APPROVED === 'true',
               sitePublic: site.public,
               publicApproved: process.env.PUBLIC_SITE_APPROVED === 'true'
             });
