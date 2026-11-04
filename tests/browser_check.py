@@ -24,14 +24,31 @@ async def check_text(page):
   for element in await page.locator(selector).all():
    text=await element.inner_text();assert not BANNED.search(text),text;PLAY_TEXT.append(text)
  assert await page.locator('#dialogue .fiction-tag').count()==0
+async def play_mini(page,answer=0):
+ for _ in range(120):
+  s=await snap(page)
+  if not s.get('mini',{}).get('active'):return
+  if s['modalOpen']:await page.locator('.close-modal').click()
+  buttons=page.locator('#mini-root button:not(:disabled):not(.mini-pause)')
+  if await page.locator('#mini-done').count():await page.locator('#mini-done').click()
+  elif await page.locator('[data-pose]:not(:disabled)').count():await page.locator('[data-pose]').first.click()
+  elif await page.locator('[data-answer]:not(:disabled)').count():await page.locator('[data-answer]').nth(answer).click()
+  elif await buttons.count():await buttons.first.click()
+  await page.wait_for_timeout(120)
+ raise AssertionError(('Mini stuck',await snap(page)))
 async def settle(page,answer=0):
  for _ in range(110):
   s=await snap(page)
   await check_text(page)
   if s['dialogue']:
+   if s.get('typing'):
+    await page.locator('.next-line').click() if await page.locator('.next-line').count() else await page.locator('.dialogue-text').click()
+    await page.wait_for_timeout(40);continue
    if s['dialogue']['choices']:
     choices=page.locator('.choice-button');await choices.nth(min(answer,await choices.count()-1)).click()
    else:await page.locator('#dialogue').click()
+  elif s['overlay']=='minigame':await play_mini(page,answer)
+  elif s['overlay'] in ['interaction','transition']:await page.wait_for_timeout(200)
   elif s['overlay']=='memory':await page.locator('#memory-close').click()
   elif s['overlay']=='cutscene':
    await page.locator('#visual-next').wait_for();await page.wait_for_function('!document.querySelector("#visual-next").disabled');await page.locator('#visual-next').click()
@@ -53,14 +70,14 @@ async def run():
   exe=os.environ.get('CHROMIUM_PATH') or shutil.which('chromium')
   browser=await p.chromium.launch(**({'executable_path':exe} if exe else {}),headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader'])
   context=await browser.new_context(viewport={'width':412,'height':915},is_mobile=True,has_touch=True,device_scale_factor=1)
-  page=await context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
+  page=await context.new_page();page.on('pageerror',lambda e:(errors.append(str(e)),print('JSERROR:',str(e),flush=True)))
   await start(page)
   cdp=await context.new_cdp_session(page)
   boxes=[await page.locator(f'[data-control={k}]').bounding_box() for k in ['right','jump']]
   points=[{'x':b['x']+b['width']/2,'y':b['y']+b['height']/2,'id':i+1} for i,b in enumerate(boxes)]
   before=await snap(page);await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':points[:1]});await page.wait_for_timeout(130);await cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':points});await page.wait_for_timeout(160)
   moving=await snap(page);assert moving['x']>before['x']+10 and moving['y']<before['y']-10
-  await cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});await page.wait_for_timeout(900);stopped=await snap(page);await page.wait_for_timeout(120);assert abs((await snap(page))['x']-stopped['x'])<1 and abs(stopped['y']-460)<5
+  await cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});await page.wait_for_timeout(900);await page.wait_for_function('lifeStory.getSnapshot().grounded',timeout=8000);stopped=await snap(page);await page.wait_for_timeout(120);assert abs((await snap(page))['x']-stopped['x'])<1 and abs(stopped['y']-460)<5
   await page.locator('#pause-button').click();old=await snap(page);await page.keyboard.down('ArrowRight');await page.wait_for_timeout(130);await page.keyboard.up('ArrowRight');assert (await snap(page))['x']==old['x'];await page.locator('#menu-resume').click()
   check('이동·점프 멀티터치, 해제 후 정지, 일시정지·재개')
   await interact(page,650);await expected(page,1,'home')
@@ -98,6 +115,7 @@ async def run():
   check('기존 선택 탐험 맵과 배경 NPC·사물의 자연스러운 대화 유지')
   await interact(page,890);await expected(page,3)
   await walk(page,620);await page.keyboard.press('e');await page.wait_for_timeout(70)
+  await play_mini(page)
   assert (await snap(page))['overlay']=='cutscene' and await page.locator('#visual-skip').count()==0
   assert not any(e['character']=='brother' for e in (await snap(page))['entities'])
   hero_lines=[]
@@ -112,7 +130,7 @@ async def run():
   # Only after all 22 beats does the revised scene become skippable.
   assert (await snap(page))['overlay']=='memory'
   await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();await page.wait_for_timeout(120)
-  await walk(page,620);await page.keyboard.press('e');await page.wait_for_selector('#visual-skip');await page.locator('#visual-skip').click();await settle(page);await expected(page,4,'interval')
+  await walk(page,620);await page.keyboard.press('e');await play_mini(page);await page.wait_for_selector('#visual-skip');await page.locator('#visual-skip').click();await settle(page);await expected(page,4,'interval')
   check('액션가면 22개 대사·행동, 부모 반응, 첫 관람 필수·재관람 건너뛰기')
   await interact(page,460);await interact(page,820);await expected(page,5,'door-home')
   assert not any(e['character']=='brother' for e in (await snap(page))['entities'])

@@ -1,0 +1,85 @@
+{
+  "version": "1.3.0",
+  "build_succeeded": true,
+  "vite": "7.3.7",
+  "phaser": "3.90.0",
+  "pwa_precache_entries": 12,
+  "build_seconds": 5.44,
+  "assets": [
+    {
+      "path": "assets/index-BpkTt7qZ.css",
+      "bytes": 27351,
+      "sha256": "d61c5ef46ef32002d54677e4b0843267bf9ba53596ac8abc6262b0134077b731"
+    },
+    {
+      "path": "assets/index-DJTVA8_8.js",
+      "bytes": 165184,
+      "sha256": "48d1219ebcdb397aaeb6a37d978299054f4e574eef31bb87c8925729044922fc"
+    },
+    {
+      "path": "assets/phaser-DFK5Ua9d.js",
+      "bytes": 1208056,
+      "sha256": "f9025c1a29bc3ae097dd886ce07717b297466da1ce8f032c8294252ce6cf5cdb"
+    },
+    {
+      "path": "assets/workbox-window.prod.es5-BBnX5xw4.js",
+      "bytes": 5748,
+      "sha256": "cadd21be4a88598a4dec91a26a025df0a5790ff6baec54a884e401c3f5c95557"
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 691,
+      "sha256": "e1208f2153315ccced02039d27a7da71752862577657122bc94aaa6d161b6047"
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 2047,
+      "sha256": "6a06e4c0c9d6f9b11943190e3796285f036b48c0365c390bff46f69351521243"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 327,
+      "sha256": "03a63fedc38a49c8519f5602ea6942daade3917d5de491f7d77c994b78fbe92b"
+    },
+    {
+      "path": "index.html",
+      "bytes": 5149,
+      "sha256": "81bb8ed1de100f6cf6df2e937b3d9eda8c10d7f24ef71eed65e156468ae4456f"
+    },
+    {
+      "path": "licenses/Phaser.txt",
+      "bytes": 1120,
+      "sha256": "080f3d5539e766bb556df5b8e86c4f5d581ece35c692b80956ca352b84d29134"
+    },
+    {
+      "path": "licenses/Vite.txt",
+      "bytes": 101176,
+      "sha256": "a77a1c089806b39ad339535bdf3677f636c91d96693e8ad7b11fe733f650ea64"
+    },
+    {
+      "path": "licenses/Workbox.txt",
+      "bytes": 1050,
+      "sha256": "aee9670e09b75ca8a2a1fe62d545ae38a6797970caf0335628e3a4dd15bc9b6c"
+    },
+    {
+      "path": "licenses/vite-plugin-pwa.txt",
+      "bytes": 1102,
+      "sha256": "05c365176db3cc00e951c44b921c809c75b8e99d2d724f7daf00381e26fb0850"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 432,
+      "sha256": "f4c23a1948b7ba7319577cb4b0e0147958c7cd7285bb405bd35f103fd677abac"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1582,
+      "sha256": "12a1dc083a5196fe2c623fe5d9b63be95755c065a5276ed44c758d60dd3447d6"
+    },
+    {
+      "path": "workbox-2fbc6a65.js",
+      "bytes": 15026,
+      "sha256": "39c2e6ae44c3f29666f6a328b6523bf13a053a1d95c74af8ddea82b1045b0b6e"
+    }
+  ]
+}

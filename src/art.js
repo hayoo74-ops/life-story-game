@@ -166,8 +166,8 @@ export function createCharacters(scene){
   };
   const portraits={};
   for(const [key,p] of Object.entries(variants)){
-    const {c,g}=surface(32*9,40);g.imageSmoothingEnabled=false;
-    for(let f=0;f<9;f++){
+    const {c,g}=surface(32*13,40);g.imageSmoothingEnabled=false;
+    for(let f=0;f<13;f++){
       g.save();g.translate(f*32,0);const bob=f===1?1:0;g.translate(0,bob);
       // Sprite pixels deliberately remain single pixels here.
       const r=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h);};
@@ -190,10 +190,13 @@ export function createCharacters(scene){
       r(12,cy+13,11,5,p.pants);r(12,cy+17,4,jump?2:5+(walk?swing:0),p.pants);r(19,cy+17,4,jump?4:5-(walk?swing:0),p.pants);
       r(10,cy+21+(walk?swing:0)-(jump?3:0),6,3,'#4a4b3d');r(19,cy+21-(walk?swing:0)-(jump?1:0),7,3,'#4a4b3d');r(11,cy+21+(walk?swing:0)-(jump?3:0),4,1,'#ac9c7a');
       if(jump){r(8,cy-1,3,5,p.shirt);r(24,cy-1,3,5,p.shirt);}
+      if(f===9||f===10){r(7,cy+8,22,6,'#eee1b6');r(17,cy+8,1,6,'#a49271');r(10,cy+10,5,1,'#899879');r(20,cy+10,5,1,'#899879');r(f===9?23:25,cy+4,2,7,'#c49a5d');}
+      if(f===11||f===12){r(5,cy-3,4,10,p.shirt);r(5,cy-6,4,4,p.skin);r(25,f===11?cy+3:cy-5,4,8,p.shirt);r(25,f===11?cy+10:cy-8,4,4,p.skin);}
       g.restore();
     }
-    const tex=scene.textures.addCanvas('char-'+key,c);for(let f=0;f<9;f++)tex.add(f,0,f*32,0,32,40);
+    const tex=scene.textures.addCanvas('char-'+key,c);for(let f=0;f<13;f++)tex.add(f,0,f*32,0,32,40);
     scene.anims.create({key:key+'-idle',frames:[{key:'char-'+key,frame:0},{key:'char-'+key,frame:1}],frameRate:1.5,repeat:-1});
+    scene.anims.create({key:key+'-read',frames:[9,10].map(f=>({key:'char-'+key,frame:f})),frameRate:3,repeat:-1});
     scene.anims.create({key:key+'-walk',frames:[2,3,4,5].map(f=>({key:'char-'+key,frame:f})),frameRate:9,repeat:-1});
     const portrait=surface(32,40);portrait.g.drawImage(c,0,0,32,40,0,0,32,40);portraits[key]=portrait.c.toDataURL();
   }
@@ -266,4 +269,12 @@ export function createNarrativeArt(scene){
   scene.textures.addCanvas('obj-'+key,c);
  }
  const m=surface(16,10);rect(m.g,0,2,16,7,'#528468');rect(m.g,2,4,4,2,'#f1db9b');rect(m.g,10,4,4,2,'#f1db9b');rect(m.g,7,0,2,4,'#e6cc81');scene.textures.addCanvas('mask-worn',m.c);
+}
+
+export function createInteractionArt(scene){
+ for(const id of ['drawer','bed']){const {c,g}=surface(id==='bed'?136:72,72);
+  if(id==='drawer'){rect(g,3,7,66,61,'#735f49');rect(g,7,11,58,53,'#b49b6c');for(let y=15;y<60;y+=23){rect(g,11,y,50,19,'#d0b584');rect(g,31,y+7,10,4,'#7f7958');}rect(g,2,5,68,5,'#e0c798');}
+  else{rect(g,4,26,7,46,'#8d795b');rect(g,125,37,7,35,'#8d795b');rect(g,10,43,116,22,'#bba479');rect(g,13,34,109,20,'#d2c7a0');rect(g,16,30,29,13,'#efe4c5');rect(g,52,34,70,20,'#839e91');for(let x=57;x<120;x+=14)rect(g,x,35,3,17,'#b3c5ab');}
+  scene.textures.addCanvas('obj-'+id,c);
+ }
 }

@@ -1,14 +1,14 @@
 """Focused UI checks using explicit saved-state fixtures; not a full playthrough."""
 import asyncio,json,os,shutil
 from playwright.async_api import async_playwright
-from browser_check import BASE,OUT,snap,walk,settle,interact,expected,check_text
+from browser_check import BASE,OUT,snap,walk,settle,interact,expected,check_text,play_mini
 async def run():
  passed=[];errors=[]
  async with async_playwright() as p:
   exe=os.environ.get('CHROMIUM_PATH') or shutil.which('chromium')
   b=await p.chromium.launch(**({'executable_path':exe} if exe else {}),headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader'])
   async def seeded(raw):
-   c=await b.new_context(viewport={'width':412,'height':915});q=await c.new_page();q.on('pageerror',lambda e:errors.append(str(e)))
+   c=await b.new_context(viewport={'width':412,'height':915});q=await c.new_page();q.on('pageerror',lambda e:(errors.append(str(e)),print('JSERROR:',str(e),flush=True)))
    raw={'version':3,'chapter':1,'events':[],'memories':[],'inspected':[],'quests':[],'choices':{},'dialogueVisits':{},'cutscenesSeen':[],'settings':{'sound':False},**raw}
    await q.add_init_script("if(!localStorage.getItem('life-story:save'))localStorage.setItem('life-story:save',"+json.dumps(json.dumps(raw))+')')
    await q.goto(BASE);await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();await q.wait_for_timeout(150);return c,q,raw
@@ -42,7 +42,7 @@ async def run():
   await q.locator('#chapters-button').click();await q.locator('[data-chapter="2"]').click();assert '기획 단계' in await q.locator('.modal').inner_text();await q.locator('.close-modal').click();await expected(q,2)
   passed.append('완료 후 재방문·기억 보존·후속 챕터 기획 표시');await c.close()
   c,q,_=await seeded({'storyScene':3,'stage':'home','x':620,'events':['mask-equipped','brother:paper']})
-  await q.keyboard.press('e');await q.wait_for_function('lifeStory.getSnapshot().overlay==="cutscene"')
+  await q.keyboard.press('e');await play_mini(q);await q.wait_for_function('lifeStory.getSnapshot().overlay==="cutscene"')
   expressions=[]
   while (await snap(q))['overlay']=='cutscene':
    await q.wait_for_function('!document.querySelector("#visual-next").disabled')

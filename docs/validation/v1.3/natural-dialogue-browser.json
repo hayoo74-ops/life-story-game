@@ -1,0 +1,42 @@
+{
+  "passed": [
+    "이동·점프 멀티터치, 해제 후 정지, 일시정지·재개",
+    "엄마 필수 대화, 가족 반복 대사·선택 반응, 사물만으로 진행 불가",
+    "형 전용 픽셀 캐릭터·선택·종이 접기 컷신·반복 대화·막간 저장 복원",
+    "기존 선택 탐험 맵과 배경 NPC·사물의 자연스러운 대화 유지",
+    "액션가면 22개 대사·행동, 부모 반응, 첫 관람 필수·재관람 건너뛰기",
+    "방문 파손 직접 목격, 문학적 독백·충격음·정적, 형 비참여",
+    "이혼 이후 순서 유지, 아버지와 식사 준비 대화·선택 후속 반응",
+    "조부모 필수 대화·공부 선택·공부 전후 대사·체벌 기억의 비특정 서술",
+    "12장면과 형제 막간 포함 전체 완료·기억 17개·형의 후기 대화",
+    "출처는 기록 메뉴에서만 확인, 가족·선택·반복 이력 저장, 모바일·가로·데스크톱 UI",
+    "오프라인 리소스와 최신 저장으로 이어하기"
+  ],
+  "javascript_exceptions": [],
+  "full_route": {
+    "memories": 17,
+    "choices": 24,
+    "dialogue_visits": {
+      "mother:1": 2,
+      "father:2": 2,
+      "mother:2": 1,
+      "brother:2": 2,
+      "neighbor:2": 1,
+      "friend:2": 1,
+      "shopkeeper:2": 1,
+      "fatherChanged:6": 1,
+      "fatherAlone:7": 2,
+      "daeyeonNeighbor:8": 1,
+      "grandma:9": 2,
+      "grandpa:9": 2,
+      "grandma:10": 1,
+      "grandpa:10": 1,
+      "brother:11": 1
+    }
+  },
+  "hero_beats": 22,
+  "checked_play_text_screens": 351,
+  "automated_seconds": 431,
+  "human_playtime_measured": false,
+  "real_android_device": false
+}
