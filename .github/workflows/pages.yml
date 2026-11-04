@@ -64,7 +64,7 @@ jobs:
         run: |
           npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > /tmp/life-story-preview.log 2>&1 &
           npm run test:pages
-      - name: Prepare private Pages artifact only for a requested deployment
+      - name: Prepare Pages artifact only for a requested deployment
         if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:

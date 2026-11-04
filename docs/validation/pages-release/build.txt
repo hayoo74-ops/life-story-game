@@ -1,0 +1,28 @@
+
+> life-story@1.3.0 build
+> vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 29 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/manifest.webmanifest                            0.49 kB
+dist/index.html                                      5.25 kB │ gzip:   2.06 kB
+dist/assets/index-BpkTt7qZ.css                      27.35 kB │ gzip:   6.94 kB
+dist/assets/workbox-window.prod.es5-BBnX5xw4.js      5.75 kB │ gzip:   2.36 kB
+dist/assets/index-DHGsqqB6.js                      165.25 kB │ gzip:  59.05 kB
+dist/assets/phaser-DFK5Ua9d.js                   1,208.06 kB │ gzip: 332.17 kB
+✓ built in 5.57s
+
+PWA v1.3.0
+mode      generateSW
+precache  12 entries (1381.56 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-2fbc6a65.js
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

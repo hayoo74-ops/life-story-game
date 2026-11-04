@@ -10,7 +10,7 @@
 
 공식 문서: [Pages 공개 범위](https://docs.github.com/en/pages/getting-started-with-github-pages/changing-the-visibility-of-your-github-pages-site).
 
-이전 Private 상태에서 Pages API가 403을 반환해 배포를 보류했던 기록은 [기존 준비 검증](PAGES_VALIDATION.md)에 남아 있습니다. 현재 Pages API 조회는 성공하며 Source=workflow를 확인했습니다. 실제 배포 결과와 접속 주소는 Actions의 성공한 deploy 환경 URL로 확인합니다.
+이전 Private 상태에서 Pages API가 403을 반환해 배포를 보류했던 기록은 [기존 준비 검증](PAGES_VALIDATION.md)에 남아 있습니다. 현재 Pages API 조회는 성공하며 Source=workflow를 확인했습니다. 실제 접속을 확인한 주소는 [게임 실행](https://hayoo74-ops.github.io/life-story-game/)이며 [실제 배포 검증](PAGES_RELEASE.md)에 결과를 기록했습니다.
 
 ## 경로와 로컬 실행
 
@@ -40,7 +40,7 @@ VITE_BASE_PATH=/ npm run build
 - 배포 직전 실제 저장소와 Pages 설정을 API로 조회합니다. Public 소스는 별도 승인 기록이 있어야 하며 사이트의 public 값도 확인돼야 합니다.
 - 사이트가 공개이면 `approve_public_site`를 명시적으로 체크해야 진행합니다. 확인된 비공개 사이트는 공개 동의 없이 배포할 수 있지만, 현재 개인 계정에서 제공되는 기능이라는 뜻은 아닙니다.
 - 조회 403/404, 알 수 없는 공개 범위, 별도 승인이 없는 Public 소스, 동의 없는 공개 사이트는 배포를 중단합니다. Pages를 자동 생성/활성화하거나 저장소 공개 범위를 바꾸지 않습니다.
-- 배포 요청 시에만 private Actions artifact를 1일 보관합니다. 실제 publish 단계는 공식 configure-pages/deploy-pages 액션을 사용하며 Pages/ID token 쓰기 권한은 배포 job에만 부여합니다.
+- 배포 요청 시에만 Actions artifact를 1일 보관합니다. 실제 publish 단계는 공식 configure-pages/deploy-pages 액션을 사용하며 Pages/ID token 쓰기 권한은 배포 job에만 부여합니다.
 
 현재 main의 자동 작업은 검증까지만 합니다. 공개 승인이 있어도 매 배포는 수동 요청하며, 요청한 커밋을 다시 빌드·검사한 뒤 배포합니다.
 

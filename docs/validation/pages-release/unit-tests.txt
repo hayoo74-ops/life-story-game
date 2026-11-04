@@ -1,0 +1,49 @@
+
+> life-story@1.3.0 test
+> node tests/run.js
+
+✔ current progresses and settings round trip together (3.276348ms)
+✔ v1 migration preserves exact backup, collected IDs and settings without asserting old story facts (0.413835ms)
+✔ invalid IDs, position and duplicates normalize safely (0.264279ms)
+✔ future or corrupt saves are never automatically overwritten (0.235415ms)
+✔ blocked storage and quota errors do not throw (0.21177ms)
+✔ resuming outside the optional exploration period returns to canonical scene (0.197558ms)
+✔ a failed v1 backup cannot cause the old save to be overwritten (0.32486ms)
+✔ v2 upgrades without resetting scene, inventory, position or settings (0.576981ms)
+✔ brother interlude resume preserves return point and dialogue/seen state (0.443109ms)
+✔ invalid optional history cannot throw or unlock new cutscenes (0.40422ms)
+✔ 12 scenes preserve family chronology and separate the brother interlude (0.299001ms)
+✔ every playable line has provenance internally and no report-like prose (1.873609ms)
+✔ hero scene has 20+ beats, varied actions, parents, exact remembered quotes (0.328857ms)
+✔ brother family exists but age, residence, personality, and witnessing remain unknown (0.348306ms)
+✔ NPC dialogue responds to revisit, phase and saved choices (0.528368ms)
+✔ main quest asks for family conversations, not just walking past objects (0.444872ms)
+✔ all object/portal references and metadata remain valid (0.329828ms)
+✔ door memory retains direct witness, no invented cause, no extra witness (0.186412ms)
+✔ future chapters remain design-only with all ten planning fields (0.546194ms)
+✔ v3 migration backs up exact bytes and preserves all existing progress (0.351221ms)
+✔ export/import round-trip includes choices, object state, history and mini progress (1.620597ms)
+✔ corrupt, malformed, wrong-scene, future and altered files never overwrite current save (2.378511ms)
+✔ raw legacy v1/v2/v3 files are recoverable and future chapters stay blocked (0.274715ms)
+✔ failed backup or write leaves original progress byte-for-byte intact (0.712957ms)
+✔ typewriter reveal and auto advance use one timer and pause remaining time (0.585084ms)
+✔ cancelled text and choices cannot advance from a stale timer (0.188064ms)
+✔ choice and mini traces never change historical progression or events (0.316688ms)
+✔ registry rejects broken chapters; planned chapters expose no playable stages (0.485122ms)
+✔ settings clamp volume and migrate large text while keeping mute consistent (0.153872ms)
+✔ metrics exclude pauses and bound the sample ring (0.324189ms)
+✔ malformed optional mini progress is bounded before it can affect gameplay (0.296607ms)
+✔ public Pages never deploys without explicit story publication consent (0.481707ms)
+✔ verified private Pages can deploy without approving public exposure (0.171689ms)
+✔ unapproved public or unknown source repository is rejected (0.272642ms)
+✔ unknown site visibility fails closed even if public exposure was approved (0.21904ms)
+✔ public source requires its own explicit approval independently of site approval (0.21224ms)
+✔ unknown source visibility is rejected even with source-publication approval (0.128374ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 30.428398

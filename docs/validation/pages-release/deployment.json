@@ -1,0 +1,14 @@
+{
+  "url": "https://hayoo74-ops.github.io/life-story-game/",
+  "workflow_run": "https://github.com/hayoo74-ops/life-story-game/actions/runs/41776578240",
+  "run_id": 41776578240,
+  "event": "workflow_dispatch",
+  "status": "completed",
+  "conclusion": "success",
+  "released_commit": "148a0e494690088a0ff0097a96da38c10086aa23",
+  "repository_visibility": "public",
+  "site_public": true,
+  "https_enforced": true,
+  "source": "workflow",
+  "game_changes_from_pages_baseline": []
+}
