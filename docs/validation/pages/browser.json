@@ -1,0 +1,18 @@
+{
+  "passed": [
+    "프로젝트 하위 경로에서 게임·JS·CSS·아이콘·manifest 로딩",
+    "412×915 모바일 터치 이동·점프 동시 입력·해제 후 정지",
+    "새 게임·오프닝·NPC 대화·선택지·기억 획득·다음 장면",
+    "집과 골목 왕복 이동·동적 장소 리소스 로딩",
+    "세로·가로 레이아웃과 터치 영역·조작 UI 겹침 방지",
+    "프로젝트 범위 PWA·오프라인 fallback·기존 키의 저장 복원"
+  ],
+  "javascript_exceptions": [],
+  "failed_http_responses": [],
+  "base_path": "/life-story-game/",
+  "service_worker_scope": "http://127.0.0.1:4180/life-story-game/",
+  "local_production_preview": true,
+  "publicly_deployed": false,
+  "real_galaxy_device": false,
+  "save_version": 4
+}

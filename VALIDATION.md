@@ -1,5 +1,7 @@
 # 챕터 1 v1.3 검증 기록
 
+GitHub Pages 경로·워크플로 추가의 최신 검증은 [Pages 검증 기록](docs/PAGES_VALIDATION.md)을 참조하세요. 아래는 게임 v1.3 구현 당시의 검증 기록입니다.
+
 검증일: 2026-11-04 (Asia/Seoul). Node 24.19.0, npm 11.9.0, Python 3.12.14, Chromium 154.0.8037.57 / Python Playwright 환경에서 검사했습니다. [v1.2 기록](docs/VALIDATION_V1_2.md)은 보존했습니다.
 
 ## 빌드와 단위 검사

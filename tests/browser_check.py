@@ -4,7 +4,7 @@ GAME_URL and CHROMIUM_PATH can override the defaults. No gameplay setters are us
 import asyncio,json,os,shutil,time,re
 from pathlib import Path
 from playwright.async_api import async_playwright
-BASE=os.environ.get('GAME_URL','http://localhost:4173/')
+BASE=os.environ.get('GAME_URL','http://localhost:4173/life-story-game/')
 OUT=Path('test-results');OUT.mkdir(exist_ok=True)
 async def snap(page):return await page.evaluate('lifeStory.getSnapshot()')
 async def walk(page,x):
