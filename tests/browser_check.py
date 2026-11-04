@@ -49,6 +49,10 @@ async def settle(page,answer=0):
    else:await page.locator('#dialogue').click()
   elif s['overlay']=='minigame':await play_mini(page,answer)
   elif s['overlay'] in ['interaction','transition']:await page.wait_for_timeout(200)
+  elif s['overlay']=='farewell':
+   if s['farewell']['phase']=='quote':await page.keyboard.press('Enter')
+   elif s['farewell']['phase']=='epilogue' and not s['farewell']['busy']:await page.locator('#farewell-next').click()
+   else:await page.wait_for_timeout(150)
   elif s['overlay']=='memory':await page.locator('#memory-close').click()
   elif s['overlay']=='cutscene':
    await page.locator('#visual-next').wait_for();await page.wait_for_function('!document.querySelector("#visual-next").disabled');await page.locator('#visual-next').click()
@@ -88,7 +92,7 @@ async def run():
   await walk(page,790);await page.keyboard.press('e');await page.wait_for_timeout(60);assert '사진 찾았나' in (await snap(page))['dialogue']['text'];await settle(page)
   await interact(page,170);await expected(page,2)
   await interact(page,620);await interact(page,620);await interact(page,790)
-  await interact(page,890);await expected(page,2);assert 'mask-equipped' not in (await snap(page))['events']
+  await interact(page,485);await expected(page,2);assert 'mask-equipped' not in (await snap(page))['events']
   check('엄마 필수 대화, 가족 반복 대사·선택 반응, 사물만으로 진행 불가')
   await interact(page,1300);assert (await snap(page))['stage']=='brother-room'
   assert any(e['character']=='brother' for e in (await snap(page))['entities'])
@@ -104,8 +108,8 @@ async def run():
   assert (await snap(page))['stage']=='brother-room' and (await snap(page))['choices']['brother-shape']=='비행기'
   await interact(page,1040);await expected(page,2,'home')
   check('형 전용 픽셀 캐릭터·선택·종이 접기 컷신·반복 대화·막간 저장 복원')
-  for x in [360,660,720,1070,1240]:await interact(page,x)
-  await interact(page,1410);assert (await snap(page))['stage']=='alley'
+  for x in [360,660,900,1050,1390]:await interact(page,x)
+  await interact(page,1510);assert (await snap(page))['stage']=='alley'
   for x in [430,920]:await interact(page,x)
   await interact(page,1550)
   for x in [420,780]:await interact(page,x)
@@ -113,7 +117,7 @@ async def run():
   for x in [480,820]:await interact(page,x)
   await interact(page,1150);await interact(page,850);await interact(page,1250);assert (await snap(page))['stage']=='home'
   check('기존 선택 탐험 맵과 배경 NPC·사물의 자연스러운 대화 유지')
-  await interact(page,890);await expected(page,3)
+  await interact(page,485);await expected(page,3)
   await walk(page,620);await page.keyboard.press('e');await page.wait_for_timeout(70)
   await play_mini(page)
   assert (await snap(page))['overlay']=='cutscene' and await page.locator('#visual-skip').count()==0

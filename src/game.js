@@ -1,9 +1,11 @@
 import Phaser from 'phaser';
 import { createBackdrops, createStageArt, createCharacters, createObjectArt, createParticleArt, createNarrativeArt, createInteractionArt } from './art.js';
 import { stageById } from './story.js';
+import {roomLayout,decorationBounds,ROOM_FLOOR} from './data/room-layouts.js';
+import {MOTHER_FAREWELL} from './data/farewell.js';
 import {FrameMetrics} from './systems/metrics.js';
 
-const FLOOR=458;
+const FLOOR=ROOM_FLOOR;
 export class LifeScene extends Phaser.Scene{
   constructor(bridge){super('Life');this.bridge=bridge;this.controls={left:false,right:false,jump:false};this.jumpQueued=false;this.nearest=null;this.stage=null;this.isTitle=true;this.metrics=new FrameMetrics();this.lastGrounded=-1000;this.jumpAt=-1000;this.effectAt=0;}
   create(){
@@ -18,7 +20,7 @@ export class LifeScene extends Phaser.Scene{
     this.rain=this.add.graphics().setScrollFactor(0).setDepth(11);this.atmosphere=this.add.rectangle(0,0,4096,540,0xad814e,0).setOrigin(0).setScrollFactor(0).setDepth(10);
     this.living=this.add.graphics().setDepth(1);this.objectEffects=this.add.graphics().setDepth(3);
     this.lampGlow=this.add.graphics().setScrollFactor(0).setDepth(12).setBlendMode(Phaser.BlendModes.ADD);
-    this.scale.on('resize',()=>{if(this.stage){this.cameras.main.setBounds(0,0,Math.max(this.stage.width,this.scale.width),540);if(this.isTitle)this.cameras.main.setScroll(Math.max(0,1075-this.scale.width*.65),0);}});
+    this.scale.on('resize',()=>{if(this.stage){this.cameras.main.setBounds(0,0,Math.max(this.stage.width,this.scale.width),540);if(this.visualActive&&this.visualKind==='farewell')this.cameras.main.setScroll(Math.max(0,MOTHER_FAREWELL.blocking.camera-this.scale.width/2),0);if(this.isTitle)this.cameras.main.setScroll(Math.max(0,1075-this.scale.width*.65),0);}});
     this.loadStage('alley',920,true);
     this.bridge.onReady(this);
   }
@@ -26,7 +28,7 @@ export class LifeScene extends Phaser.Scene{
   clearControls(){this.controls={left:false,right:false,jump:false};this.jumpQueued=false;this.jumpAt=-1000;this.input.keyboard.resetKeys();if(this.player?.body)this.player.setAccelerationX(0).setVelocityX(0);}
   loadStage(id,x,title=false){
     this.visualGeneration=(this.visualGeneration||0)+1;this.endInteraction();this.tweens.killAll();this.visualActive=false;this.clearControls();this.isTitle=title;this.nearest=null;this.bridge.onNearest(null);
-    this.cameras.main.setZoom(1);
+    this.cameras.main.resetFX();this.cameras.main.setZoom(1);this.farewellFX=null;
     this.obstacleCollider?.destroy();this.obstacleCollider=null;this.obstacles?.destroy(true);this.collider?.destroy();this.stageObjects?.forEach(o=>o.destroy());this.stageObjects=[];this.floor?.destroy();this.player?.destroy();this.playerName?.destroy();this.playerShadow?.destroy();this.entities=[];
     this.stage=stageById(id);const stage=this.stage;
     const add=o=>{this.stageObjects.push(o);return o;};
@@ -46,10 +48,11 @@ export class LifeScene extends Phaser.Scene{
       let sprite;let top;
       if(data.type==='npc'){
         add(this.add.ellipse(data.x,FLOOR+3,35,8,0x344e35,.17).setDepth(2));
-        sprite=add(this.add.sprite(data.x,FLOOR,'char-'+data.character,0).setScale(2).setOrigin(.5,1).setDepth(4));sprite.anims.play(data.character+'-idle');top=FLOOR-86;if(stage.variant==='family'&&['father','mother'].includes(data.id)){sprite.setCrop(0,0,32,32);sprite.setFlipX(data.id==='mother');}
+        sprite=add(this.add.sprite(data.x,FLOOR,'char-'+data.character,0).setScale(2).setOrigin(.5,1).setDepth(4));sprite.anims.play(data.character+'-idle');top=FLOOR-86;if(stage.variant==='family'&&['father','mother'].includes(data.id)){sprite.setCrop(0,0,32,32);sprite.setFlipX(false);}
       }else{
         const art=data.art||(data.type==='event'?'finish':'portal');
-        sprite=add(this.add.image(data.x,FLOOR,'obj-'+art).setOrigin(.5,1).setDepth(2));top=FLOOR-sprite.height-12;
+        const anchorY=data.mount==='wall'?data.y:FLOOR;
+        sprite=add(this.add.image(data.x,anchorY,'obj-'+art).setScale(data.scale||1).setOrigin(.5,1).setDepth(2));top=anchorY-sprite.displayHeight-12;
       }
       const label=add(this.add.text(data.x,top,data.label,{fontFamily:'sans-serif',fontSize:'11px',color:'#f9f2d9',backgroundColor:'#4b6247d9',padding:{left:7,right:7,top:4,bottom:4}}).setOrigin(.5,1).setDepth(7));
       const indicator=add(this.add.text(data.x,top-32,data.type==='npc'?'···':'✦',{fontFamily:'sans-serif',fontSize:'16px',color:'#fff1bc',stroke:'#63704b',strokeThickness:3}).setOrigin(.5,1).setDepth(7));
@@ -62,7 +65,7 @@ export class LifeScene extends Phaser.Scene{
     this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);
     this.cameras.main.setScroll(Phaser.Math.Clamp(x-this.scale.width/2,0,Math.max(0,stage.width-this.scale.width)),0);
     if(title){this.player.setX(1075);this.cameras.main.stopFollow();this.cameras.main.setScroll(Math.max(0,1075-this.scale.width*.65),0);this.playerName.setVisible(false);for(const e of this.entities){e.label.setVisible(false);e.indicator.setVisible(false);}}
-    else{this.bridge.onStage(stage);this.cameras.main.fadeIn(this.bridge.settings.reducedMotion?0:420,241,229,199);}
+    else{this.bridge.onStage(stage);this.cameras.main.fadeIn(this.bridge.settings.reducedMotion?0:420,...(stage.variant==='farewell'?[5,9,12]:[241,229,199]));}
     this.updateSettings();this.refreshMemories();this.syncObjects();
   }
 
@@ -96,6 +99,46 @@ export class LifeScene extends Phaser.Scene{
   }
   endMini(){if(this.visualActive&&['paper','brother','hero','study'].includes(this.visualKind))this.endVisual();}
 
+  layoutSnapshot(){
+    const room=roomLayout(this.stage);if(!room)return null;
+    return {stage:this.stage.id,floor:FLOOR,width:this.stage.width,windows:room.windows.map(v=>({...v,left:v.x,right:v.x+v.w,top:v.y,bottom:v.y+v.h})),decorations:decorationBounds(room),objects:this.entities.filter(e=>e.data.type!=='npc').map(e=>{const b=e.sprite.getBounds();return {id:e.data.id,mount:e.data.mount||'floor',left:b.left,right:b.right,top:b.top,bottom:b.bottom,depth:e.sprite.depth};}),playerDepth:this.player.depth};
+  }
+  beginFarewell(){
+    this.startVisual('farewell');const b=MOTHER_FAREWELL.blocking;
+    this.player.setPosition(b.child,FLOOR).setFlipX(false).setFrame(0);this.playerName.setVisible(false);
+    this.entities.forEach(e=>{e.label.setVisible(false);e.indicator.setVisible(false);e.sparkle?.setVisible(false);});
+    this.entities.find(e=>e.data.id==='farewell-mother')?.sprite.anims.stop();
+    this.entities.find(e=>e.data.id==='farewell-mother')?.sprite.setFlipX(true).setFrame(0);
+    this.cameras.main.setFollowOffset(0,0);this.cameras.main.setScroll(Math.max(0,b.camera-this.scale.width/2),0);
+    this.atmosphere.setFillStyle(0x172630,.25);
+    this.farewellDoorOpen=0;this.farewellFX=this.add.graphics().setDepth(1.5);this.visualObjects.push(this.farewellFX);
+    const frame=this.add.graphics().setDepth(2.1);frame.lineStyle(6,0x695e4d);frame.strokeRect(b.door-61,187,122,271);this.visualObjects.push(frame);
+  }
+  farewellBeat(phase){
+    const b=MOTHER_FAREWELL.blocking,mother=this.entities.find(e=>e.data.id==='farewell-mother')?.sprite,door=this.entities.find(e=>e.data.id==='farewell-door')?.sprite;
+    const reduced=this.bridge.settings.reducedMotion;
+    if(phase==='open'){
+      this.farewellDoorOpen=1;
+      door?.setOrigin(0,1).setX(b.door-60);
+      if(door)this.tweens.add({targets:door,scaleX:.12,duration:reduced?0:450});
+    }else if(phase==='leave'&&mother){
+      mother.setFlipX(false);const counter={step:0};
+      this.tweens.add({targets:counter,step:10,duration:reduced?120:MOTHER_FAREWELL.timing.walk,onUpdate:()=>mother.setFrame(2+Math.floor(counter.step)%4)});
+      this.tweens.add({targets:mother,x:b.outside,duration:reduced?120:MOTHER_FAREWELL.timing.walk,onComplete:()=>this.tweens.add({targets:mother,alpha:0,duration:reduced?40:MOTHER_FAREWELL.timing.leave})});
+    }else if(phase==='close'){
+      this.farewellDoorOpen=0;
+      if(door)this.tweens.add({targets:door,scaleX:1,duration:reduced?0:MOTHER_FAREWELL.timing.close});
+    }
+  }
+  drawFarewellWeather(time){
+    if(!this.farewellFX?.active)return;
+    const g=this.farewellFX,b=MOTHER_FAREWELL.blocking;g.clear();
+    g.fillStyle(0x87939a);g.fillRect(b.door-52,194,104,264);g.fillStyle(0x667883);g.fillRect(b.door-52,360,104,98);
+    g.lineStyle(1,0xc5d0d4,.55);
+    const t=this.bridge.settings.reducedMotion?0:time;
+    for(let i=0;i<26;i++){const x=b.door-46+(i*27+t*.02)%90,y=202+(i*31+t*.24)%240;g.lineBetween(x,y,x-4,Math.min(456,y+13));}
+    if(this.farewellDoorOpen){g.fillStyle(0x9aafbd,.15);g.fillTriangle(b.door-49,455,b.door+50,455,b.child-45,455-70);}
+  }
   refreshMemories(){for(const e of this.entities||[]){if(e.sparkle)e.sparkle.setVisible(!this.bridge.state?.inspected.includes(e.data.id));}}
   startVisual(kind){
     this.visualGeneration=(this.visualGeneration||0)+1;this.visualActive=true;this.visualKind=kind;this.visualObjects=[];
@@ -122,7 +165,7 @@ export class LifeScene extends Phaser.Scene{
     if(action==='door-impact'){await this.playVisual('door');return;}
     let duration=0;
     if(action==='watch-tv'){
-      const glow=add(this.add.rectangle(710,382,48,34,0xb9d7b0,.22).setDepth(3));
+      const glow=add(this.add.rectangle(actor('tv')?.x||900,382,48,34,0xb9d7b0,.22).setDepth(3));
       if(!reduced)this.tweens.add({targets:glow,alpha:.65,yoyo:true,repeat:-1,duration:450});
       for(const id of ['father','mother']){const p=actor(id);if(p)this.tweens.add({targets:p,y:FLOOR-2,yoyo:true,duration:240});}
       duration=260;
@@ -137,7 +180,7 @@ export class LifeScene extends Phaser.Scene{
       this.player.setVisible(false);this.playerName.setVisible(false);this.playerShadow.setVisible(false);duration=210;
     }else if(action==='tv-cutaway'){
       this.player.setVisible(false);this.cameras.main.setZoom(reduced?1:1.25);
-      this.cameras.main.setScroll(Phaser.Math.Clamp(720-this.scale.width/2,0,this.stage.width-this.scale.width),0);
+      this.cameras.main.setScroll(Phaser.Math.Clamp((actor('tv')?.x||900)-this.scale.width/2,0,this.stage.width-this.scale.width),0);
       duration=160;
     }else if(action==='family-laugh'){
       const laugh=add(this.add.text(650,338,'하 하 하',{fontSize:'16px',color:'#fff0bd',stroke:'#7c8060',strokeThickness:3}).setDepth(14));
@@ -206,16 +249,16 @@ export class LifeScene extends Phaser.Scene{
   }
   endVisual(){
     this.visualGeneration++;this.tweens.killAll();for(const o of this.visualObjects||[])o.destroy();this.visualObjects=[];
-    this.visualActive=false;this.player.setVisible(true).setAngle(0);this.playerName.setVisible(true);this.playerShadow.setVisible(true);
+    this.farewellFX=null;this.visualActive=false;this.player.setVisible(true).setAngle(0);this.playerName.setVisible(true);this.playerShadow.setVisible(true);
     if(this.visualStart)this.player.setPosition(this.visualStart.x,FLOOR);
-    for(const e of this.entities){if(e.data.type!=='npc')continue;e.sprite.setPosition(e.data.x,FLOOR).setAngle(0).setFrame(0);e.label.setX(e.data.x);if(this.stage.variant==='family'&&['father','mother'].includes(e.data.id))e.sprite.setCrop(0,0,32,32);}
+    for(const e of this.entities){if(e.data.type!=='npc')continue;e.sprite.setPosition(e.data.x,FLOOR).setAlpha(1).setAngle(0).setFrame(0);e.label.setX(e.data.x);if(this.stage.variant==='family'&&['father','mother'].includes(e.data.id))e.sprite.setCrop(0,0,32,32);}
     if(this.visualKind==='door')this.entities.find(e=>e.data.id==='door')?.sprite.setTexture('obj-broken');
     this.cameras.main.setZoom(1);this.cameras.main.setFollowOffset(0,0);this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);
   }
   updateSettings(){
     if(!this.atmosphere)return;const interior=['interior','shop'].includes(this.stage?.kind);const a=this.bridge.settings.ambience;const rested=Object.entries(this.bridge.state?.objectStates||{}).some(([key,v])=>key===this.stage?.id+':bed'&&v.naps%2===1);
-    this.atmosphere.setFillStyle(a==='rain'||a==='night'?0x253c59:0x9a623e,interior?(rested?.12:0):(a==='night'?.48:a==='dusk'?.22:a==='rain'?.18:0));
-    if(a==='day')this.rain.clear();if(this.player&&!this.isTitle)this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);
+    this.atmosphere.setFillStyle(a==='rain'||a==='night'?0x253c59:0x9a623e,interior?(this.visualActive&&this.visualKind==='farewell'?.25:rested?.12:0):(a==='night'?.48:a==='dusk'?.22:a==='rain'?.18:0));
+    if(a==='day')this.rain.clear();if(this.player&&!this.isTitle&&!this.visualActive)this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);
   }
   update(time,delta){
     if(!this.player)return;this.bridge.onTick?.(delta);const blocked=this.isTitle||this.bridge.locked();
@@ -259,11 +302,12 @@ export class LifeScene extends Phaser.Scene{
     if(time-this.effectAt<80)return;this.effectAt=time;
     this.living.clear();this.objectEffects.clear();
     if(!this.bridge.settings.reducedMotion){
-      if(interior){this.living.fillStyle(0xf4ead0,.55);const cx=300+(time*.008)%140;this.living.fillRect(cx,204,20,5);this.living.fillRect(cx+6,200,10,5);this.living.lineStyle(2,0x737b56);const a=time/10000;this.living.lineBetween(898,172,898+Math.sin(a)*10,172-Math.cos(a)*10);}
+      if(interior){const room=roomLayout(this.stage);this.living.fillStyle(0xf4ead0,.45);for(const v of room?.windows||[]){const cx=v.x+10+(time*.008)%(v.w-40);this.living.fillRect(cx,v.y+23,20,5);this.living.fillRect(cx+6,v.y+19,10,5);}if(room?.clock){const {x,y}=room.clock,a=time/10000;this.living.lineStyle(2,0x737b56);this.living.lineBetween(x,y,x+Math.sin(a)*10,y-Math.cos(a)*10);}}
       else{this.living.fillStyle(0x9cab74,.6);for(let i=0;i<8;i++)this.living.fillRect(170+i*183+Math.sin(time*.001+i)*8,365+Math.sin(time*.002+i)*14,5,2);}
     }
     const drawer=this.entities.find(e=>e.data.object==='drawer');if(drawer&&this.bridge.state?.objectStates?.[this.stage.id+':'+drawer.data.id]?.opened){this.objectEffects.fillStyle(0xd0b584);this.objectEffects.fillRect(drawer.data.x-14,FLOOR-42,56,20);this.objectEffects.lineStyle(2,0x7f7958);this.objectEffects.strokeRect(drawer.data.x-14,FLOOR-42,56,20);}
     const tv=this.entities.find(e=>e.data.object==='tv');if(tv){const on=this.bridge.state?.objectStates?.[this.stage.id+':tv']?.on!==false;this.objectEffects.fillStyle(on?0xb9d5ae:0x344739,on?.16+(this.bridge.settings.reducedMotion?0:Math.sin(time*.012)*.07):1);this.objectEffects.fillRect(tv.data.x-31,FLOOR-95,45,36);}
+    this.drawFarewellWeather(time);
     this.rain.clear();this.lampGlow.clear();
     if(ambience==='rain'&&!interior){
       this.rain.lineStyle(1,0xe0e9d8,.38);for(let i=0;i<65;i++){const x=(i*73.7+time*.065)%(this.scale.width+80)-30;const y=(i*47.3+time*.29)%540;this.rain.lineBetween(x,y,x-5,y+13);}
@@ -273,7 +317,7 @@ export class LifeScene extends Phaser.Scene{
       for(let i=0;i<35;i++){this.rain.fillStyle(0xf9edcf,.25+(i%3)*.16);this.rain.fillRect((i*137.3)%this.scale.width,36+(i*71)%150,2,2);}
     }
     if(interior||['dusk','night','rain'].includes(ambience)){
-      let points=interior?(this.stage.kind==='interior'?[[720,172]]:[[90,143],[420,143],[750,143],[1080,143]]):this.entities.filter(e=>e.data.art==='lamp').map(e=>[e.data.x+24,295]);
+      let points=interior?(this.stage.kind==='interior'?(roomLayout(this.stage)?.light?[[roomLayout(this.stage).light.x,roomLayout(this.stage).light.y]]:[]):[[90,143],[420,143],[750,143],[1080,143]]):this.entities.filter(e=>e.data.art==='lamp').map(e=>[e.data.x+24,295]);
       if(this.stage.kind==='town')points.push([589,299],[1484,299]);
       for(const [worldX,y]of points){const x=worldX-this.cameras.main.scrollX;for(let i=3;i>0;i--){this.lampGlow.fillStyle(0xf9d591,.025+(3-i)*.015);this.lampGlow.fillCircle(x,y,18+i*12);}}
     }

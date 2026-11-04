@@ -60,7 +60,7 @@ async def run():
   await interact(page,790);assert (await snap(page))['dialogueVisits']['mother:1']==1
   await interact(page,170);await expected(page,2,'home');assert 'family' in (await snap(page))['memories']
   check('새 게임·오프닝·NPC 대화·선택지·기억 획득·다음 장면')
-  await interact(page,1410);assert (await snap(page))['stage']=='alley'
+  await interact(page,1510);assert (await snap(page))['stage']=='alley'
   await interact(page,70);await expected(page,2,'home')
   check('집과 골목 왕복 이동·동적 장소 리소스 로딩')
   for width,height in [(412,915),(915,412)]:

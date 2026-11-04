@@ -37,7 +37,7 @@ export function normalizeSave(raw){
  const choices=Object.fromEntries(Object.entries(raw.choices||{}).filter(([key,value])=>key!=='__proto__'&&typeof value==='string'));
  return {...freshSave(),chapter,storyScene,stage,x:Number.isFinite(raw.x)?Math.max(40,Math.min(width-40,raw.x)):300,
   dialogueVisits:Object.fromEntries(Object.entries(raw.dialogueVisits||{}).filter(([k,v])=>k!=='__proto__'&&Number.isInteger(v)&&v>=0).map(([k,v])=>[k,Math.min(v,100000)])),
-  cutscenesSeen:strings([...strings(raw.cutscenesSeen),...(raw.version===2?strings(raw.events).filter(e=>['story:hero','story:door','mask-equipped'].includes(e)).map(e=>({'story:hero':'hero','story:door':'door','mask-equipped':'mask'})[e]):[])]).filter(k=>/^(hero|door|mask|brother)(:v1\.2)?$/.test(k)),
+  cutscenesSeen:strings([...strings(raw.cutscenesSeen),...(raw.version===2?strings(raw.events).filter(e=>['story:hero','story:door','mask-equipped'].includes(e)).map(e=>({'story:hero':'hero','story:door':'door','mask-equipped':'mask'})[e]):[])]).filter(k=>/^(hero|door|mask|brother)(:v1\.2)?$/.test(k)||k==='farewell:v1.4'),
   interludeReturn:interlude?{stage:sceneById(storyScene,chapter).stage,x:Number.isFinite(raw.interludeReturn?.x)?Math.max(40,Math.min(catalog.stage(sceneById(storyScene,chapter).stage).width-40,raw.interludeReturn.x)):300}:null,
   objectStates:Object.fromEntries(safeKeys(raw.objectStates).map(([k,v])=>[k,{on:v?.on!==false,opened:v?.opened===true,naps:Math.floor(clamp(v?.naps,0,999,0))}])),
   minigames:Object.fromEntries(safeKeys(raw.minigames).filter(([k])=>['paper','hero','study'].includes(k)).map(([k,v])=>[k,normalizeMini(k,v)])),

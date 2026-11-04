@@ -1,3 +1,4 @@
+import {roomLayout,ROOM_FLOOR} from './data/room-layouts.js';
 // 모든 그래픽은 이 프로젝트에서 직접 그리는 오리지널 코드 기반 픽셀아트입니다.
 // 캐릭터 교체: 동일한 32×40 프레임 규격의 시트를 로드하고 createCharacters를 대체하세요.
 const PALETTE={outline:'#394b40',cream:'#f2deb0',stone:'#a7ad8c',leaf:'#6d875b',darkleaf:'#48684b',wood:'#936946'};
@@ -63,21 +64,7 @@ export function createStageArt(scene,stage){
   const key='stage-'+stage.id;if(scene.textures.exists(key))return key;
   const {c,g}=surface(stage.width,540);const w=stage.width;
   if(stage.kind==='interior'){
-    rect(g,0,0,w,458,'#e4d4ab');rect(g,0,0,w,104,'#c1b68c');rect(g,0,101,w,9,'#907e5a');
-    for(let x=8;x<w;x+=26)for(let y=128;y<435;y+=32){rect(g,x,y,2,4,'#c4bd9270');rect(g,x+4,y+5,4,2,'#c4bd9270');}
-    for(let x=55;x<w;x+=455){rect(g,x,100,12,354,'#c0aa7b');rect(g,x+3,104,3,349,'#dbbc87');}
-    // Large, sunlit window and linen curtains.
-    rect(g,280,172,192,175,'#8a9475');rect(g,289,180,175,159,'#c5d7b7');poly(g,[[289,285],[333,242],[376,279],[420,225],[464,274],[464,339],[289,339]],'#a6bb94');
-    rect(g,373,180,7,159,'#d3c594');rect(g,289,253,175,6,'#d3c594');rect(g,277,338,201,9,'#a48a60');
-    rect(g,270,165,17,182,'#eee3c1');rect(g,455,165,22,182,'#e7dcb5');for(let x=273;x<286;x+=6)rect(g,x,169,2,172,'#d3caa5');for(let x=460;x<477;x+=7)rect(g,x,169,2,172,'#c7bf9b');
-    poly(g,[[300,347],[455,347],[617,456],[337,456]],'#f4deaa70');
-    rect(g,607,175,80,72,'#a28c63');rect(g,613,181,68,60,'#e7d4a8');text(g,'家',647,225,28,'#7e8860');
-    // Clock, warm hanging light, floor cushions and folded blanket.
-    rect(g,878,151,40,44,'#8e8059');rect(g,884,157,28,30,'#f2e7c3');line(g,[[898,162],[898,173],[908,179]],'#737b56',2);
-    rect(g,720,109,3,43,'#8e8059');poly(g,[[703,150],[741,150],[753,171],[690,171]],'#a99863');rect(g,700,171,44,6,'#f1d391');
-    rect(g,440,437,160,16,'#adac86');rect(g,449,437,140,4,'#c3bd92');rect(g,610,426,58,23,'#a4ac85');rect(g,615,422,48,9,'#c2c3a0');
-    rect(g,1164,187,118,270,'#9a855f');rect(g,1173,196,100,258,'#aa9670');rect(g,1183,211,79,128,'#8f9d84');rect(g,1188,216,69,118,'#b8bea0');rect(g,1183,348,79,91,'#b4a078');rect(g,1249,351,5,6,'#726c4f');
-    ground(g,w,true);rect(g,440,468,231,35,'#b19b7b');rect(g,446,472,217,27,'#c5b391');for(let x=452;x<657;x+=14)rect(g,x,475,4,22,'#a9937170');
+    drawRoom(g,stage);
   }else if(stage.kind==='shop'){
     rect(g,0,0,w,458,'#e1d6ac');rect(g,0,85,w,24,'#8c9c75');rect(g,0,109,w,5,'#c1bb90');
     // Cubby shelves full of distinct stationery.
@@ -119,26 +106,6 @@ export function createStageArt(scene,stage){
     ground(g,w);const r=rng(123);for(let i=0;i<w/24;i++){const x=r()*w;rect(g,x,450,3,7,'#7b905e');if(i%5===0)rect(g,x-2,448,6,3,'#e6d4a0');}
     // A subtle path line, not a blocking boundary.
     rect(g,0,495,w,2,'#ded1ad80');
-  }
-  if(stage.variant==='father-only'){
-    rect(g,0,0,w,456,'#c2c6b5');rect(g,0,90,w,10,'#7e8a76');
-    for(let x=30;x<w;x+=180){rect(g,x,109,4,340,'#afb7a2');}
-    windowArt(g,260,181,134,150);rect(g,228,336,197,9,'#8c9a82');
-    text(g,'아버지와 단둘이',w/2,140,16,'#5a6a59');ground(g,w,true);
-  }else if(stage.variant==='present'&&stage.kind==='interior'){
-    rect(g,0,0,w,457,'#bdc8bd');rect(g,0,100,w,9,'#7d9484');
-    for(let x=60;x<w;x+=370){windowArt(g,x,170,160,170);rect(g,x-8,342,180,7,'#7d9484');}
-    rect(g,480,394,330,14,'#8b8066');rect(g,500,407,10,50,'#687b68');rect(g,780,407,10,50,'#687b68');
-    for(let x=860;x<1120;x+=26){rect(g,x,270,18,100-(x%4)*9,['#7c9987','#9e9f7e','#a48876'][x%3]);}
-    rect(g,850,368,290,12,'#788c78');ground(g,w,true);
-  }else if(stage.variant==='brother'){
-    rect(g,0,0,w,456,'#bcc5ba');for(let x=40;x<w;x+=250){rect(g,x,139,180,254,'#ece6cc');line(g,[[x+90,139],[x+90,393]],'#c6cdb6',2);line(g,[[x,266],[x+180,266]],'#d0d2bd',2);}
-    rect(g,300,394,520,12,'#a99c76');rect(g,322,406,12,50,'#7f886d');rect(g,780,406,12,50,'#7f886d');ground(g,w,true);
-  }else if(stage.variant==='study'){
-    rect(g,0,110,w,340,'#77876c23');text(g,'대연동 · 공부방',w/2,145,16,'#647259');
-    rect(g,40,200,120,206,'#9b936f');for(let y=220;y<397;y+=55){for(let x=48;x<145;x+=16)rect(g,x,y,10,35,['#8d9a77','#b39c78','#729087'][x%3]);rect(g,44,y+37,112,5,'#817c5b');}
-  }else if(['tension','changed','interval'].includes(stage.variant)){
-    rect(g,0,0,w,540,stage.variant==='interval'?'#a5906a18':'#314b6236');
   }
   if(stage.variant==='daeyeon'){
     building(g,130,411,220,265,{wall:'#c1cbbb',roofColor:'#657e70',floors:3});
@@ -237,7 +204,7 @@ export function createParticleArt(scene){
 }
 
 export function createNarrativeArt(scene){
- const specs={mask:[80,108],sofa:[340,98],shelf:[114,150],window:[122,140],calendar:[80,132],album:[100,100],chairs:[125,85],notebook:[80,92],workbook:[88,105],eraser:[70,80],cane:[70,132],clock:[80,140],paper:[120,95],door:[120,270],broken:[120,270]};
+ const specs={mask:[80,70],sofa:[340,98],shelf:[114,220],window:[122,140],calendar:[80,132],album:[100,100],chairs:[125,85],notebook:[80,92],workbook:[88,105],eraser:[70,80],cane:[70,132],clock:[80,140],paper:[120,95],door:[120,270],broken:[120,270]};
  for(const [key,[w,h]]of Object.entries(specs)){
   const {c,g}=surface(w,h);const r=(x,y,a,b,col)=>rect(g,x,y,a,b,col);
   if(key==='paper'){r(4,64,112,8,'#a39674');r(12,72,8,23,'#7e8068');r(101,72,8,23,'#7e8068');r(19,22,78,40,'#eee5bf');line(g,[[57,23],[57,61]],'#b7c1a2',2);for(let i=0;i<3;i++)r(92+i*6,7+i*3,4,32,['#a27964','#729585','#d2b578'][i]);}
@@ -246,11 +213,11 @@ export function createNarrativeArt(scene){
    if(key==='door'){r(23,25,72,98,'#b5b899');r(22,137,73,100,'#c0ad82');r(91,141,7,7,'#6f7151');}
    else{poly(g,[[21,23],[91,17],[77,67],[94,107],[63,133],[83,175],[51,225],[23,235],[38,172],[21,137],[39,83]],'#455347');line(g,[[80,23],[62,73],[89,106],[53,133],[67,181],[45,229]],'#6e7055',6);r(15,257,70,10,'#8d7955');}
   }else if(key==='mask'){
-   r(10,87,60,8,'#a28b64');r(17,95,8,13,'#837b59');r(57,95,8,13,'#837b59');r(17,28,48,37,'#487965');r(13,35,56,23,'#639178');r(20,39,14,9,'#efd5a0');r(47,39,14,9,'#efd5a0');r(36,20,8,14,'#e5cc7e');r(30,25,20,6,'#e5cc7e');line(g,[[13,44],[3,35],[4,60],[17,56]],'#bec2a1',2);
+   r(36,3,8,4,'#8c7e5e');line(g,[[40,7],[35,23]],'#b0a589',2);r(17,28,48,37,'#487965');r(13,35,56,23,'#639178');r(20,39,14,9,'#efd5a0');r(47,39,14,9,'#efd5a0');r(36,20,8,14,'#e5cc7e');r(30,25,20,6,'#e5cc7e');line(g,[[13,44],[3,35],[4,60],[17,56]],'#bec2a1',2);
   }else if(key==='sofa'){
    r(12,20,314,65,'#849677');r(25,8,286,55,'#b2b99a');r(7,46,26,37,'#8b9d7e');r(310,46,25,37,'#8b9d7e');r(33,57,275,21,'#c0c3a1');for(let x=41;x<300;x+=88)r(x,60,78,15,'#a5b28f');r(28,82,12,16,'#6b7c5e');r(298,82,12,16,'#6b7c5e');
   }else if(key==='shelf'){
-   r(4,0,106,h,'#9b8b63');for(let y=14;y<130;y+=41){for(let x=12;x<102;x+=15){r(x,y,10,30,['#b69b77','#82977b','#8aa49c'][x%3]);r(x+2,y+4,6,2,'#e9d9ad');}r(9,y+32,97,6,'#786f50');}
+   r(4,0,106,h,'#9b8b63');for(let y=14;y<h-32;y+=41){for(let x=12;x<102;x+=15){r(x,y,10,30,['#b69b77','#82977b','#8aa49c'][x%3]);r(x+2,y+4,6,2,'#e9d9ad');}r(9,y+32,97,6,'#786f50');}
   }else if(key==='window'){windowArt(g,8,2,106,126);}
   else if(key==='chairs'){
    for(const x of [3,73]){r(x,13,46,40,'#9e946e');r(x+3,16,40,34,'#b5b294');r(x-2,51,52,9,'#8b8761');r(x+3,60,6,25,'#797c5e');r(x+37,60,6,25,'#797c5e');}
@@ -272,9 +239,34 @@ export function createNarrativeArt(scene){
 }
 
 export function createInteractionArt(scene){
- for(const id of ['drawer','bed']){const {c,g}=surface(id==='bed'?136:72,72);
+ for(const id of ['drawer','bed','shoes']){const {c,g}=surface(id==='bed'?136:id==='shoes'?80:72,id==='shoes'?94:72);
+  if(id==='shoes'){rect(g,3,5,74,85,'#84735b');rect(g,8,10,64,73,'#ae9470');for(const y of [28,56]){rect(g,7,y+17,66,5,'#76654d');for(const x of [15,45]){rect(g,x,y,23,11,'#626857');rect(g,x+9,y-5,12,7,'#717866');rect(g,x,y+10,25,3,'#c4b38e');}}rect(g,9,86,7,8,'#6f6953');rect(g,64,86,7,8,'#6f6953');scene.textures.addCanvas('obj-'+id,c);continue;}
   if(id==='drawer'){rect(g,3,7,66,61,'#735f49');rect(g,7,11,58,53,'#b49b6c');for(let y=15;y<60;y+=23){rect(g,11,y,50,19,'#d0b584');rect(g,31,y+7,10,4,'#7f7958');}rect(g,2,5,68,5,'#e0c798');}
   else{rect(g,4,26,7,46,'#8d795b');rect(g,125,37,7,35,'#8d795b');rect(g,10,43,116,22,'#bba479');rect(g,13,34,109,20,'#d2c7a0');rect(g,16,30,29,13,'#efe4c5');rect(g,52,34,70,20,'#839e91');for(let x=57;x<120;x+=14)rect(g,x,35,3,17,'#b3c5ab');}
   scene.textures.addCanvas('obj-'+id,c);
+ }
+}
+
+// Single source for interior architecture; never paint a second copy of an interactive shelf.
+function drawRoom(g,stage){
+ const room=roomLayout(stage),p=room.palette,w=stage.width,floor=ROOM_FLOOR;
+ rect(g,0,0,w,floor,p.wall);rect(g,0,0,w,106,p.upper);rect(g,0,103,w,8,p.beam);
+ for(let x=18;x<w;x+=46)for(let y=135;y<430;y+=38){rect(g,x,y,2,3,'#8e7c5b18');}
+ for(let x=52;x<w;x+=455){rect(g,x,111,8,335,p.beam+'38');}
+ rect(g,0,440,w,18,p.skirt);
+ for(const v of room.windows){
+  windowArt(g,v.x,v.y,v.w,v.h);rect(g,v.x-10,v.y-7,v.w+20,5,p.beam);
+  rect(g,v.x-12,v.y,12,v.h+10,'#ece0bd');rect(g,v.x+v.w,v.y,13,v.h+10,'#d9ceb0');
+  for(let y=v.y+6;y<v.y+v.h;y+=12){rect(g,v.x-9,y,3,7,'#bfba9d');rect(g,v.x+v.w+4,y,3,7,'#b4b69b');}
+ }
+ for(const f of room.frames){rect(g,f.x,f.y,f.w,f.h,'#9c8867');rect(g,f.x+5,f.y+5,f.w-10,f.h-10,'#d9c8a2');line(g,[[f.x+13,f.y+f.h-15],[f.x+f.w/2,f.y+18],[f.x+f.w-12,f.y+f.h-15]],'#9eab88',4);}
+ if(room.clock){const {x,y}=room.clock;rect(g,x-20,y-20,40,43,'#8c785c');rect(g,x-15,y-15,30,31,'#eee2be');line(g,[[x,y-10],[x,y],[x+9,y+6]],'#6c775d',2);}
+ const lamp=room.light;if(lamp){rect(g,lamp.x-1,110,3,lamp.y-110,'#827252');poly(g,[[lamp.x-23,lamp.y],[lamp.x+23,lamp.y],[lamp.x+14,lamp.y-17],[lamp.x-14,lamp.y-17]],'#aa9570');rect(g,lamp.x-17,lamp.y,34,5,'#e5d09d');}
+ ground(g,w,true);
+ for(const f of room.furniture){const x=f.x-f.w/2,y=floor-f.h;
+  if(f.kind==='bench'){rect(g,x+5,y+12,f.w-10,f.h-17,'#8f9b7b');rect(g,x+14,y,f.w-28,45,'#aab395');rect(g,x+12,y+f.h-30,f.w-24,16,'#c1c3a4');rect(g,x+12,floor-10,8,10,'#6d765c');rect(g,x+f.w-20,floor-10,8,10,'#6d765c');}
+  else if(f.kind==='shelf'){rect(g,x,y,f.w,f.h,'#938066');for(let yy=y+10;yy<floor-20;yy+=48){for(let xx=x+9;xx<x+f.w-12;xx+=15)rect(g,xx,yy,10,32,'#9baf92');rect(g,x+5,yy+35,f.w-10,5,'#6f7159');}}
+  else if(f.kind==='table'){rect(g,x,y,f.w,9,'#bcaa7f');rect(g,x+8,y+9,8,f.h-9,'#82775b');rect(g,x+f.w-16,y+9,8,f.h-9,'#82775b');rect(g,x+25,y-5,25,4,'#dfd8bc');rect(g,x+f.w-46,y-8,13,7,'#9cab92');}
+  else{rect(g,x,y,f.w,f.h,'#796d58');rect(g,x+5,y+5,f.w-10,f.h-10,'#a08b6c');rect(g,x+8,y+f.h/2,f.w-16,4,'#655f4f');}
  }
 }

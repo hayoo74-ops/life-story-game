@@ -1,0 +1,23 @@
+
+> life-story@1.4.0 build
+> vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 33 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/manifest.webmanifest                            0.49 kB
+dist/index.html                                      5.25 kB │ gzip:   2.06 kB
+dist/assets/index-BB7tJX5N.css                      29.38 kB │ gzip:   7.33 kB
+dist/assets/workbox-window.prod.es5-BBnX5xw4.js      5.75 kB │ gzip:   2.36 kB
+dist/assets/index-JdzLfEJe.js                      177.72 kB │ gzip:  62.80 kB
+dist/assets/phaser-DFK5Ua9d.js                   1,208.06 kB │ gzip: 332.17 kB
+✓ built in 4.74s
+
+PWA v1.3.0
+mode      generateSW
+precache  12 entries (1395.72 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-2fbc6a65.js

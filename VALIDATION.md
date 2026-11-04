@@ -1,5 +1,7 @@
 # 챕터 1 v1.3 검증 기록
 
+최신 v1.4 수정 결과는 [기억·실내 배치·현관 작별 검증](docs/CHAPTER_POLISH_V1_4.md)을 참조하세요. 아래는 이전 v1.3 검증 기록입니다.
+
 실제 GitHub Pages 배포·외부 모바일 브라우저 검증은 [Pages 배포 기록](docs/PAGES_RELEASE.md), 이전 준비 단계는 [Pages 경로 검증](docs/PAGES_VALIDATION.md)을 참조하세요. 아래는 게임 v1.3 구현 당시의 검증 기록입니다.
 
 검증일: 2026-11-04 (Asia/Seoul). Node 24.19.0, npm 11.9.0, Python 3.12.14, Chromium 154.0.8037.57 / Python Playwright 환경에서 검사했습니다. [v1.2 기록](docs/VALIDATION_V1_2.md)은 보존했습니다.

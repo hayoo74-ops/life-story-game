@@ -8,7 +8,7 @@ async def run():
  async with async_playwright() as p:
   b=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH') or shutil.which('chromium'),headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader'])
   async def seed(**extra):
-   raw={'version':3,'chapter':1,'storyScene':2,'stage':'home','x':720,'events':[],'memories':[],'quests':[],'inspected':[],'choices':{},'settings':{'sound':False,'textSpeed':0},**extra}
+   raw={'version':3,'chapter':1,'storyScene':2,'stage':'home','x':900,'events':[],'memories':[],'quests':[],'inspected':[],'choices':{},'settings':{'sound':False,'textSpeed':0},**extra}
    c=await b.new_context(viewport={'width':412,'height':915},accept_downloads=True);q=await c.new_page();q.on('pageerror',lambda e:(errors.append(str(e)),print('JSERROR:',str(e),flush=True)))
    await q.add_init_script("if(!localStorage.getItem('life-story:save'))localStorage.setItem('life-story:save',"+json.dumps(json.dumps(raw))+')')
    await q.goto(BASE);await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();await q.wait_for_timeout(150);return c,q
@@ -27,7 +27,7 @@ async def run():
   await settle(q);await q.reload();await q.wait_for_selector('#loading',state='hidden');s=await snap(q);assert s['settings']['textSize']=='xlarge' and s['settings']['highContrast'] and s['settings']['musicVolume']==.15
   check('타이핑·정지·기록·Enter 선택·자동 진행·큰 글씨·설정 복원');await c.close()
   c,q=await seed()
-  await interact(q,720);assert (await snap(q))['objectStates']['home:tv']['on'] is False
+  await interact(q,900);assert (await snap(q))['objectStates']['home:tv']['on'] is False
   await q.reload();await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();assert (await snap(q))['objectStates']['home:tv']['on'] is False
   await interact(q,1150);assert (await snap(q))['objectStates']['home:drawer']['opened']
   await interact(q,790);await interact(q,790);await q.keyboard.press('e');assert '서랍' in (await snap(q))['dialogue']['text'];await settle(q)

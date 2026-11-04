@@ -33,7 +33,7 @@ export const FACTS={
   study:'조부모님은 공부에 매우 엄격했습니다. 재원은 집에서 공부를 많이 해야 했습니다. 문제를 여러 개 틀리면 심하게 혼났고, 회초리로 체벌을 받기도 했습니다.',
   cane:'회초리 체벌은 실제로 제공된 경험입니다. 구체적인 횟수, 욕설, 상해는 제공되지 않았습니다. 모든 일상이 체벌이었다고 확대하지 않으며 체벌을 좋은 교육 방식으로 정당화하지 않습니다.'
 };
-// 실제 기억의 두 직접 대사입니다. 다른 일상 대사는 fictional_dialogue로 별도 관리합니다.
+// 액션가면의 두 직접 대사입니다. 새 현관 장면의 지정 문구는 별도 재구성 데이터로 관리합니다.
 export const QUOTES=REAL_QUOTES;
 export const EVENT_RECORDS=[
   {id:'arrival',scene:1,kinds:['fact','staged','fiction'],fact:'family'},
@@ -377,6 +377,7 @@ export const OBJECTS=Object.fromEntries(objectMeta.map(o=>[o.id,{...o,sourceType
 
 
 // Optional everyday props are staged interactions, not additional biographical facts.
+OBJECTS.shoes.art='shoes';
 OBJECTS.drawer={id:'drawer',title:'작은 서랍',art:'drawer',sourceType:'dramatic_reconstruction',kinds:['staged','fiction'],lines:[{speaker:'재원',character:'child',text:'뭐가 들어 있을까?',sourceType:'fictional_dialogue'}]};
 OBJECTS.bed={id:'bed',title:'잠깐 쉬기',art:'bed',sourceType:'dramatic_reconstruction',kinds:['staged','fiction'],lines:[{speaker:'재원',character:'child',text:'눈 좀 붙였다가 다시 일어날까.',sourceType:'fictional_dialogue'}]};
 for(const [id,interaction]of Object.entries({tv:'television',toy:'toy',photo:'photo',desk:'read',drawer:'drawer',bed:'rest',books:'read',workbook:'read'}))OBJECTS[id].interaction=interaction;
@@ -385,16 +386,17 @@ const object=(id,x,key,extra={})=>({id,x,label:OBJECTS[key].title,type:'object',
 const event=(id,x,label,action,art='finish')=>({id,x,label,type:'event',event:action,art});
 const npc=(id,x,label,character,dialogue,kind='fact')=>({id,x,label:label.replace(' · 창작',''),type:'npc',character,dialogue,kinds:[kind,'staged'],sourceType:'fictional_dialogue'});
 const portal=(id,x,label,target,spawn)=>({id,x,label,type:'portal',target,spawn});
-const homeProps=()=>[object('photo',170,'photo'),object('toy',360,'toy'),object('sofa',660,'sofa'),object('tv',720,'tv'),object('mask',890,'mask'),object('shoes',1070,'shoes'),object('drawer',1150,'drawer'),object('plain-door',1240,'plain-door')];
+const homeProps=()=>[object('photo',170,'photo'),object('toy',360,'toy'),object('sofa',660,'sofa',{scale:.85}),object('tv',900,'tv'),object('mask',485,'mask',{mount:'wall',y:310}),object('shoes',1050,'shoes'),object('drawer',1150,'drawer'),object('plain-door',1390,'plain-door')];
 export const STAGES=[
   {id:'brother-room',name:'막간 · 종이 한 장',location:'시기와 거처를 지정하지 않는 막간',year:'기억 사이',width:1180,spawn:230,kind:'interior',variant:'brother',music:'childhood',sourceType:'dramatic_reconstruction',entities:[npc('brother',650,'형','brother','brother','staged'),object('brother-paper',460,'brother-paper',{action:'brother-fold'}),event('brother-exit',1040,'다시 사진 속으로','brother-exit','portal')]},
-  {id:'home',name:'학장동 · 부모님과 살던 집',location:'부산 사하구 학장동',year:'어린 시절',width:1480,spawn:250,kind:'interior',variant:'family',music:'childhood',entities:[...homeProps(),npc('father',620,'아버지','father','father'),npc('mother',790,'어머니','mother','mother'),object('folded-paper',1300,'folded-paper',{action:'brother-enter'}),portal('out',1410,'동네 둘러보기','alley',150)]},
-  {id:'interval',name:'학장동 · 같은 집',location:'부산 사하구 학장동',year:'약 1~2년 뒤',width:1360,spawn:340,kind:'interior',variant:'interval',music:'quiet',entities:[object('calendar',820,'calendar',{action:'interval'}),object('window',460,'window')]},
+  {id:'home',name:'학장동 · 부모님과 살던 집',location:'부산 사하구 학장동',year:'어린 시절',width:1580,spawn:250,kind:'interior',variant:'family',music:'childhood',entities:[...homeProps(),npc('father',620,'아버지','father','father'),npc('mother',790,'어머니','mother','mother'),object('folded-paper',1270,'folded-paper',{action:'brother-enter',scale:.8}),portal('out',1510,'동네 둘러보기','alley',150)]},
+  {id:'interval',name:'학장동 · 같은 집',location:'부산 사하구 학장동',year:'약 1~2년 뒤',width:1360,spawn:340,kind:'interior',variant:'interval',music:'quiet',entities:[object('calendar',820,'calendar',{action:'interval'}),object('window',460,'window',{mount:'wall',y:300})]},
   {id:'door-home',name:'학장동 · 방문 앞',location:'부산 사하구 학장동',year:'어린 시절',width:1360,spawn:900,kind:'interior',variant:'tension',music:'quiet',entities:[npc('father-door',1060,'아버지','father','doorFather'),event('door',1215,'방문 · 목격한 기억','door','door')]},
+  {id:'farewell',name:'학장동 · 집 현관',location:'현관 · 작별의 장면',year:'어린 시절',width:1200,spawn:685,kind:'interior',variant:'farewell',music:'quiet',transient:true,entities:[npc('farewell-mother',800,'엄마','mother','mother'),event('farewell-door',900,'현관문','farewell','door')]},
   {id:'changed-home',name:'달라진 가족',location:'학장동 시절 이후의 기록',year:'얼마 지나지 않아',width:1360,spawn:400,kind:'interior',variant:'changed',music:'quiet',entities:[object('family-record',850,'family-record',{action:'divorce'}),object('broken-door',1215,'broken-door'),npc('father-changed',590,'아버지','father','fatherChanged')]},
   {id:'father-home',name:'아버지와 단둘이',location:'거처 미상 · 상징적 공간',year:'약 1~2년 동안',width:1200,spawn:250,kind:'interior',variant:'father-only',music:'alone',entities:[object('bed',120,'bed'),object('two-chairs',400,'two-chairs'),npc('father-alone',570,'아버지','father','fatherAlone'),object('father-record',780,'father-record'),object('blank-note',990,'blank-note'),event('father-next',1120,'집 밖으로','father-period')]},
-  {id:'daeyeon',name:'대연동 · 새로운 동네',location:'부산 남구 대연동',year:'그 시기 이후',width:1480,spawn:160,kind:'town',variant:'daeyeon',music:'quiet',entities:[object('new-town',350,'new-town'),npc('daeyeon-neighbor',660,'익명의 이웃 · 창작','neighbor','daeyeonNeighbor','fiction'),object('window',920,'window'),event('grandparents-home',1300,'조부모님 댁으로','daeyeon','portal')]},
-  {id:'study',name:'대연동 · 조부모님 댁 공부방',location:'부산 남구 대연동',year:'어린 시절',width:1660,spawn:230,kind:'interior',variant:'study',music:'study',entities:[object('desk',380,'desk',{action:'study'}),object('workbook',540,'workbook'),npc('grandma',690,'할머니','grandma','grandma'),object('eraser',840,'eraser'),object('study-pencil',980,'study-pencil'),npc('grandpa',1100,'할아버지','grandpa','grandpa'),object('cane',1230,'cane',{action:'cane'}),object('clock',1400,'clock'),event('study-end',1550,'공부의 페이지 닫기','study-end','notebook'),object('books',90,'books')]},
+  {id:'daeyeon',name:'대연동 · 새로운 동네',location:'부산 남구 대연동',year:'그 시기 이후',width:1480,spawn:160,kind:'town',variant:'daeyeon',music:'quiet',entities:[object('new-town',350,'new-town'),npc('daeyeon-neighbor',660,'익명의 이웃 · 창작','neighbor','daeyeonNeighbor','fiction'),object('window',920,'window',{mount:'wall',y:300}),event('grandparents-home',1300,'조부모님 댁으로','daeyeon','portal')]},
+  {id:'study',name:'대연동 · 조부모님 댁 공부방',location:'부산 남구 대연동',year:'어린 시절',width:1660,spawn:230,kind:'interior',variant:'study',music:'study',entities:[object('desk',380,'desk',{action:'study'}),object('workbook',540,'workbook'),npc('grandma',690,'할머니','grandma','grandma'),object('eraser',840,'eraser'),object('study-pencil',980,'study-pencil'),npc('grandpa',1100,'할아버지','grandpa','grandpa'),object('cane',1230,'cane',{action:'cane'}),object('clock',1400,'clock',{mount:'wall',y:310}),event('study-end',1550,'공부의 페이지 닫기','study-end','notebook'),object('books',90,'books')]},
   {id:'present',name:'현재 · 사진첩 앞',location:'현재의 방 · 연출',year:'2026',width:1200,spawn:300,kind:'interior',variant:'present',player:'adult',music:'present',entities:[event('album',650,'사진첩 펼치기','album','album'),object('note-present',1100,'blank-note'),object('folded-paper-present',920,'folded-paper',{action:'brother-enter'})]},
   {id:'present-street',name:'현재 · 다음 이야기로',location:'현재의 거리 · 연출',year:'2026',width:1250,spawn:230,kind:'town',variant:'present',player:'adult',music:'present',entities:[event('finish',1090,'다음 이야기','finish'),object('present-lamp',660,'lamp')]},
   {id:'alley',name:'학장동 골목',location:'학장동 · 창작 배경',year:'어린 시절',width:1680,spawn:150,kind:'town',music:'childhood',entities:[portal('back',70,'부모님 집으로','home',1310),npc('neighbor',430,'골목의 이웃 · 창작','neighbor','neighbor','fiction'),object('lamp',920,'lamp'),portal('out',1550,'놀이터로','playground',150)]},
@@ -404,4 +406,5 @@ export const STAGES=[
 ];
 export const DIALOGUES=NATURAL_DIALOGUES;
 
+EVENT_RECORDS.push({id:'mother-farewell',scene:6,kinds:['staged'],fact:null,sourceType:'dramatic_reconstruction'});
 for(const event of EVENT_RECORDS){event.sourceTypes=event.kinds.map(k=>SOURCE_TYPES[k]);}

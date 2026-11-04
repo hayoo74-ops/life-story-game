@@ -5,7 +5,7 @@
 
 갤럭시 Chrome에서 링크를 열고 **새 게임** 또는 **이어하기**를 선택하세요. 첫 리소스 캐싱 뒤 오프라인 재실행을 지원합니다. 홈 화면에 추가는 브라우저 메뉴에서 선택할 수 있습니다.
 
-**챕터 1 v1.3 — 탐색과 기억의 흔적.** 종이놀이·액션가면 자세·세 문제 공부, 사물별 동작, 후속 대화와 사진첩의 선택 흔적을 추가했습니다. 기존 서사·멀티터치·오프라인을 유지하며 대화 기록·접근성·음량·JSON 보관 기능을 통합했습니다. **챕터 2–8은 기획 단계**입니다.
+**챕터 1 v1.4 — 현관에 남은 인사.** 기억은 첫 조사 때만 전체 팝업을 보여 주고 재조사는 한 줄로 답합니다. 실내 가구 배치와 벽면 창문을 정리하고, 이혼 기록과 아버지와의 시기 사이에 엄마의 현관 작별 장면을 연결했습니다. 종이놀이·액션가면·공부와 사진첩의 선택 흔적은 유지합니다. 기존 서사·멀티터치·오프라인을 유지하며 대화 기록·접근성·음량·JSON 보관 기능을 통합했습니다. **챕터 2–8은 기획 단계**입니다.
 
 ## 실행
 
@@ -127,4 +127,4 @@ python tests/browser_performance.py
 
 브라우저 검사는 Python Playwright와 Chromium이 필요하며 일반 게임 실행에는 필요하지 않습니다. `python -m pip install playwright`, `python -m playwright install chromium`으로 준비할 수 있습니다. `GAME_URL`, `CHROMIUM_PATH`로 서버·브라우저를 지정할 수 있습니다. 실제 UI/입력으로 전체 챕터를 진행하는 검사와 저장 fixture를 사용하는 부분 검사를 구분합니다.
 
-[실제 배포·모바일 검증](docs/PAGES_RELEASE.md), [v1.3 변경 보고](docs/IMPROVEMENTS_V1_3.md), [챕터 확장](docs/CHAPTER_EXTENSION.md), [v1.2 서사 기록](docs/NARRATIVE_V1_2.md), [검증 기록](VALIDATION.md), [외부 라이브러리](THIRD_PARTY_NOTICES.md)를 참조하세요. 사람의 읽기 시간이나 S24 Ultra 실기기 성능을 측정한 것으로 표현하지 않습니다. 사진 기반 외형과 챕터 2–8 플레이는 아직 구현하지 않았습니다.
+[v1.4 변경·검증](docs/CHAPTER_POLISH_V1_4.md), [이전 배포 기록](docs/PAGES_RELEASE.md), [v1.3 변경 보고](docs/IMPROVEMENTS_V1_3.md), [챕터 확장](docs/CHAPTER_EXTENSION.md), [v1.2 서사 기록](docs/NARRATIVE_V1_2.md), [검증 기록](VALIDATION.md), [외부 라이브러리](THIRD_PARTY_NOTICES.md)를 참조하세요. 사람의 읽기 시간이나 S24 Ultra 실기기 성능을 측정한 것으로 표현하지 않습니다. 사진 기반 외형과 챕터 2–8 플레이는 아직 구현하지 않았습니다.
