@@ -1,3 +1,4 @@
+import {buildingGeometry,stageArchitecture} from './data/architecture.js';
 import {roomLayout,ROOM_FLOOR} from './data/room-layouts.js';
 // 모든 그래픽은 이 프로젝트에서 직접 그리는 오리지널 코드 기반 픽셀아트입니다.
 // 캐릭터 교체: 동일한 32×40 프레임 규격의 시트를 로드하고 createCharacters를 대체하세요.
@@ -17,16 +18,19 @@ function roof(g,x,y,w,h,color='#8e6552'){
   for(let xx=22;xx<w-10;xx+=15)line(g,[[x+xx,y+2],[x+xx-5,y+h-5]],'#4b514527');
   rect(g,x-13,y+h-5,w+26,6,'#5c6853');rect(g,x-15,y+h-7,w+30,3,'#d4c399');
 }
-function building(g,x,base,w,h,{wall='#dfc89e',roofColor='#8b6e57',floors=2,door=true,sign=null,seed=1}={}){
-  const y=base-h;rect(g,x+6,y+25,w,h-25,'#7d8869');rect(g,x,y+25,w,h-25,wall);rect(g,x,y+25,8,h-25,'#c2b793');rect(g,x+w-8,y+25,8,h-25,'#b8ae8b');
-  for(let yy=y+45;yy<base-10;yy+=16){rect(g,x+14,yy,w-28,1,'#bba98435');}
-  roof(g,x-5,y,w+10,33,roofColor);
-  const cols=Math.max(2,Math.floor(w/58));
-  for(let f=0;f<floors;f++)for(let j=0;j<cols;j++){if(f===floors-1&&j===Math.floor(cols/2)&&door)continue;windowArt(g,x+18+j*(w-36)/(cols-1),y+48+f*(h-65)/floors,24,34,seed%3===j);}
-  if(door){rect(g,x+w/2-17,base-70,36,70,'#606e58');rect(g,x+w/2-13,base-65,28,60,'#8a7656');rect(g,x+w/2-9,base-61,20,30,'#91a196');rect(g,x+w/2+6,base-27,3,3,'#eed6a1');rect(g,x+w/2-22,base-5,47,5,'#b2b396');}
-  if(sign){rect(g,x+15,base-100,w-30,26,'#dce0b5');rect(g,x+18,base-97,w-36,20,'#627c62');text(g,sign,x+w/2,base-82,12,'#f5e5b9');}
-  rect(g,x-4,base-3,w+8,5,'#8d9577');
+function building(g,x,base,w,h,options={}){
+ const b=buildingGeometry({id:options.id||'distant',x,base,w,h,...options});
+ const wall=options.wall||options.wallColor||'#dfc89e',roofColor=options.roofColor||'#8b6e57';
+ rect(g,x,base-h+b.roofHeight,w,h-b.roofHeight,wall);
+ rect(g,x,base-h+b.roofHeight,8,h-b.roofHeight,'#c2b793');rect(g,x+w-8,base-h+b.roofHeight,8,h-b.roofHeight,'#b8ae8b');
+ for(let yy=b.wall.top+12;yy<base-10;yy+=16)rect(g,x+14,yy,w-28,1,'#bba98435');
+ roof(g,x-5,base-h,w+10,b.roofHeight,roofColor);
+ for(const win of b.windows)windowArt(g,win.left,win.top,win.right-win.left,win.bottom-win.top);
+ if(b.entrance){const d=b.entrance;rect(g,d.left,d.top,36,d.bottom-d.top,'#606e58');rect(g,d.left+4,d.top+5,28,d.bottom-d.top-10,'#8a7656');rect(g,d.left+8,d.top+9,20,28,'#91a196');rect(g,d.right-10,d.bottom-22,3,3,'#eed6a1');}
+ if(b.sign){const v=b.sign;rect(g,v.left,v.top,v.right-v.left,v.bottom-v.top,'#dce0b5');rect(g,v.left+3,v.top+3,v.right-v.left-6,v.bottom-v.top-6,'#627c62');text(g,b.signText,x+w/2,v.bottom-7,12,'#f5e5b9');}
+ rect(g,x-4,base-7,w+8,7,'#8d9577');rect(g,x-8,base,w+16,5,'#c5bda1');
 }
+
 function tree(g,x,base,size=1,pink=false){
   rect(g,x-5*size,base-100*size,10*size,100*size,'#7d7451');rect(g,x+2*size,base-80*size,3*size,80*size,'#a18b60');
   line(g,[[x,base-64*size],[x-25*size,base-100*size]],'#716b48',5*size);line(g,[[x,base-80*size],[x+25*size,base-125*size]],'#716b48',4*size);
@@ -76,42 +80,35 @@ export function createStageArt(scene,stage){
   }else{
     // Trees and retaining walls make each outdoor place part of the same neighborhood.
     rect(g,0,411,w,47,'#a4ae89');for(let x=0;x<w;x+=46){rect(g,x,416,42,15,'#b4b99b');rect(g,x+22,436,40,15,'#899c7b');rect(g,x,413,42,2,'#c8c8a4');}
+    const architecture=stageArchitecture(stage);
+    for(const b of architecture.buildings)building(g,b.x,b.base,b.w,b.h,{...b,wall:b.wallColor,sign:b.signText});
+    for(const t of architecture.trees)tree(g,t.x,t.base,t.size,t.pink);
     if(stage.kind==='town'){
-      building(g,-50,411,245,224,{wall:'#d7c69e',roofColor:'#8a735b',floors:2});
-      building(g,235,411,235,257,{wall:'#e7d4ac',roofColor:'#6b8a7b',floors:2,sign:'학장 이발관'});
-      building(g,635,411,234,195,{wall:'#cbd0ad',roofColor:'#9b745b',floors:2,sign:'우리 동네'});
-      building(g,1090,411,275,266,{wall:'#e0c7a1',roofColor:'#7d8c70',floors:2});
-      building(g,1552,411,245,216,{wall:'#d9cfac',roofColor:'#90735e',floors:2});
       fence(g,475,416,150);fence(g,1372,416,160);
-      tree(g,980,430,1.15,true);tree(g,1490,435,1.4);tree(g,117,437,.8);
+
       lamp(g,565,457);lamp(g,1460,457);pot(g,228,457,true);pot(g,465,457);pot(g,1090,457,true);pot(g,1365,457);
       // Laundry, electric poles, and hand-laid overhead wires.
       line(g,[[480,290],[620,301]],'#718566',2);['#e8ddbf','#8eaaa1','#c99d87'].forEach((color,i)=>{rect(g,494+i*35,293+i*2,23,29,color);rect(g,489+i*35,294+i*2,32,9,color);});
       for(let x=140;x<w;x+=670){rect(g,x,115,9,341,'#a49a72');rect(g,x-21,137,52,7,'#7e896d');rect(g,x-15,126,5,17,'#bdc2a0');rect(g,x+20,126,5,17,'#bdc2a0');g.strokeStyle='#6d7f62';g.lineWidth=1.5;g.beginPath();g.moveTo(x-670,126);g.quadraticCurveTo(x-330,192,x,126);g.stroke();}
     }else if(stage.kind==='park'){
-      fence(g,0,397,w);tree(g,160,435,1.6);tree(g,1190,434,1.5,true);tree(g,1460,430,1.3);
+      fence(g,0,397,w);
       rect(g,300,435,770,21,'#d4c49b');rect(g,310,439,750,15,'#dfcda0');
       // Climbing slide, sandbox, bench.
       rect(g,335,299,9,150,'#7a8f69');rect(g,407,299,9,150,'#7a8f69');for(let yy=316;yy<444;yy+=21)rect(g,343,yy,65,5,'#b3b492');rect(g,323,291,110,12,'#a48164');poly(g,[[424,300],[551,440],[535,446],[409,304]],'#ac9171');poly(g,[[432,302],[555,438],[545,443],[421,303]],'#c9b78b');
       rect(g,1100,391,122,10,'#9e8963');rect(g,1100,407,122,9,'#b29a70');rect(g,1098,424,128,9,'#b29a70');rect(g,1110,432,8,24,'#677b5b');rect(g,1203,432,8,24,'#677b5b');
       for(let x=580;x<1080;x+=42){rect(g,x,452,16,2,'#bfae88');}
     }else if(stage.kind==='school'){
-      building(g,650,406,580,265,{wall:'#d8cba3',roofColor:'#7e8e73',floors:3,door:false});
       rect(g,900,196,82,185,'#b5b796');rect(g,916,303,52,98,'#637f70');rect(g,940,303,4,98,'#d6cba2');rect(g,916,304,52,6,'#d6cba2');
       rect(g,920,221,38,38,'#ece0b9');line(g,[[939,226],[939,239],[948,244]],'#6c7c60',3);text(g,'배움이 자라는 곳',942,291,13,'#647555');
       fence(g,180,435,410);fence(g,1260,435,310);rect(g,583,338,30,119,'#9b9e7a');rect(g,575,330,46,12,'#bac09a');rect(g,1240,338,30,119,'#9b9e7a');rect(g,1233,330,44,12,'#bac09a');
-      tree(g,350,440,1.6,true);tree(g,1530,440,1.7);pot(g,670,455);pot(g,1160,455,true);
+      pot(g,670,455);pot(g,1160,455,true);
       rect(g,44,320,165,75,'#7e926d');rect(g,50,326,153,63,'#d0d2ac');text(g,'천천히, 함께',127,352,17);text(g,'오늘도 좋은 하루',127,376,11);rect(g,60,395,7,61,'#85916d');rect(g,185,395,7,61,'#85916d');
     }
     ground(g,w);const r=rng(123);for(let i=0;i<w/24;i++){const x=r()*w;rect(g,x,450,3,7,'#7b905e');if(i%5===0)rect(g,x-2,448,6,3,'#e6d4a0');}
     // A subtle path line, not a blocking boundary.
     rect(g,0,495,w,2,'#ded1ad80');
   }
-  if(stage.variant==='daeyeon'){
-    building(g,130,411,220,265,{wall:'#c1cbbb',roofColor:'#657e70',floors:3});
-    building(g,710,411,215,310,{wall:'#c6cdb5',roofColor:'#7b8a75',floors:3});
-    tree(g,1120,433,1.35);rect(g,433,340,154,34,'#aab99a');text(g,'대연동의 골목',510,362,16,'#4d6551');
-  }
+  if(stage.variant==='daeyeon'){rect(g,433,340,154,34,'#aab99a');text(g,'대연동의 골목',510,362,16,'#4d6551');}
   scene.textures.addCanvas(key,c);return key;
 }
 

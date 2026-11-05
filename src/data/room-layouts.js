@@ -11,7 +11,7 @@ export const ROOM_LAYOUTS={
  'brother-room':{palette:{...warm,wall:'#c9cdbb'},windows:[{x:230,y:157,w:160,h:130}],clock:null,light:{x:600,y:158},frames:[],furniture:[{id:'background-shelf',kind:'shelf',x:870,w:100,h:200}]},
  study:{palette:warm,windows:[{x:740,y:154,w:160,h:128},{x:1080,y:154,w:130,h:128}],clock:null,light:{x:630,y:158},frames:[{x:240,y:172,w:64,h:60}],furniture:[]},
  present:{palette:quiet,windows:[{x:260,y:154,w:176,h:132},{x:780,y:154,w:170,h:132}],clock:{x:1060,y:162},light:{x:620,y:158},frames:[],furniture:[{id:'reading-bench',kind:'bench',x:290,w:240,h:86}]},
- farewell:{palette:{...quiet,wall:'#626965',upper:'#454f4e',beam:'#394744'},windows:[{x:260,y:158,w:150,h:126}],clock:null,light:{x:720,y:158},frames:[],furniture:[{id:'entry-shoes',kind:'rack',x:1040,w:80,h:86}]}
+ farewell:{palette:{...warm,wall:'#a9ada0',upper:'#8b9689',beam:'#6a776a'},windows:[{x:260,y:158,w:150,h:126}],clock:null,light:{x:720,y:158},frames:[],furniture:[{id:'entry-shoes',kind:'rack',x:1040,w:80,h:86}]}
 };
 export function roomLayout(stage){return ROOM_LAYOUTS[typeof stage==='string'?stage:stage.id]||null;}
 export function decorationBounds(room){return (room?.furniture||[]).map(f=>({...f,left:f.x-f.w/2,right:f.x+f.w/2,top:ROOM_FLOOR-f.h,bottom:ROOM_FLOOR,role:'decoration'}));}

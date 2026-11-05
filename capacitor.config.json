@@ -1,0 +1,8 @@
+{
+  "appId": "com.hayoo74.lifestory",
+  "appName": "LIFE STORY — 나의 인생",
+  "webDir": "dist-native",
+  "server": {"androidScheme": "https"},
+  "android": {"backgroundColor": "#efebdf", "allowMixedContent": false},
+  "plugins": {"SplashScreen": {"launchAutoHide": false, "backgroundColor": "#efebdf"}, "StatusBar": {"overlaysWebView": false}}
+}

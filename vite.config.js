@@ -2,11 +2,13 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // Project Pages lives under this path; override only for another hosting layout.
-const base = process.env.VITE_BASE_PATH || '/life-story-game/';
+const native=process.env.NATIVE_BUILD==='true';
+const base = native?'./':process.env.VITE_BASE_PATH || '/life-story-game/';
 
 export default defineConfig({
   base,
   plugins: [VitePWA({
+    disable:native,
     registerType: 'prompt',
     base, scope: base,
     includeAssets: ['icon.svg', 'icon-192.png', 'icon-512.png'],
@@ -19,5 +21,5 @@ export default defineConfig({
     },
     workbox: {globPatterns:['**/*.{js,css,html,png,svg,woff2}'], maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, navigateFallback: 'index.html', cleanupOutdatedCaches:true}
   })],
-  build: {chunkSizeWarningLimit: 1600, rollupOptions:{output:{manualChunks:{phaser:['phaser']}}}}
+  build: {outDir:native?'dist-native':'dist',target:'es2022',chunkSizeWarningLimit: 1600, rollupOptions:{output:{manualChunks:{phaser:['phaser']}}}}
 });

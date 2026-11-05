@@ -1,3 +1,4 @@
+import {gameStorage} from './systems/runtime-storage.js';
 import {sceneById} from './story.js';
 import {catalog,chapterSupported} from './systems/catalog.js';
 export const SAVE_KEY='life-story:save',SETTINGS_KEY='life-story:settings',BACKUP_KEY='life-story:save:v1-backup',V2_BACKUP_KEY='life-story:save:v2-backup',V3_BACKUP_KEY='life-story:save:v3-backup';
@@ -37,7 +38,7 @@ export function normalizeSave(raw){
  const choices=Object.fromEntries(Object.entries(raw.choices||{}).filter(([key,value])=>key!=='__proto__'&&typeof value==='string'));
  return {...freshSave(),chapter,storyScene,stage,x:Number.isFinite(raw.x)?Math.max(40,Math.min(width-40,raw.x)):300,
   dialogueVisits:Object.fromEntries(Object.entries(raw.dialogueVisits||{}).filter(([k,v])=>k!=='__proto__'&&Number.isInteger(v)&&v>=0).map(([k,v])=>[k,Math.min(v,100000)])),
-  cutscenesSeen:strings([...strings(raw.cutscenesSeen),...(raw.version===2?strings(raw.events).filter(e=>['story:hero','story:door','mask-equipped'].includes(e)).map(e=>({'story:hero':'hero','story:door':'door','mask-equipped':'mask'})[e]):[])]).filter(k=>/^(hero|door|mask|brother)(:v1\.2)?$/.test(k)||k==='farewell:v1.4'),
+  cutscenesSeen:strings([...strings(raw.cutscenesSeen),...(raw.version===2?strings(raw.events).filter(e=>['story:hero','story:door','mask-equipped'].includes(e)).map(e=>({'story:hero':'hero','story:door':'door','mask-equipped':'mask'})[e]):[])]).filter(k=>/^(hero|door|mask|brother)(:v1\.2)?$/.test(k)||['farewell:v1.4','farewell:v1.5'].includes(k)),
   interludeReturn:interlude?{stage:sceneById(storyScene,chapter).stage,x:Number.isFinite(raw.interludeReturn?.x)?Math.max(40,Math.min(catalog.stage(sceneById(storyScene,chapter).stage).width-40,raw.interludeReturn.x)):300}:null,
   objectStates:Object.fromEntries(safeKeys(raw.objectStates).map(([k,v])=>[k,{on:v?.on!==false,opened:v?.opened===true,naps:Math.floor(clamp(v?.naps,0,999,0))}])),
   minigames:Object.fromEntries(safeKeys(raw.minigames).filter(([k])=>['paper','hero','study'].includes(k)).map(([k,v])=>[k,normalizeMini(k,v)])),
@@ -51,16 +52,16 @@ export function normalizeSave(raw){
 }
 export const backupKey=v=>v===1?BACKUP_KEY:v===2?V2_BACKUP_KEY:V3_BACKUP_KEY;
 export function loadSave(storage){try{
- const store=storage??globalThis.localStorage,serialized=store.getItem(SAVE_KEY);if(!serialized)return {state:null,error:null,migrated:false};
+ const store=storage??gameStorage(),serialized=store.getItem(SAVE_KEY);if(!serialized)return {state:null,error:null,migrated:false};
  const raw=JSON.parse(serialized),state=normalizeSave(raw);let backupError=false;
  if(state&&raw.version<4){try{const key=backupKey(raw.version);if(!store.getItem(key))store.setItem(key,serialized);}catch{backupError=true;}}
  return {state,error:state?null:(raw?.version>4?'future-version':'invalid'),migrated:raw.version===1,backupError};
  }catch{return {state:null,error:'unavailable',migrated:false};}}
 export function writeSave(state,storage){try{
- const store=storage??globalThis.localStorage,previous=store.getItem(SAVE_KEY);let oldVersion=null;
+ const store=storage??gameStorage(),previous=store.getItem(SAVE_KEY);let oldVersion=null;
  try{oldVersion=previous?JSON.parse(previous)?.version:null;}catch{/* A new game may replace explicitly discarded corrupt data. */}
  if(oldVersion>=1&&oldVersion<4){const key=backupKey(oldVersion);if(!store.getItem(key))store.setItem(key,previous);}
  state.updatedAt=new Date().toISOString();store.setItem(SAVE_KEY,JSON.stringify(state));return true;
  }catch{return false;}}
-export function loadSettings(storage){try{return normalizeSettings(JSON.parse((storage??globalThis.localStorage).getItem(SETTINGS_KEY)||'{}'));}catch{return {...DEFAULT_SETTINGS};}}
-export function writeSettings(settings,storage){try{(storage??globalThis.localStorage).setItem(SETTINGS_KEY,JSON.stringify(settings));return true;}catch{return false;}}
+export function loadSettings(storage){try{return normalizeSettings(JSON.parse((storage??gameStorage()).getItem(SETTINGS_KEY)||'{}'));}catch{return {...DEFAULT_SETTINGS};}}
+export function writeSettings(settings,storage){try{(storage??gameStorage()).setItem(SETTINGS_KEY,JSON.stringify(settings));return true;}catch{return false;}}

@@ -18,8 +18,8 @@ test('every interior uses one architecture layout and upper-wall windows',()=>{
  assert.equal(ROOM_LAYOUTS.study.furniture.filter(f=>f.kind==='shelf').length,0);
 });
 test('farewell preserves requested text, provenance, chronology and scene IDs',()=>{
- assert.equal(MOTHER_FAREWELL.quote.text,'엄마 나갔다올게 건강하게 잘있어');assert.equal(MOTHER_FAREWELL.ending.text,'그 뒤로 다시는 엄마를 만날 수 없었다');
- assert.equal(MOTHER_FAREWELL.sourceType,'dramatic_reconstruction');assert.equal(MOTHER_FAREWELL.quote.sourceType,'dramatic_reconstruction');assert.equal(MOTHER_FAREWELL.storyScene,6);assert.equal(SCENES.find(s=>s.id===6).next,7);assert.equal(SCENES.find(s=>s.id===7).stage,'father-home');
+ assert.equal(MOTHER_FAREWELL.quote.text,'엄마 나갔다올게 건강하게 잘있어');assert.equal(MOTHER_FAREWELL.ending.text,'그 뒤로 다시는 엄마를 만날 수 없었다.');
+ assert.equal(MOTHER_FAREWELL.sourceType,'dramatic_reconstruction');assert.equal(MOTHER_FAREWELL.quote.sourceType,'real_memory');assert.equal(MOTHER_FAREWELL.storyScene,6);assert.equal(SCENES.find(s=>s.id===6).next,7);assert.equal(SCENES.find(s=>s.id===7).stage,'father-home');
  assert.deepEqual(STAGES.find(s=>s.id==='farewell').entities.filter(e=>e.type==='npc').map(e=>e.character),['mother']);assert.equal(EVENT_RECORDS.find(e=>e.id==='mother-farewell').fact,null);
 });
 test('new seen state persists without resetting old saves or storing the transient cinematic map',()=>{

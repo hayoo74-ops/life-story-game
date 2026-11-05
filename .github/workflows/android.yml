@@ -1,0 +1,78 @@
+name: Build LIFE STORY Android APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['android/**', 'src/**', 'public/**', 'package*.json', 'capacitor.config.json', 'vite.config.js', 'tests/android_smoke.py', '.github/workflows/android.yml']
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - run: npm ci
+      - run: npm test
+      - run: npm run android:sync
+      - run: chmod +x android/gradlew && cd android && ./gradlew --no-daemon assembleDebug
+      - name: Verify package, signature and embedded offline files
+        run: |
+          mkdir -p apk-output
+          cp android/app/build/outputs/apk/debug/app-debug.apk apk-output/LIFE-STORY-DEMO-v1.5.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs apk-output/LIFE-STORY-DEMO-v1.5.apk | tee apk-output/signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging apk-output/LIFE-STORY-DEMO-v1.5.apk > apk-output/package.txt
+          python scripts/verify-apk.py apk-output/LIFE-STORY-DEMO-v1.5.apk
+          cd apk-output && sha256sum LIFE-STORY-DEMO-v1.5.apk > SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LIFE-STORY-DEMO-v1.5
+          path: apk-output/
+          retention-days: 30
+  emulator:
+    needs: apk
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: LIFE-STORY-DEMO-v1.5
+          path: apk-output
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r tests/requirements-browser.txt
+      - name: Enable KVM for emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: python tests/android_smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Android-emulator-validation-v1.5
+          path: test-results/android/
+          retention-days: 30

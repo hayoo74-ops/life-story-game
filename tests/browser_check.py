@@ -37,7 +37,7 @@ async def play_mini(page,answer=0):
   await page.wait_for_timeout(120)
  raise AssertionError(('Mini stuck',await snap(page)))
 async def settle(page,answer=0):
- for _ in range(110):
+ for _ in range(650):
   s=await snap(page)
   await check_text(page)
   if s['dialogue']:

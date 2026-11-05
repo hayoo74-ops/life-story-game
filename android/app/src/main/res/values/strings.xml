@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LIFE STORY — 나의 인생</string>
+    <string name="title_activity_main">LIFE STORY — 나의 인생</string>
+    <string name="package_name">com.hayoo74.lifestory</string>
+    <string name="custom_url_scheme">com.hayoo74.lifestory</string>
+</resources>

@@ -1,3 +1,4 @@
+import {stageArchitecture} from './data/architecture.js';
 import Phaser from 'phaser';
 import { createBackdrops, createStageArt, createCharacters, createObjectArt, createParticleArt, createNarrativeArt, createInteractionArt } from './art.js';
 import { stageById } from './story.js';
@@ -20,7 +21,7 @@ export class LifeScene extends Phaser.Scene{
     this.rain=this.add.graphics().setScrollFactor(0).setDepth(11);this.atmosphere=this.add.rectangle(0,0,4096,540,0xad814e,0).setOrigin(0).setScrollFactor(0).setDepth(10);
     this.living=this.add.graphics().setDepth(1);this.objectEffects=this.add.graphics().setDepth(3);
     this.lampGlow=this.add.graphics().setScrollFactor(0).setDepth(12).setBlendMode(Phaser.BlendModes.ADD);
-    this.scale.on('resize',()=>{if(this.stage){this.cameras.main.setBounds(0,0,Math.max(this.stage.width,this.scale.width),540);if(this.visualActive&&this.visualKind==='farewell')this.cameras.main.setScroll(Math.max(0,MOTHER_FAREWELL.blocking.camera-this.scale.width/2),0);if(this.isTitle)this.cameras.main.setScroll(Math.max(0,1075-this.scale.width*.65),0);}});
+    this.scale.on('resize',()=>{if(this.stage){this.cameras.main.setBounds(0,0,Math.max(this.stage.width,this.scale.width),540);if(this.visualActive&&this.visualKind==='farewell')this.cameras.main.setScroll(Math.max(0,(this.farewellFocus||MOTHER_FAREWELL.blocking.camera)-this.scale.width/2),0);if(this.isTitle)this.cameras.main.setScroll(Math.max(0,1075-this.scale.width*.65),0);}});
     this.loadStage('alley',920,true);
     this.bridge.onReady(this);
   }
@@ -79,14 +80,14 @@ export class LifeScene extends Phaser.Scene{
     const entity=this.entities.find(e=>e.data.id===data.id),add=o=>{this.interactionObjects.push(o);return o;};
     const wait=ms=>new Promise(resolve=>this.time.delayedCall(reduced?60:ms,resolve));
     if(kind==='television'){this.bridge.sound.effect(data.on?'tv-on':'tv-off');this.syncObjects();await wait(240);}
-    if(kind==='toy'){this.bridge.sound.effect('toy');if(entity)this.tweens.add({targets:entity.sprite,x:data.x+35,y:FLOOR-5,yoyo:true,duration:reduced?60:260});await wait(550);}
+    if(kind==='toy'){this.bridge.sound.startToyMotion();if(entity){let lastX=entity.sprite.x;this.tweens.add({targets:entity.sprite,x:data.x+60,yoyo:true,duration:reduced?60:500,ease:'Sine.easeInOut',onUpdate:()=>{const speed=Math.abs(entity.sprite.x-lastX)*60;lastX=entity.sprite.x;this.bridge.sound.updateToyMotion(speed);},onComplete:()=>this.bridge.sound.stopToyMotion()});}await wait(1050);this.bridge.sound.stopToyMotion();}
     if(kind==='drawer'){this.bridge.sound.effect('drawer');const drawer=add(this.add.rectangle(data.x,FLOOR-22,58,19,0xd0b584).setStrokeStyle(2,0x7f7958).setDepth(6));drawer.setX(data.opened?data.x:data.x+16);this.tweens.add({targets:drawer,x:data.opened?data.x+16:data.x,duration:reduced?40:250});await wait(300);}
     if(kind==='read'){this.player.setFrame(9);this.time.delayedCall(reduced?30:260,()=>{if(gen===this.visualGeneration&&this.interactionStart)this.player.setFrame(10);});this.bridge.sound.effect('paper');await wait(550);this.bridge.sound.effect('pencil');}
     if(kind==='photo'){this.bridge.sound.effect('paper');if(entity){this.cameras.main.stopFollow();this.cameras.main.centerOn(data.x,270);this.cameras.main.setZoom(reduced?1:1.15);}await wait(250);}
     if(kind==='rest'){this.player.setAngle(-85).setPosition(data.x+15,FLOOR-20);this.cameras.main.fadeOut(reduced?0:350,43,57,61);await wait(450);if(gen===this.visualGeneration){this.updateSettings();this.cameras.main.fadeIn(reduced?0:450);}}
     return gen===this.visualGeneration;
   }
-  endInteraction(){for(const o of this.interactionObjects||[])o.destroy();this.interactionObjects=[];if(this.interactionStart&&this.player?.active){this.player.setPosition(this.interactionStart.x,this.interactionStart.y).setAngle(0);this.cameras.main.setZoom(1);this.cameras.main.setFollowOffset(0,0);this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);}this.interactionStart=null;}
+  endInteraction(){this.bridge.sound.stopToyMotion();for(const o of this.interactionObjects||[])o.destroy();this.interactionObjects=[];if(this.interactionStart&&this.player?.active){this.player.setPosition(this.interactionStart.x,this.interactionStart.y).setAngle(0);this.cameras.main.setZoom(1);this.cameras.main.setFollowOffset(0,0);this.cameras.main.startFollow(this.player,true,this.bridge.settings.reducedMotion?1:.085,1);}this.interactionStart=null;}
   beginMini(id){this.startVisual(id==='paper'?'brother':id==='hero'?'hero':'study');this.miniObjects=[];}
   async animateMini(kind,payload){
     const reduced=this.bridge.settings.reducedMotion,gen=this.visualGeneration,duration=reduced?80:kind==='throw'?1100:360;
@@ -100,7 +101,7 @@ export class LifeScene extends Phaser.Scene{
   endMini(){if(this.visualActive&&['paper','brother','hero','study'].includes(this.visualKind))this.endVisual();}
 
   layoutSnapshot(){
-    const room=roomLayout(this.stage);if(!room)return null;
+    const room=roomLayout(this.stage);if(!room)return {stage:this.stage.id,...stageArchitecture(this.stage),objects:this.entities.filter(e=>e.data.type!=='npc').map(e=>({id:e.data.id,buildingId:e.data.buildingId,...e.sprite.getBounds()}))};
     return {stage:this.stage.id,floor:FLOOR,width:this.stage.width,windows:room.windows.map(v=>({...v,left:v.x,right:v.x+v.w,top:v.y,bottom:v.y+v.h})),decorations:decorationBounds(room),objects:this.entities.filter(e=>e.data.type!=='npc').map(e=>{const b=e.sprite.getBounds();return {id:e.data.id,mount:e.data.mount||'floor',left:b.left,right:b.right,top:b.top,bottom:b.bottom,depth:e.sprite.depth};}),playerDepth:this.player.depth};
   }
   beginFarewell(){
@@ -108,16 +109,28 @@ export class LifeScene extends Phaser.Scene{
     this.player.setPosition(b.child,FLOOR).setFlipX(false).setFrame(0);this.playerName.setVisible(false);
     this.entities.forEach(e=>{e.label.setVisible(false);e.indicator.setVisible(false);e.sparkle?.setVisible(false);});
     this.entities.find(e=>e.data.id==='farewell-mother')?.sprite.anims.stop();
-    this.entities.find(e=>e.data.id==='farewell-mother')?.sprite.setFlipX(true).setFrame(0);
-    this.cameras.main.setFollowOffset(0,0);this.cameras.main.setScroll(Math.max(0,b.camera-this.scale.width/2),0);
-    this.atmosphere.setFillStyle(0x172630,.25);
+    this.entities.find(e=>e.data.id==='farewell-mother')?.sprite.setPosition(b.mother,FLOOR).setFlipX(false).setFrame(0);
+    this.farewellFocus=b.camera;this.cameras.main.setFollowOffset(0,0);this.cameras.main.setScroll(Math.max(0,b.camera-this.scale.width/2),0);
+    this.atmosphere.setFillStyle(0x172630,.12);
     this.farewellDoorOpen=0;this.farewellFX=this.add.graphics().setDepth(1.5);this.visualObjects.push(this.farewellFX);
     const frame=this.add.graphics().setDepth(2.1);frame.lineStyle(6,0x695e4d);frame.strokeRect(b.door-61,187,122,271);this.visualObjects.push(frame);
   }
   farewellBeat(phase){
     const b=MOTHER_FAREWELL.blocking,mother=this.entities.find(e=>e.data.id==='farewell-mother')?.sprite,door=this.entities.find(e=>e.data.id==='farewell-door')?.sprite;
     const reduced=this.bridge.settings.reducedMotion;
-    if(phase==='open'){
+    const focus=(x,duration=1500)=>{this.farewellFocus=x;this.tweens.add({targets:this.cameras.main,scrollX:Phaser.Math.Clamp(x-this.scale.width/2,0,Math.max(0,this.stage.width-this.scale.width)),duration:reduced?0:duration,ease:'Sine.easeInOut'});};
+    if(phase==='play'){
+      this.player.setFrame(9);const toy=this.entities.find(e=>e.data.id==='farewell-toy')?.sprite;
+      this.bridge.sound.startToyMotion();if(toy)this.tweens.add({targets:toy,x:toy.x+42,yoyo:true,repeat:1,duration:550,ease:'Sine.easeInOut',onUpdate:t=>this.bridge.sound.updateToyMotion(80*Math.abs(Math.sin(t.progress*Math.PI))),onComplete:()=>this.bridge.sound.stopToyMotion()});
+    }else if(phase==='approach'){
+      this.bridge.sound.stopToyMotion();this.player.setFrame(0).setFlipX(false);focus(760,1900);
+      if(mother){let step=0;this.tweens.add({targets:mother,x:815,duration:reduced?0:1400,onUpdate:()=>mother.setFrame(2+(step++%4)),onComplete:()=>mother.setFlipX(true).setFrame(0)});}
+    }else if(phase==='ordinary'){
+      this.player.setFrame(0);focus(805,1800);
+    }else if(['door','tv','toy'].includes(phase)){
+      focus(phase==='door'?900:phase==='tv'?420:570,1800);
+      if(phase==='door')this.tweens.addCounter({from:.12,to:.28,duration:2200,onUpdate:t=>this.atmosphere.setFillStyle(0x172630,t.getValue())});
+    }else if(phase==='open'){
       this.farewellDoorOpen=1;
       door?.setOrigin(0,1).setX(b.door-60);
       if(door)this.tweens.add({targets:door,scaleX:.12,duration:reduced?0:450});
@@ -137,6 +150,8 @@ export class LifeScene extends Phaser.Scene{
     g.lineStyle(1,0xc5d0d4,.55);
     const t=this.bridge.settings.reducedMotion?0:time;
     for(let i=0;i<26;i++){const x=b.door-46+(i*27+t*.02)%90,y=202+(i*31+t*.24)%240;g.lineBetween(x,y,x-4,Math.min(456,y+13));}
+    g.lineStyle(1,0xb6c6cc,.35);for(let i=0;i<17;i++){const x=270+(i*21+t*.012)%128,y=168+(i*17+t*.15)%104;g.lineBetween(x,y,x-3,Math.min(y+9,278));}
+    g.fillStyle(0xc3dbd6,.12+.03*Math.sin(t*.01));g.fillRect(384,350,70,48);
     if(this.farewellDoorOpen){g.fillStyle(0x9aafbd,.15);g.fillTriangle(b.door-49,455,b.door+50,455,b.child-45,455-70);}
   }
   refreshMemories(){for(const e of this.entities||[]){if(e.sparkle)e.sparkle.setVisible(!this.bridge.state?.inspected.includes(e.data.id));}}

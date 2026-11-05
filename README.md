@@ -128,3 +128,22 @@ python tests/browser_performance.py
 브라우저 검사는 Python Playwright와 Chromium이 필요하며 일반 게임 실행에는 필요하지 않습니다. `python -m pip install playwright`, `python -m playwright install chromium`으로 준비할 수 있습니다. `GAME_URL`, `CHROMIUM_PATH`로 서버·브라우저를 지정할 수 있습니다. 실제 UI/입력으로 전체 챕터를 진행하는 검사와 저장 fixture를 사용하는 부분 검사를 구분합니다.
 
 [v1.4 변경·검증](docs/CHAPTER_POLISH_V1_4.md), [이전 배포 기록](docs/PAGES_RELEASE.md), [v1.3 변경 보고](docs/IMPROVEMENTS_V1_3.md), [챕터 확장](docs/CHAPTER_EXTENSION.md), [v1.2 서사 기록](docs/NARRATIVE_V1_2.md), [검증 기록](VALIDATION.md), [외부 라이브러리](THIRD_PARTY_NOTICES.md)를 참조하세요. 사람의 읽기 시간이나 S24 Ultra 실기기 성능을 측정한 것으로 표현하지 않습니다. 사진 기반 외형과 챕터 2–8 플레이는 아직 구현하지 않았습니다.
+
+## v1.5 Android DEMO
+
+웹과 같은 게임 코드를 Capacitor 8 앱에 포함합니다. Android 패키지는 `com.hayoo74.lifestory`, 버전은 `1.5.0`입니다. 외부 게임 서버를 여는 방식이 아니며 `dist-native` 파일을 APK에 포함합니다. 브라우저 저장은 그대로 유지하고, 앱에서는 Android Preferences에 별도로 저장합니다. 두 저장소는 자동 공유되지 않습니다. 기존 저장 파일 내보내기/가져오기로 옮길 수 있으며 앱에서는 내보내기 시 Android 공유 창을 사용합니다.
+
+```sh
+npm ci
+npm test
+npm run build              # Pages용 dist, /life-story-game/
+npm run android:sync       # 앱용 dist-native, 상대 경로 + Capacitor 동기화
+cd android
+./gradlew assembleDebug    # Java 21, Android SDK 36 필요
+```
+
+`.github/workflows/android.yml`은 Pages와 별개로 APK를 빌드하고 서명/내장 파일 무결성을 검사한 뒤 Android 에뮬레이터에서 설치 검사를 수행합니다. Actions의 **LIFE-STORY-DEMO-v1.5** 아티팩트에 `LIFE-STORY-DEMO-v1.5.apk`와 SHA-256 파일이 포함됩니다.
+
+`android/debug-demo.keystore`는 **공개된 데모 전용 키**이며 비밀번호는 `android`입니다. CI 빌드 사이의 앱 업데이트와 저장 유지를 위해 고정합니다. 정식 Play Store 배포에는 이 키를 사용하지 말고 별도의 비공개 릴리스 키를 사용해야 합니다. 앱 제거/데이터 삭제 전에는 저장 파일을 내보내세요. 동일 ID와 동일 서명의 덮어쓰기 설치는 데이터를 유지합니다.
+
+오디오의 실제 구현과 한계: [AUDIO_V1_5.md](docs/AUDIO_V1_5.md).

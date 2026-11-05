@@ -1,3 +1,4 @@
+import {gameStorage} from './runtime-storage.js';
 import {normalizeSave,SAVE_KEY,writeSave,SAVE_VERSION} from '../save.js';
 import {catalog,chapterSupported} from './catalog.js';
 const LIMIT=2*1024*1024;
@@ -24,6 +25,6 @@ export function parseSaveFile(text){
 }
 export function importSaveText(text,storage){
  const parsed=parseSaveFile(text);if(!parsed.ok)return parsed;
- try{const target=storage??globalThis.localStorage,old=target.getItem(SAVE_KEY);if(old!==null)target.setItem(IMPORT_BACKUP_KEY,old);if(!writeSave(parsed.state,target))return {ok:false,error:'저장 공간이 부족해 복구하지 못했습니다. 기존 진행은 유지됩니다.'};return parsed;}
+ try{const target=storage??gameStorage(),old=target.getItem(SAVE_KEY);if(old!==null)target.setItem(IMPORT_BACKUP_KEY,old);if(!writeSave(parsed.state,target))return {ok:false,error:'저장 공간이 부족해 복구하지 못했습니다. 기존 진행은 유지됩니다.'};return parsed;}
  catch{return {ok:false,error:'브라우저 저장소에 쓸 수 없습니다. 기존 진행은 유지됩니다.'};}
 }

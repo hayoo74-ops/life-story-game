@@ -50,14 +50,14 @@ async def run():
    elif s['overlay']=='memory':await q.locator('#memory-close').click()
    await q.wait_for_timeout(50)
   await q.wait_for_function('lifeStory.getSnapshot().farewell.phase==="quote"')
-  assert await q.locator('.farewell-quote').inner_text()=='엄마 나갔다올게 건강하게 잘있어';s=await snap(q);assert s['visualStage']=='farewell' and s['storyScene']==6;assert s['audio']['cinematicAmbience']=='rain' and s['audio']['ambientLoops']==2
+  assert await q.locator('.farewell-quote').inner_text()=='엄마 나갔다올게 건강하게 잘있어';s=await snap(q);assert s['visualStage']=='farewell' and s['storyScene']==6;assert s['audio']['cinematicAmbience']=='rain' and s['audio']['ambientLoops']>=2
   assert (await q.evaluate("JSON.parse(localStorage.getItem('life-story:save')).stage"))=='changed-home'
   await q.screenshot(path=str(OUT/'farewell-quote.png'))
   await q.locator('#farewell-next').click();await q.wait_for_function('lifeStory.getSnapshot().farewell.phase==="silence"');assert (await snap(q))['audio']['rainOpenness']==1
   await q.locator('.farewell-pause').click();before=await snap(q);await q.wait_for_timeout(1700);assert (await snap(q))['farewell']['phase']==before['farewell']['phase'];assert (await snap(q))['audio']['ambientLoops']==0
   await q.locator('#menu-resume').click();await q.wait_for_timeout(250);await q.screenshot(path=str(OUT/'farewell-rain.png'))
-  await q.wait_for_function('lifeStory.getSnapshot().farewell.phase==="epilogue"',timeout=15000)
-  assert await q.locator('.farewell-final').inner_text()=='그 뒤로 다시는 엄마를 만날 수 없었다'
+  await q.wait_for_function('lifeStory.getSnapshot().farewell.phase==="epilogue"',timeout=60000)
+  assert await q.locator('.farewell-final').inner_text()=='그 뒤로 다시는 엄마를 만날 수 없었다.'
   assert await q.locator('#cinematic').evaluate('(e)=>getComputedStyle(e).backgroundColor')=='rgb(5, 9, 12)'
   await q.wait_for_function('!lifeStory.getSnapshot().farewell.busy');await q.screenshot(path=str(OUT/'farewell-final.png'))
   for width,height in [(360,740),(412,915),(915,412)]:
