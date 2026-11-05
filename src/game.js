@@ -45,7 +45,8 @@ export class LifeScene extends Phaser.Scene{
     if(stage.id==='playground'){const box=add(this.add.rectangle(1020,FLOOR-10,34,20,0xa98c60).setStrokeStyle(2,0xd1bb86).setDepth(2));this.obstacles.add(box);this.obstacleCollider=this.physics.add.collider(this.player,this.obstacles);}
     this.lastGrounded=-1000;this.jumpAt=-1000;this.player.anims.play(this.playerKey+'-idle');
     this.playerName=this.add.text(x,FLOOR-89,'재원',{fontFamily:'sans-serif',fontSize:'11px',color:'#f9f1d3',stroke:'#617156',strokeThickness:3}).setOrigin(.5).setDepth(7);
-    for(const data of stage.entities){
+    for(const specification of stage.entities){
+      const data={...specification};
       let sprite;let top;
       if(data.type==='npc'){
         add(this.add.ellipse(data.x,FLOOR+3,35,8,0x344e35,.17).setDepth(2));
@@ -53,7 +54,13 @@ export class LifeScene extends Phaser.Scene{
       }else{
         const art=data.art||(data.type==='event'?'finish':'portal');
         const anchorY=data.mount==='wall'?data.y:FLOOR;
-        sprite=add(this.add.image(data.x,anchorY,'obj-'+art).setScale(data.scale||1).setOrigin(.5,1).setDepth(2));top=anchorY-sprite.displayHeight-12;
+        sprite=add(this.add.image(data.x,anchorY,'obj-'+art).setScale(data.scale||1).setOrigin(.5,1).setDepth(2));
+        if(data.buildingId){
+          const facade=stageArchitecture(stage).buildings.find(b=>b.id===data.buildingId);
+          const opening=facade?.windows.toSorted((a,b)=>Math.hypot((a.left+a.right)/2-data.x,a.bottom-data.y)-Math.hypot((b.left+b.right)/2-data.x,b.bottom-data.y))[0];
+          if(opening){data.x=(opening.left+opening.right)/2;data.y=opening.bottom;sprite.setPosition(data.x,data.y).setDisplaySize(opening.right-opening.left,opening.bottom-opening.top).setVisible(false);}
+        }
+        top=sprite.y-sprite.displayHeight-12;
       }
       const label=add(this.add.text(data.x,top,data.label,{fontFamily:'sans-serif',fontSize:'11px',color:'#f9f2d9',backgroundColor:'#4b6247d9',padding:{left:7,right:7,top:4,bottom:4}}).setOrigin(.5,1).setDepth(7));
       const indicator=add(this.add.text(data.x,top-32,data.type==='npc'?'···':'✦',{fontFamily:'sans-serif',fontSize:'16px',color:'#fff1bc',stroke:'#63704b',strokeThickness:3}).setOrigin(.5,1).setDepth(7));
@@ -123,7 +130,7 @@ export class LifeScene extends Phaser.Scene{
       this.player.setFrame(9);const toy=this.entities.find(e=>e.data.id==='farewell-toy')?.sprite;
       this.bridge.sound.startToyMotion();if(toy)this.tweens.add({targets:toy,x:toy.x+42,yoyo:true,repeat:1,duration:550,ease:'Sine.easeInOut',onUpdate:t=>this.bridge.sound.updateToyMotion(80*Math.abs(Math.sin(t.progress*Math.PI))),onComplete:()=>this.bridge.sound.stopToyMotion()});
     }else if(phase==='approach'){
-      this.bridge.sound.stopToyMotion();this.player.setFrame(0).setFlipX(false);focus(760,1900);
+      this.bridge.sound.stopToyMotion();this.player.setFrame(0).setFlipX(false);focus(750,1900);let childStep=0;this.tweens.add({targets:this.player,x:650,duration:reduced?0:1200,onUpdate:()=>this.player.setFrame(2+(childStep++%4)),onComplete:()=>this.player.setFrame(0)});
       if(mother){let step=0;this.tweens.add({targets:mother,x:815,duration:reduced?0:1400,onUpdate:()=>mother.setFrame(2+(step++%4)),onComplete:()=>mother.setFlipX(true).setFrame(0)});}
     }else if(phase==='ordinary'){
       this.player.setFrame(0);focus(805,1800);
@@ -136,7 +143,7 @@ export class LifeScene extends Phaser.Scene{
       if(door)this.tweens.add({targets:door,scaleX:.12,duration:reduced?0:450});
     }else if(phase==='leave'&&mother){
       mother.setFlipX(false);const counter={step:0};
-      this.tweens.add({targets:counter,step:10,duration:reduced?120:MOTHER_FAREWELL.timing.walk,onUpdate:()=>mother.setFrame(2+Math.floor(counter.step)%4)});
+      this.tweens.add({targets:counter,step:10,duration:reduced?120:MOTHER_FAREWELL.timing.walk,onUpdate:()=>{mother.setFrame(2+Math.floor(counter.step)%4);this.bridge.sound.effect('step-wet');}});
       this.tweens.add({targets:mother,x:b.outside,duration:reduced?120:MOTHER_FAREWELL.timing.walk,onComplete:()=>this.tweens.add({targets:mother,alpha:0,duration:reduced?40:MOTHER_FAREWELL.timing.leave})});
     }else if(phase==='close'){
       this.farewellDoorOpen=0;

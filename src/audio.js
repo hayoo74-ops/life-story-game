@@ -55,7 +55,7 @@ export class Soundtrack{
   if(kind==='impact'){this.burst(.12,.05,260,'lowpass');return;}
   if(kind==='thunder'){this.burst(.8,.035,130,'lowpass');return;}
   if(kind==='clock'){this.burst(.012,.009,1800,'bandpass');return;}
-  if(kind.startsWith('step')){this.burst(.035,kind==='step-wood'?.035:.024,kind==='step-wood'?1100:1900,'lowpass');return;}
+  if(kind.startsWith('step')){this.burst(.035,kind==='step-wood'?.035:.024,kind==='step-wood'?1100:1900,'lowpass');if(kind==='step-wet')this.burst(.09,.018,1400,'highpass');return;}
   if(kind==='paper'){this.burst(.12,.025,1300);return;}
   if(kind==='pencil'){this.burst(.06,.018,2200,'bandpass');return;}
   if(kind==='drawer'){this.burst(.22,.028,600,'bandpass');this.schedule(()=>this.burst(.04,.02,240,'lowpass'),190);return;}

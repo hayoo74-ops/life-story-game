@@ -52,7 +52,7 @@ async def run():
    s=await snap(q);phase=s['farewell']['phase']
    if phase not in seen:
     seen.add(phase);phases.append(phase);await q.screenshot(path=str(OUT/('farewell-'+str(phase)+'.png')))
-   if phase=='quote':assert await q.locator('.farewell-quote').inner_text()=='엄마 나갔다올게 건강하게 잘있어';await q.locator('#farewell-next').click()
+   if phase=='quote':assert await q.locator('.farewell-quote').inner_text()=='엄마 나갔다올게 건강하게 잘있어';assert s['camera']['left']<s['x']<s['camera']['right'];assert all(s['camera']['left']<a['x']<s['camera']['right'] for a in s['actors']);await q.locator('#farewell-next').click()
    if phase=='epilogue' and not s['farewell']['busy']:break
    await q.wait_for_timeout(150)
   assert all(x in phases for x in ['establish','approach','quote','silence','leaving','door-close','ordinary','montage-door','montage-tv','montage-toy','reflection-0','reflection-1','reflection-2','epilogue']),phases
