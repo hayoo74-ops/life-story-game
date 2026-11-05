@@ -1,3 +1,4 @@
+import {recordChoice,albumTraces} from '../src/systems/progress.js';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {clockReading} from '../src/systems/wall-clocks.js';
@@ -22,7 +23,7 @@ test('all parent branches and hero child lines use casual speech; grandparents k
 });
 test('visible casual options retain prior saved choice values and old progress',()=>{
  const option=DIALOGUES.father({...freshSave(),storyScene:2}).find(l=>l.choices).choices[1];assert.equal(option.label,'뭐 하나 보여 줄래');assert.equal(option.value,'뭐 하나 보여 줄래요');
- const old={...freshSave(),storyScene:7,stage:'father-home',memories:['family','tv','hero'],choices:{'father-tv':option.value}};const restored=normalizeSave(old);assert.equal(restored.version,4);assert.equal(restored.storyScene,7);assert.deepEqual(restored.memories,old.memories);assert.deepEqual(restored.choices,old.choices);
+ const old={...freshSave(),storyScene:7,stage:'father-home',memories:['family','tv','hero'],choices:{'father-tv':option.value}};const restored=normalizeSave(old);assert.equal(restored.version,4);assert.equal(restored.storyScene,7);assert.deepEqual(restored.memories,old.memories);assert.deepEqual(restored.choices,old.choices);recordChoice(restored,'father-tv',option.value,option.label);assert.equal(restored.choices['father-tv'],option.value);assert.equal(albumTraces(restored).find(t=>t.id==='father-tv').text,option.label);restored.memoryTraces['father-tv'].value=option.value;assert.equal(albumTraces(restored).find(t=>t.id==='father-tv').text,option.label);
 });
 test('N64 memory is optional, factual recollection with staged art, using the existing save schema',()=>{
  const memory=MEMORIES.find(m=>m.id==='console64');assert.ok(memory.kinds.includes('fact'));assert.ok(memory.kinds.includes('staged'));assert.match(memory.text,/부모님과.*첫 콘솔게임기/);assert.match(memory.text,/슈퍼마리오64/);
