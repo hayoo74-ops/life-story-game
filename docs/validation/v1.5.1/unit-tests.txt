@@ -1,0 +1,64 @@
+
+> life-story@1.5.1 test
+> node tests/run.js
+
+✔ current progresses and settings round trip together (3.233337ms)
+✔ v1 migration preserves exact backup, collected IDs and settings without asserting old story facts (0.382527ms)
+✔ invalid IDs, position and duplicates normalize safely (0.354165ms)
+✔ future or corrupt saves are never automatically overwritten (0.207313ms)
+✔ blocked storage and quota errors do not throw (0.182415ms)
+✔ resuming outside the optional exploration period returns to canonical scene (0.175826ms)
+✔ a failed v1 backup cannot cause the old save to be overwritten (0.204789ms)
+✔ v2 upgrades without resetting scene, inventory, position or settings (0.597402ms)
+✔ brother interlude resume preserves return point and dialogue/seen state (1.067262ms)
+✔ invalid optional history cannot throw or unlock new cutscenes (0.389298ms)
+✔ 12 scenes preserve family chronology and separate the brother interlude (0.397099ms)
+✔ every playable line has provenance internally and no report-like prose (1.706616ms)
+✔ hero scene has 20+ beats, varied actions, parents, exact remembered quotes (0.323899ms)
+✔ brother family exists but age, residence, personality, and witnessing remain unknown (0.762521ms)
+✔ NPC dialogue responds to revisit, phase and saved choices (0.326684ms)
+✔ main quest asks for family conversations, not just walking past objects (0.323989ms)
+✔ all object/portal references and metadata remain valid (0.434516ms)
+✔ door memory retains direct witness, no invented cause, no extra witness (0.163597ms)
+✔ future chapters remain design-only with all ten planning fields (0.560236ms)
+✔ v3 migration backs up exact bytes and preserves all existing progress (0.269217ms)
+✔ export/import round-trip includes choices, object state, history and mini progress (1.43105ms)
+✔ corrupt, malformed, wrong-scene, future and altered files never overwrite current save (2.317089ms)
+✔ raw legacy v1/v2/v3 files are recoverable and future chapters stay blocked (0.235916ms)
+✔ failed backup or write leaves original progress byte-for-byte intact (0.762932ms)
+✔ typewriter reveal and auto advance use one timer and pause remaining time (0.61616ms)
+✔ cancelled text and choices cannot advance from a stale timer (0.146872ms)
+✔ choice and mini traces never change historical progression or events (0.265591ms)
+✔ registry rejects broken chapters; planned chapters expose no playable stages (0.494236ms)
+✔ settings clamp volume and migrate large text while keeping mute consistent (0.191669ms)
+✔ metrics exclude pauses and bound the sample ring (0.37086ms)
+✔ malformed optional mini progress is bounded before it can affect gameplay (0.34476ms)
+✔ public Pages never deploys without explicit story publication consent (0.448357ms)
+✔ verified private Pages can deploy without approving public exposure (0.076556ms)
+✔ unapproved public or unknown source repository is rejected (0.182084ms)
+✔ unknown site visibility fails closed even if public exposure was approved (0.169727ms)
+✔ public source requires its own explicit approval independently of site approval (0.189286ms)
+✔ unknown source visibility is rejected even with source-publication approval (0.12597ms)
+✔ only the first inspection of an uncollected memory gets a full presentation (0.117137ms)
+✔ every interior uses one architecture layout and upper-wall windows (0.378371ms)
+✔ farewell preserves requested text, provenance, chronology and scene IDs (0.329768ms)
+✔ new seen state persists without resetting old saves or storing the transient cinematic map (0.227754ms)
+✔ TV and wall mask have separate approach positions (0.22554ms)
+✔ building openings belong to their facade at every hillside and street scale (63.875122ms)
+✔ every outdoor stage uses nonoverlapping architecture and gap landscaping (0.897084ms)
+✔ farewell distinguishes exact remembered quote from artistic voice-over (0.113402ms)
+✔ v1.5 does not reset v4 progress or v1.4 seen markers (0.139401ms)
+✔ clock follows local device hours/minutes at midday and midnight, independently of story time (0.155234ms)
+✔ all parent branches and hero child lines use casual speech; grandparents keep respectful replies (1.764173ms)
+✔ visible casual options retain prior saved choice values and old progress (0.23202ms)
+✔ N64 memory is optional, factual recollection with staged art, using the existing save schema (0.214364ms)
+✔ parents have explicit sofa seats within the cushion rather than cropped standing frames (0.1791ms)
+✔ districts have distinct period architecture without invented business names or window/utility collisions (0.447116ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 52
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.369144

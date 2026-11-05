@@ -1,5 +1,9 @@
 # Android DEMO 다운로드
 
+최신 패치: [LIFE-STORY-DEMO-v1.5.1.apk](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.1/LIFE-STORY-DEMO-v1.5.1.apk) · [검증 결과](../docs/PATCH_V1_5_1.md)
+
+아래 v1.5.0 파일은 이전 버전 이력입니다.
+
 [LIFE-STORY-DEMO-v1.5.apk](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.0/LIFE-STORY-DEMO-v1.5.apk)
 
 - 앱 ID: `com.hayoo74.lifestory`, 버전: `1.5.0`

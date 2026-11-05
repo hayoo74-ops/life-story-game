@@ -1,0 +1,158 @@
+{
+  "url": "https://hayoo74-ops.github.io/life-story-game/",
+  "http_status": 200,
+  "files_verified": 30,
+  "sha256_match": true,
+  "files": [
+    {
+      "path": "icon.svg",
+      "bytes": 327,
+      "sha256": "03a63fedc38a49c8519f5602ea6942daade3917d5de491f7d77c994b78fbe92b"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 487,
+      "sha256": "e8a14f33a68ffa714912710754d543b93a538dc002a9226d13dfd074075e58be"
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 691,
+      "sha256": "e1208f2153315ccced02039d27a7da71752862577657122bc94aaa6d161b6047"
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 2047,
+      "sha256": "6a06e4c0c9d6f9b11943190e3796285f036b48c0365c390bff46f69351521243"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 2294,
+      "sha256": "d025275ad39585cf86ce3fb4c74655db271cff1e6bd552ced8b0f1eea433d777"
+    },
+    {
+      "path": "workbox-2fbc6a65.js",
+      "bytes": 15026,
+      "sha256": "39c2e6ae44c3f29666f6a328b6523bf13a053a1d95c74af8ddea82b1045b0b6e"
+    },
+    {
+      "path": "index.html",
+      "bytes": 5265,
+      "sha256": "27f85bd7d293aaa65e0ef7233eb9fdafeb97ccf087a6b5012f09d6464c825fe9"
+    },
+    {
+      "path": "licenses/Vite.txt",
+      "bytes": 101176,
+      "sha256": "a77a1c089806b39ad339535bdf3677f636c91d96693e8ad7b11fe733f650ea64"
+    },
+    {
+      "path": "licenses/vite-plugin-pwa.txt",
+      "bytes": 1102,
+      "sha256": "05c365176db3cc00e951c44b921c809c75b8e99d2d724f7daf00381e26fb0850"
+    },
+    {
+      "path": "licenses/Workbox.txt",
+      "bytes": 1050,
+      "sha256": "aee9670e09b75ca8a2a1fe62d545ae38a6797970caf0335628e3a4dd15bc9b6c"
+    },
+    {
+      "path": "licenses/Phaser.txt",
+      "bytes": 1120,
+      "sha256": "080f3d5539e766bb556df5b8e86c4f5d581ece35c692b80956ca352b84d29134"
+    },
+    {
+      "path": "assets/runtime-storage-BUsKMspq.js",
+      "bytes": 1326,
+      "sha256": "446e2a1973ac42e74969c3653ca421d40f37d784453c8462ccf4d14dadbc2f25"
+    },
+    {
+      "path": "assets/index-BH01yloE.js",
+      "bytes": 8267,
+      "sha256": "00d8c39482f9af8f25927d83b91cfb71a154ea4c8014b4e99b37d4d13b148876"
+    },
+    {
+      "path": "assets/main-CLLtqNGk.css",
+      "bytes": 29856,
+      "sha256": "7adb9141b9738a1c95ec0f57d32217b8876db7af731c52530bc95e7e118b18a8"
+    },
+    {
+      "path": "assets/web-BVcj6WZN.js",
+      "bytes": 8777,
+      "sha256": "c29575c7ae0d661ab6c0c9d9cf9465ae88825088211c9f3449a37bf52c9a939c"
+    },
+    {
+      "path": "assets/index-C5Hrvce8.js",
+      "bytes": 284,
+      "sha256": "43acfe233810f08e00605e937a68161e13b6b76ec3059ec70c1902ba0ac2d18e"
+    },
+    {
+      "path": "assets/index-CrRHsHFD.js",
+      "bytes": 363,
+      "sha256": "a0a16cda5c1b64c0494d88ae7e9cf0b96b494c4ad36cecb26398ec85adf1f076"
+    },
+    {
+      "path": "assets/preload-helper-DIUUf0JC.js",
+      "bytes": 1126,
+      "sha256": "df9d6a83b7f63c4ab3b8ccff1ebc9cd5af4abdea61fd04cc27ba55adebf7725c"
+    },
+    {
+      "path": "assets/index-CY9Ssz0p.js",
+      "bytes": 1384,
+      "sha256": "1c9b1d75d36d3448bcd02998fa167d0bb3ad2032de4a58a7e64dd3ea11d15de9"
+    },
+    {
+      "path": "assets/web-CHEUK_Kh.js",
+      "bytes": 1253,
+      "sha256": "924a71e46cef7a44410cdee423a5096fa4dd37fbee6bdca6c799cd03505fb25b"
+    },
+    {
+      "path": "assets/index-Bb1YlFP3.js",
+      "bytes": 1414,
+      "sha256": "1a2cad56e9b322f6efd5cd0a0badb5fe92f60d9253a364cf9d845970600a3a6a"
+    },
+    {
+      "path": "assets/web-CjeB5fKc.js",
+      "bytes": 127,
+      "sha256": "31f77f75161570ebc0383e4a11591371a8fbd7914b47ce4f35ad8bed217cde3f"
+    },
+    {
+      "path": "assets/main-5yDWiMPz.js",
+      "bytes": 191712,
+      "sha256": "3f72602c0310e62861c4b91f80741247b03e42e553d5a8f5652626e7c4dac0fd"
+    },
+    {
+      "path": "assets/phaser-DXXWZowi.js",
+      "bytes": 1208050,
+      "sha256": "9031f79935ba598df03915ec937779c0480dc35b2e58e0cb9f95b910e56df425"
+    },
+    {
+      "path": "assets/index-Gnomo0Z1.js",
+      "bytes": 357,
+      "sha256": "0f7fd2f9864556c8945e9bb2294093a789bb13876de3aec179faea6bd75565a8"
+    },
+    {
+      "path": "assets/index-B2nIB3Gp.js",
+      "bytes": 381,
+      "sha256": "65ee56f9b936bfea4ca3b902b47473074266dc8cb5e9c4b52b7d5f9ece99e902"
+    },
+    {
+      "path": "assets/web-CGGH88F4.js",
+      "bytes": 850,
+      "sha256": "c09af1c5f60eb283ead3dd7d1bd2e49ccd728e67ba91b4879156628550bdb0b9"
+    },
+    {
+      "path": "assets/web-CkoM7Jtb.js",
+      "bytes": 369,
+      "sha256": "e696b249db234722fd9f6c71c2cb8e7c219de6e50f381f966fb9294f47ffb09e"
+    },
+    {
+      "path": "assets/index-DU0Fw3je.js",
+      "bytes": 384,
+      "sha256": "850768326a70006d1c362630f3d5688d98f55f34cdc60e73b03c40b74c37d6ac"
+    },
+    {
+      "path": "assets/workbox-window.prod.es5-BBnX5xw4.js",
+      "bytes": 5748,
+      "sha256": "cadd21be4a88598a4dec91a26a025df0a5790ff6baec54a884e401c3f5c95557"
+    }
+  ]
+}

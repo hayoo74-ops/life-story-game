@@ -1,0 +1,140 @@
+{
+  "tested_url": "http://127.0.0.1:4173/life-story-game/",
+  "passed": [
+    "집↔시계 없는 골목 3회 왕복: 중복/잔상 없음; 한국·뉴욕 로컬 시각, 분/시/자정, 일시정지·숨김 복귀, 공부방 시계 동기화",
+    "엄마 전용 착석 프레임/좌표, 부모 반말 대화와 기존 선택 값에 따른 후속 반응",
+    "닌텐도64 첫 조사 기억·재조사 한 줄·앨범 재열람·저장 재시작 유지",
+    "모바일 Chromium 터치 에뮬레이션: 2.2초 롱프레스 이동 유지/해제 정지, 선택·contextmenu 취소, JS 진동 호출 없음",
+    "학장동 기와 주택/생활 골목과 대연동 평지붕 중층 주거·포장도로 실제 렌더, 임의 상호 없음"
+  ],
+  "javascript_exceptions": [],
+  "clock_checks": [
+    {
+      "stage": "home",
+      "faces": [
+        {
+          "id": "wall-clock",
+          "x": 1190,
+          "y": 161,
+          "r": 14,
+          "case": true
+        }
+      ],
+      "labelCount": 1,
+      "labels": [
+        {
+          "text": "10:23",
+          "x": 1190,
+          "y": 184,
+          "active": true
+        }
+      ],
+      "reading": {
+        "hours": 10,
+        "minutes": 23,
+        "seconds": 45,
+        "label": "10:23",
+        "hourAngle": 5.436700619962337,
+        "minuteAngle": 2.4085543677521746,
+        "secondAngle": 4.71238898038469
+      },
+      "depth": 2.6
+    },
+    {
+      "stage": "home",
+      "faces": [
+        {
+          "id": "wall-clock",
+          "x": 1190,
+          "y": 161,
+          "r": 14,
+          "case": true
+        }
+      ],
+      "labelCount": 1,
+      "labels": [
+        {
+          "text": "10:23",
+          "x": 1190,
+          "y": 184,
+          "active": true
+        }
+      ],
+      "reading": {
+        "hours": 10,
+        "minutes": 23,
+        "seconds": 45,
+        "label": "10:23",
+        "hourAngle": 5.436700619962337,
+        "minuteAngle": 2.4085543677521746,
+        "secondAngle": 4.71238898038469
+      },
+      "depth": 2.6
+    },
+    {
+      "stage": "home",
+      "faces": [
+        {
+          "id": "wall-clock",
+          "x": 1190,
+          "y": 161,
+          "r": 14,
+          "case": true
+        }
+      ],
+      "labelCount": 1,
+      "labels": [
+        {
+          "text": "10:23",
+          "x": 1190,
+          "y": 184,
+          "active": true
+        }
+      ],
+      "reading": {
+        "hours": 10,
+        "minutes": 23,
+        "seconds": 45,
+        "label": "10:23",
+        "hourAngle": 5.436700619962337,
+        "minuteAngle": 2.4085543677521746,
+        "secondAngle": 4.71238898038469
+      },
+      "depth": 2.6
+    },
+    {
+      "stage": "home",
+      "faces": [
+        {
+          "id": "wall-clock",
+          "x": 1190,
+          "y": 161,
+          "r": 14,
+          "case": true
+        }
+      ],
+      "labelCount": 1,
+      "labels": [
+        {
+          "text": "10:23",
+          "x": 1190,
+          "y": 184,
+          "active": true
+        }
+      ],
+      "reading": {
+        "hours": 10,
+        "minutes": 23,
+        "seconds": 45,
+        "label": "10:23",
+        "hourAngle": 5.436700619962337,
+        "minuteAngle": 2.4085543677521746,
+        "secondAngle": 4.71238898038469
+      },
+      "depth": 2.6
+    }
+  ],
+  "fixture_based": true,
+  "physical_haptic_actuator_tested": false,
+  "real_galaxy_device": false
+}

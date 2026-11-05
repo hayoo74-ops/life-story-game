@@ -1,14 +1,17 @@
-# LIFE STORY v1.5 Android 설치·개발
+# LIFE STORY v1.5.1 Android 설치·개발
 
-앱 이름: **LIFE STORY — 나의 인생**  
-ID: `com.hayoo74.lifestory`  
-버전 이름: `1.5.0`, versionCode: `10500`  
+앱 이름: **LIFE STORY — 나의 인생**
+
+ID: `com.hayoo74.lifestory`
+
+버전 이름: `1.5.1`, versionCode: `10501`
+
 최소 Android: 7.0 (API 24). 권장 대상: Galaxy S24 Ultra, 최신 Android System WebView.
 
 ## 갤럭시에 설치하기
 
-1. [APK 다운로드](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.0/LIFE-STORY-DEMO-v1.5.apk) 링크를 엽니다. [v1.5 배포·검증 기록](RELEASE_V1_5.md)에 SHA-256과 실제 검사 결과가 있습니다.
-2. `LIFE-STORY-DEMO-v1.5.apk`를 내려받아 **내 파일 → 다운로드**에서 엽니다.
+1. [APK 다운로드](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.1/LIFE-STORY-DEMO-v1.5.1.apk) 링크를 엽니다. [v1.5.1 패치·검증 기록](PATCH_V1_5_1.md)에 SHA-256과 실제 검사 결과가 있습니다.
+2. `LIFE-STORY-DEMO-v1.5.1.apk`를 내려받아 **내 파일 → 다운로드**에서 엽니다.
 3. 요청되면 해당 브라우저 또는 내 파일의 **출처를 알 수 없는 앱 설치** 권한을 허용한 뒤 설치합니다. 기기 관리 정책이나 삼성 보안 위험 자동 차단이 설치를 막는 경우에는 기기에 표시되는 안내를 확인해야 합니다.
 4. 홈 화면/앱스의 LIFE STORY 아이콘을 누릅니다. Chrome이나 삼성 인터넷을 따로 열지 않습니다.
 5. 첫 실행부터 필수 게임 파일은 APK 안에 있습니다. 인터넷 없이 새 게임을 시작할 수 있습니다. 소리는 게임 상단의 음표 버튼으로 켭니다.
@@ -31,9 +34,9 @@ Java 21과 Android SDK 36, build-tools 36.0.0이 필요합니다. SDK 경로는 
 
 ## GitHub Actions
 
-**Actions → Build LIFE STORY Android APK → Run workflow → main**을 선택합니다. `apk` 작업이 빌드·서명·모든 내장 파일 일치 검사를 수행합니다. 성공하면 **LIFE-STORY-DEMO-v1.5** 아티팩트에 APK, `SHA256SUMS.txt`, 서명·패키지 메타데이터가 들어갑니다. 일반 Actions 아티팩트 다운로드는 GitHub 로그인이 필요하며 보관 기간은 30일입니다. 최종 릴리스 다운로드는 별도로 기록합니다.
+**Actions → Build LIFE STORY Android APK → Run workflow → main**을 선택합니다. `apk` 작업이 빌드·서명·모든 내장 파일 일치 검사를 수행합니다. 성공하면 **LIFE-STORY-DEMO-v1.5.1** 아티팩트에 APK, `SHA256SUMS.txt`, 서명·패키지 메타데이터가 들어갑니다. 일반 Actions 아티팩트 다운로드는 GitHub 로그인이 필요하며 보관 기간은 30일입니다. 최종 릴리스 다운로드는 별도로 기록합니다.
 
-`emulator` 작업은 API 35 Pixel 6 프로필에서 인터넷을 끈 채 실제 APK를 설치하고, UIAutomator와 Android 입력으로 터치·저장·앱 복귀·프로세스 재시작·같은 서명 덮어쓰기·뒤로 가기를 검사합니다. 결과와 Android 스크린샷은 **Android-emulator-validation-v1.5**에 들어갑니다. 이 검사를 Galaxy 실기기 검사로 간주하지 않습니다.
+`emulator` 작업은 API 35 Pixel 6 프로필에서 인터넷을 끈 채 실제 APK를 설치하고, UIAutomator와 Android 입력으로 터치·저장·앱 복귀·프로세스 재시작·같은 서명 덮어쓰기·뒤로 가기를 검사합니다. 결과와 Android 스크린샷은 **Android-emulator-validation-v1.5.1**에 들어갑니다. 이 검사를 Galaxy 실기기 검사로 간주하지 않습니다.
 
 Pages는 별도 `pages.yml`을 사용합니다. main 푸시는 검증을 실행하고, 실제 공개 배포는 기존 공개 승인 입력을 포함하는 workflow_dispatch로 수행합니다.
 

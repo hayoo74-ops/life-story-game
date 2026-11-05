@@ -5,11 +5,13 @@
 
 갤럭시 Chrome에서 링크를 열고 **새 게임** 또는 **이어하기**를 선택하세요. 첫 리소스 캐싱 뒤 오프라인 재실행을 지원합니다. 홈 화면에 추가는 브라우저 메뉴에서 선택할 수 있습니다.
 
-**챕터 1 v1.5 — 일상에 남은 인사.** 건물 외벽에 속한 창문과 문, 행동에 맞는 합성 환경음, 다섯 단계의 엄마 작별 시네마틱과 앨범 영상 재감상을 구현했습니다. 기존 이동·대화·선택·미니게임·기억 17개와 저장 호환성을 유지합니다. Capacitor 기반 오프라인 Android APK 빌드를 추가했습니다. **챕터 2–8은 기획 단계**입니다.
+**챕터 1 v1.5.1 — 완성도 보강 패치.** 씬 재진입 시계와 기기 로컬 시각 동기화, 부모님께 반말/조부모님께 존댓말, 엄마의 소파 착석, 모바일 롱프레스 대응, 두 동네의 시대감과 닌텐도64 추억을 보강했습니다. 기존 저장 스키마 v4와 사건·이동·컷신은 유지하고 선택 기억은 17개에서 18개가 됩니다. **챕터 2–8은 기획 단계**입니다.
 
-[변경 파일·검증·APK 다운로드 기록](docs/RELEASE_V1_5.md) · [갤럭시 APK 설치](docs/ANDROID.md)
+[이번 패치의 수정 파일·테스트·그림](docs/PATCH_V1_5_1.md) · [이전 v1.5 배포 기록](docs/RELEASE_V1_5.md) · [갤럭시 APK 설치](docs/ANDROID.md)
 
-**[Android APK 다운로드 — v1.5](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.0/LIFE-STORY-DEMO-v1.5.apk)** (약 4.6MB, 디버그 빌드). [웹 게임 실행](https://hayoo74-ops.github.io/life-story-game/) / [검증 스크린샷](docs/screenshots/v1.5/all-stages.png). 웹 업데이트 전 탭이 열려 있었다면 게임 탭을 모두 닫고 다시 접속하세요. 저장 데이터는 삭제하지 않아도 됩니다.
+**[패치 APK 다운로드 — v1.5.1](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.1/LIFE-STORY-DEMO-v1.5.1.apk)** (약 4.6MB, 기존 앱 위에 덮어 설치). [패치 스크린샷](docs/screenshots/v1.5.1/district-comparison.png).
+
+웹 업데이트 전 탭이 열려 있었다면 게임 탭을 모두 닫고 다시 접속하세요. 저장 데이터는 삭제하지 않아도 됩니다.
 
 ## 실행
 
@@ -133,9 +135,9 @@ python tests/browser_performance.py
 
 [v1.4 변경·검증](docs/CHAPTER_POLISH_V1_4.md), [이전 배포 기록](docs/PAGES_RELEASE.md), [v1.3 변경 보고](docs/IMPROVEMENTS_V1_3.md), [챕터 확장](docs/CHAPTER_EXTENSION.md), [v1.2 서사 기록](docs/NARRATIVE_V1_2.md), [검증 기록](VALIDATION.md), [외부 라이브러리](THIRD_PARTY_NOTICES.md)를 참조하세요. 사람의 읽기 시간이나 S24 Ultra 실기기 성능을 측정한 것으로 표현하지 않습니다. 사진 기반 외형과 챕터 2–8 플레이는 아직 구현하지 않았습니다.
 
-## v1.5 Android DEMO
+## Android DEMO
 
-웹과 같은 게임 코드를 Capacitor 8 앱에 포함합니다. Android 패키지는 `com.hayoo74.lifestory`, 버전은 `1.5.0`입니다. 외부 게임 서버를 여는 방식이 아니며 `dist-native` 파일을 APK에 포함합니다. 브라우저 저장은 그대로 유지하고, 앱에서는 Android Preferences에 별도로 저장합니다. 두 저장소는 자동 공유되지 않습니다. 기존 저장 파일 내보내기/가져오기로 옮길 수 있으며 앱에서는 내보내기 시 Android 공유 창을 사용합니다.
+웹과 같은 게임 코드를 Capacitor 8 앱에 포함합니다. Android 패키지는 `com.hayoo74.lifestory`, 버전은 `1.5.1`입니다. 외부 게임 서버를 여는 방식이 아니며 `dist-native` 파일을 APK에 포함합니다. 브라우저 저장은 그대로 유지하고, 앱에서는 Android Preferences에 별도로 저장합니다. 두 저장소는 자동 공유되지 않습니다. 기존 저장 파일 내보내기/가져오기로 옮길 수 있으며 앱에서는 내보내기 시 Android 공유 창을 사용합니다.
 
 ```sh
 npm ci
@@ -146,7 +148,7 @@ cd android
 ./gradlew assembleDebug    # Java 21, Android SDK 36 필요
 ```
 
-`.github/workflows/android.yml`은 Pages와 별개로 APK를 빌드하고 서명/내장 파일 무결성을 검사한 뒤 Android 에뮬레이터에서 설치 검사를 수행합니다. Actions의 **LIFE-STORY-DEMO-v1.5** 아티팩트에 `LIFE-STORY-DEMO-v1.5.apk`와 SHA-256 파일이 포함됩니다.
+`.github/workflows/android.yml`은 Pages와 별개로 APK를 빌드하고 서명/내장 파일 무결성을 검사한 뒤 Android 에뮬레이터에서 설치 검사를 수행합니다. Actions의 **LIFE-STORY-DEMO-v1.5.1** 아티팩트에 `LIFE-STORY-DEMO-v1.5.1.apk`와 SHA-256 파일이 포함됩니다.
 
 `android/debug-demo.keystore`는 **공개된 데모 전용 키**이며 비밀번호는 `android`입니다. CI 빌드 사이의 앱 업데이트와 저장 유지를 위해 고정합니다. 정식 Play Store 배포에는 이 키를 사용하지 말고 별도의 비공개 릴리스 키를 사용해야 합니다. 앱 제거/데이터 삭제 전에는 저장 파일을 내보내세요. 동일 ID와 동일 서명의 덮어쓰기 설치는 데이터를 유지합니다.
 

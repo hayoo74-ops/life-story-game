@@ -1,0 +1,2309 @@
+{
+  "tested_url": "http://127.0.0.1:4173/life-story-game/",
+  "passed": [
+    "모든 일반 스테이지 전체 좌우·중앙과 세로 모바일 렌더링; 외벽 내 창문·문, 실내 창문/가구 비중첩",
+    "TV 전원 클릭·방송 루프 켜짐/꺼짐, 자동차 이동 중 마찰음·정지, 음소거/복귀",
+    "A~E 전체 컷신·3개 독백·최종 문구·복귀, 앨범 전체 영상 재감상 및 건너뛰기 시 원래 진행 유지",
+    "최초 관람도 건너뛰기 가능; 기존 기억 재팝업 없이 다음 장면으로 진행",
+    "v1.3 진행 저장도 강제 되감기 없이 앨범에서 새 컷신 감상; 관람이 사건/퀘스트를 변경하지 않음"
+  ],
+  "javascript_exceptions": [],
+  "stages_rendered": 15,
+  "phases": [
+    "establish",
+    "approach",
+    "quote",
+    "silence",
+    "leaving",
+    "door-close",
+    "ordinary",
+    "montage-door",
+    "montage-tv",
+    "montage-toy",
+    "fade",
+    "reflection-0",
+    "reflection-1",
+    "reflection-2",
+    "epilogue"
+  ],
+  "layouts": [
+    {
+      "stage": "brother-room",
+      "floor": 458,
+      "width": 1180,
+      "windows": [
+        {
+          "x": 230,
+          "y": 157,
+          "w": 160,
+          "h": 130,
+          "left": 230,
+          "right": 390,
+          "top": 157,
+          "bottom": 287
+        }
+      ],
+      "decorations": [
+        {
+          "id": "background-shelf",
+          "kind": "shelf",
+          "x": 870,
+          "w": 100,
+          "h": 200,
+          "left": 820,
+          "right": 920,
+          "top": 258,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "brother-paper",
+          "parentId": null,
+          "mount": "floor",
+          "left": 400,
+          "right": 520,
+          "top": 363,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "brother-exit",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1009,
+          "right": 1071,
+          "top": 355,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "home",
+      "floor": 458,
+      "width": 1580,
+      "windows": [
+        {
+          "x": 250,
+          "y": 160,
+          "w": 176,
+          "h": 132,
+          "left": 250,
+          "right": 426,
+          "top": 160,
+          "bottom": 292
+        }
+      ],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "photo",
+          "parentId": null,
+          "mount": "floor",
+          "left": 130,
+          "right": 210,
+          "top": 325,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "toy",
+          "parentId": null,
+          "mount": "floor",
+          "left": 326.5,
+          "right": 393.5,
+          "top": 431,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "sofa",
+          "parentId": null,
+          "mount": "floor",
+          "left": 515.5,
+          "right": 804.5,
+          "top": 374.7,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "tv",
+          "parentId": null,
+          "mount": "floor",
+          "left": 820,
+          "right": 980,
+          "top": 337,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "console64",
+          "parentId": "tv",
+          "mount": "attachment",
+          "left": 832,
+          "right": 896,
+          "top": 424,
+          "bottom": 448,
+          "depth": 2
+        },
+        {
+          "id": "mask",
+          "parentId": null,
+          "mount": "wall",
+          "left": 445,
+          "right": 525,
+          "top": 240,
+          "bottom": 310,
+          "depth": 2
+        },
+        {
+          "id": "shoes",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1010,
+          "right": 1090,
+          "top": 364,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "drawer",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1114,
+          "right": 1186,
+          "top": 386,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "plain-door",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1330,
+          "right": 1450,
+          "top": 188,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "folded-paper",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1222,
+          "right": 1318,
+          "top": 382,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "out",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1479,
+          "right": 1541,
+          "top": 355,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "interval",
+      "floor": 458,
+      "width": 1360,
+      "windows": [],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "calendar",
+          "parentId": null,
+          "mount": "floor",
+          "left": 780,
+          "right": 860,
+          "top": 326,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "window",
+          "parentId": null,
+          "mount": "wall",
+          "left": 399,
+          "right": 521,
+          "top": 160,
+          "bottom": 300,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "door-home",
+      "floor": 458,
+      "width": 1360,
+      "windows": [
+        {
+          "x": 280,
+          "y": 160,
+          "w": 160,
+          "h": 130,
+          "left": 280,
+          "right": 440,
+          "top": 160,
+          "bottom": 290
+        }
+      ],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "door",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1155,
+          "right": 1275,
+          "top": 188,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "changed-home",
+      "floor": 458,
+      "width": 1360,
+      "windows": [
+        {
+          "x": 280,
+          "y": 160,
+          "w": 160,
+          "h": 130,
+          "left": 280,
+          "right": 440,
+          "top": 160,
+          "bottom": 290
+        }
+      ],
+      "decorations": [
+        {
+          "id": "low-bench",
+          "kind": "bench",
+          "x": 320,
+          "w": 220,
+          "h": 80,
+          "left": 210,
+          "right": 430,
+          "top": 378,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "family-record",
+          "parentId": null,
+          "mount": "floor",
+          "left": 800,
+          "right": 900,
+          "top": 358,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "broken-door",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1155,
+          "right": 1275,
+          "top": 188,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "father-home",
+      "floor": 458,
+      "width": 1200,
+      "windows": [
+        {
+          "x": 250,
+          "y": 160,
+          "w": 150,
+          "h": 130,
+          "left": 250,
+          "right": 400,
+          "top": 160,
+          "bottom": 290
+        }
+      ],
+      "decorations": [
+        {
+          "id": "meal-table",
+          "kind": "table",
+          "x": 560,
+          "w": 126,
+          "h": 72,
+          "left": 497,
+          "right": 623,
+          "top": 386,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "bed",
+          "parentId": null,
+          "mount": "floor",
+          "left": 52,
+          "right": 188,
+          "top": 386,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "two-chairs",
+          "parentId": null,
+          "mount": "floor",
+          "left": 337.5,
+          "right": 462.5,
+          "top": 373,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "father-record",
+          "parentId": null,
+          "mount": "floor",
+          "left": 740,
+          "right": 820,
+          "top": 326,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "blank-note",
+          "parentId": null,
+          "mount": "floor",
+          "left": 950,
+          "right": 1030,
+          "top": 366,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "father-next",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1083,
+          "right": 1157,
+          "top": 348,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "daeyeon",
+      "buildings": [
+        {
+          "wallColor": "#c3cac6",
+          "roofType": "flat",
+          "era": "mid-2000s",
+          "id": "daeyeon:house:0",
+          "x": 80,
+          "base": 411,
+          "w": 290,
+          "h": 280,
+          "floors": 3,
+          "wall": {
+            "left": 88,
+            "right": 362,
+            "top": 151,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 60,
+            "right": 390,
+            "top": 131,
+            "bottom": 145
+          },
+          "roofHeight": 14,
+          "windows": [
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 0,
+              "left": 103.25,
+              "right": 141.25,
+              "top": 159,
+              "bottom": 193
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 0,
+              "left": 171.75,
+              "right": 209.75,
+              "top": 159,
+              "bottom": 193
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 0,
+              "left": 240.25,
+              "right": 278.25,
+              "top": 159,
+              "bottom": 193
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 0,
+              "left": 308.75,
+              "right": 346.75,
+              "top": 159,
+              "bottom": 193
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 1,
+              "left": 103.25,
+              "right": 141.25,
+              "top": 243,
+              "bottom": 277
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 1,
+              "left": 171.75,
+              "right": 209.75,
+              "top": 243,
+              "bottom": 277
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 1,
+              "left": 240.25,
+              "right": 278.25,
+              "top": 243,
+              "bottom": 277
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 1,
+              "left": 308.75,
+              "right": 346.75,
+              "top": 243,
+              "bottom": 277
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 2,
+              "left": 103.25,
+              "right": 141.25,
+              "top": 327,
+              "bottom": 361
+            },
+            {
+              "owner": "daeyeon:house:0",
+              "floor": 2,
+              "left": 308.75,
+              "right": 346.75,
+              "top": 327,
+              "bottom": 361
+            }
+          ],
+          "entrance": {
+            "owner": "daeyeon:house:0",
+            "left": 207,
+            "right": 243,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#b6c3c6",
+          "roofType": "flat",
+          "era": "mid-2000s",
+          "id": "daeyeon:house:1",
+          "x": 710,
+          "base": 411,
+          "w": 265,
+          "h": 330,
+          "floors": 4,
+          "wall": {
+            "left": 718,
+            "right": 967,
+            "top": 101,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 690,
+            "right": 995,
+            "top": 81,
+            "bottom": 95
+          },
+          "roofHeight": 14,
+          "windows": [
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 0,
+              "left": 730.125,
+              "right": 768.125,
+              "top": 109,
+              "bottom": 143
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 0,
+              "left": 792.375,
+              "right": 830.375,
+              "top": 109,
+              "bottom": 143
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 0,
+              "left": 854.625,
+              "right": 892.625,
+              "top": 109,
+              "bottom": 143
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 0,
+              "left": 916.875,
+              "right": 954.875,
+              "top": 109,
+              "bottom": 143
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 1,
+              "left": 730.125,
+              "right": 768.125,
+              "top": 184.5,
+              "bottom": 218.5
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 1,
+              "left": 792.375,
+              "right": 830.375,
+              "top": 184.5,
+              "bottom": 218.5
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 1,
+              "left": 854.625,
+              "right": 892.625,
+              "top": 184.5,
+              "bottom": 218.5
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 1,
+              "left": 916.875,
+              "right": 954.875,
+              "top": 184.5,
+              "bottom": 218.5
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 2,
+              "left": 730.125,
+              "right": 768.125,
+              "top": 260,
+              "bottom": 294
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 2,
+              "left": 792.375,
+              "right": 830.375,
+              "top": 260,
+              "bottom": 294
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 2,
+              "left": 854.625,
+              "right": 892.625,
+              "top": 260,
+              "bottom": 294
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 2,
+              "left": 916.875,
+              "right": 954.875,
+              "top": 260,
+              "bottom": 294
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 3,
+              "left": 730.125,
+              "right": 768.125,
+              "top": 335.5,
+              "bottom": 369.5
+            },
+            {
+              "owner": "daeyeon:house:1",
+              "floor": 3,
+              "left": 916.875,
+              "right": 954.875,
+              "top": 335.5,
+              "bottom": 369.5
+            }
+          ],
+          "entrance": {
+            "owner": "daeyeon:house:1",
+            "left": 824.5,
+            "right": 860.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#c9c8ba",
+          "roofType": "flat",
+          "era": "mid-2000s",
+          "id": "daeyeon:house:2",
+          "x": 1160,
+          "base": 411,
+          "w": 260,
+          "h": 250,
+          "floors": 3,
+          "wall": {
+            "left": 1168,
+            "right": 1412,
+            "top": 181,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 1140,
+            "right": 1440,
+            "top": 161,
+            "bottom": 175
+          },
+          "roofHeight": 14,
+          "windows": [
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 0,
+              "left": 1179.5,
+              "right": 1217.5,
+              "top": 189,
+              "bottom": 223
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 0,
+              "left": 1240.5,
+              "right": 1278.5,
+              "top": 189,
+              "bottom": 223
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 0,
+              "left": 1301.5,
+              "right": 1339.5,
+              "top": 189,
+              "bottom": 223
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 0,
+              "left": 1362.5,
+              "right": 1400.5,
+              "top": 189,
+              "bottom": 223
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 1,
+              "left": 1179.5,
+              "right": 1217.5,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 1,
+              "left": 1240.5,
+              "right": 1278.5,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 1,
+              "left": 1301.5,
+              "right": 1339.5,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 1,
+              "left": 1362.5,
+              "right": 1400.5,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 2,
+              "left": 1179.5,
+              "right": 1217.5,
+              "top": 337,
+              "bottom": 371
+            },
+            {
+              "owner": "daeyeon:house:2",
+              "floor": 2,
+              "left": 1362.5,
+              "right": 1400.5,
+              "top": 337,
+              "bottom": 371
+            }
+          ],
+          "entrance": {
+            "owner": "daeyeon:house:2",
+            "left": 1272,
+            "right": 1308,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        }
+      ],
+      "trees": [
+        {
+          "x": 480,
+          "base": 435,
+          "size": 0.8
+        },
+        {
+          "x": 1050,
+          "base": 433,
+          "size": 0.8
+        }
+      ],
+      "utilities": [
+        {
+          "x": 520,
+          "top": 40,
+          "bottom": 458
+        },
+        {
+          "x": 1050,
+          "top": 40,
+          "bottom": 458
+        }
+      ],
+      "wires": [
+        {
+          "left": 520,
+          "right": 1050,
+          "top": 40,
+          "bottom": 57
+        }
+      ],
+      "era": "mid-2000s",
+      "objects": [
+        {
+          "id": "new-town",
+          "buildingId": null,
+          "type": 5,
+          "x": 300,
+          "y": 358,
+          "width": 100,
+          "height": 100
+        },
+        {
+          "id": "window",
+          "buildingId": "daeyeon:house:1",
+          "type": 5,
+          "x": 854.625,
+          "y": 184.5,
+          "width": 38,
+          "height": 34
+        },
+        {
+          "id": "grandparents-home",
+          "buildingId": null,
+          "type": 5,
+          "x": 1269,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        }
+      ]
+    },
+    {
+      "stage": "study",
+      "floor": 458,
+      "width": 1660,
+      "windows": [
+        {
+          "x": 740,
+          "y": 154,
+          "w": 160,
+          "h": 128,
+          "left": 740,
+          "right": 900,
+          "top": 154,
+          "bottom": 282
+        },
+        {
+          "x": 1080,
+          "y": 154,
+          "w": 130,
+          "h": 128,
+          "left": 1080,
+          "right": 1210,
+          "top": 154,
+          "bottom": 282
+        }
+      ],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "desk",
+          "parentId": null,
+          "mount": "floor",
+          "left": 314,
+          "right": 446,
+          "top": 354,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "workbook",
+          "parentId": null,
+          "mount": "floor",
+          "left": 496,
+          "right": 584,
+          "top": 353,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "eraser",
+          "parentId": null,
+          "mount": "floor",
+          "left": 805,
+          "right": 875,
+          "top": 378,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "study-pencil",
+          "parentId": null,
+          "mount": "floor",
+          "left": 930,
+          "right": 1030,
+          "top": 364,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "cane",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1195,
+          "right": 1265,
+          "top": 326,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "clock",
+          "parentId": null,
+          "mount": "wall",
+          "left": 1360,
+          "right": 1440,
+          "top": 170,
+          "bottom": 310,
+          "depth": 2
+        },
+        {
+          "id": "study-end",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1510,
+          "right": 1590,
+          "top": 366,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "books",
+          "parentId": null,
+          "mount": "floor",
+          "left": 33,
+          "right": 147,
+          "top": 238,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "present",
+      "floor": 458,
+      "width": 1200,
+      "windows": [
+        {
+          "x": 260,
+          "y": 154,
+          "w": 176,
+          "h": 132,
+          "left": 260,
+          "right": 436,
+          "top": 154,
+          "bottom": 286
+        },
+        {
+          "x": 780,
+          "y": 154,
+          "w": 170,
+          "h": 132,
+          "left": 780,
+          "right": 950,
+          "top": 154,
+          "bottom": 286
+        }
+      ],
+      "decorations": [
+        {
+          "id": "reading-bench",
+          "kind": "bench",
+          "x": 290,
+          "w": 240,
+          "h": 86,
+          "left": 170,
+          "right": 410,
+          "top": 372,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "album",
+          "parentId": null,
+          "mount": "floor",
+          "left": 600,
+          "right": 700,
+          "top": 358,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "note-present",
+          "parentId": null,
+          "mount": "floor",
+          "left": 1060,
+          "right": 1140,
+          "top": 366,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "folded-paper-present",
+          "parentId": null,
+          "mount": "floor",
+          "left": 860,
+          "right": 980,
+          "top": 363,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "present-street",
+      "buildings": [
+        {
+          "wallColor": "#d7c69e",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "present-street:house:0",
+          "x": -50,
+          "base": 411,
+          "w": 245,
+          "h": 224,
+          "floors": 2,
+          "wall": {
+            "left": -42,
+            "right": 187,
+            "top": 226,
+            "bottom": 403
+          },
+          "roof": {
+            "left": -70,
+            "right": 215,
+            "top": 187,
+            "bottom": 220
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "present-street:house:0",
+              "floor": 0,
+              "left": -27.375,
+              "right": 0.625,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "present-street:house:0",
+              "floor": 0,
+              "left": 29.875,
+              "right": 57.875,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "present-street:house:0",
+              "floor": 0,
+              "left": 87.125,
+              "right": 115.125,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "present-street:house:0",
+              "floor": 0,
+              "left": 144.375,
+              "right": 172.375,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "present-street:house:0",
+              "floor": 1,
+              "left": -27.375,
+              "right": 0.625,
+              "top": 322.5,
+              "bottom": 356.5
+            },
+            {
+              "owner": "present-street:house:0",
+              "floor": 1,
+              "left": 144.375,
+              "right": 172.375,
+              "top": 322.5,
+              "bottom": 356.5
+            }
+          ],
+          "entrance": {
+            "owner": "present-street:house:0",
+            "left": 54.5,
+            "right": 90.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#e7d4ac",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "present-street:house:1",
+          "x": 235,
+          "base": 411,
+          "w": 235,
+          "h": 210,
+          "floors": 2,
+          "wall": {
+            "left": 243,
+            "right": 462,
+            "top": 240,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 215,
+            "right": 490,
+            "top": 201,
+            "bottom": 234
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "present-street:house:1",
+              "floor": 0,
+              "left": 265.5,
+              "right": 293.5,
+              "top": 248,
+              "bottom": 282
+            },
+            {
+              "owner": "present-street:house:1",
+              "floor": 0,
+              "left": 338.5,
+              "right": 366.5,
+              "top": 248,
+              "bottom": 282
+            },
+            {
+              "owner": "present-street:house:1",
+              "floor": 0,
+              "left": 411.5,
+              "right": 439.5,
+              "top": 248,
+              "bottom": 282
+            },
+            {
+              "owner": "present-street:house:1",
+              "floor": 1,
+              "left": 265.5,
+              "right": 293.5,
+              "top": 329.5,
+              "bottom": 363.5
+            },
+            {
+              "owner": "present-street:house:1",
+              "floor": 1,
+              "left": 411.5,
+              "right": 439.5,
+              "top": 329.5,
+              "bottom": 363.5
+            }
+          ],
+          "entrance": {
+            "owner": "present-street:house:1",
+            "left": 334.5,
+            "right": 370.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#cbd0ad",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "present-street:house:2",
+          "x": 635,
+          "base": 411,
+          "w": 234,
+          "h": 195,
+          "floors": 2,
+          "wall": {
+            "left": 643,
+            "right": 861,
+            "top": 255,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 615,
+            "right": 889,
+            "top": 216,
+            "bottom": 249
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "present-street:house:2",
+              "floor": 0,
+              "left": 665.3333333333334,
+              "right": 693.3333333333334,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "present-street:house:2",
+              "floor": 0,
+              "left": 738,
+              "right": 766,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "present-street:house:2",
+              "floor": 0,
+              "left": 810.6666666666666,
+              "right": 838.6666666666666,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "present-street:house:2",
+              "floor": 1,
+              "left": 665.3333333333334,
+              "right": 693.3333333333334,
+              "top": 337,
+              "bottom": 371
+            },
+            {
+              "owner": "present-street:house:2",
+              "floor": 1,
+              "left": 810.6666666666666,
+              "right": 838.6666666666666,
+              "top": 337,
+              "bottom": 371
+            }
+          ],
+          "entrance": {
+            "owner": "present-street:house:2",
+            "left": 734,
+            "right": 770,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#e0c7a1",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "present-street:house:3",
+          "x": 1090,
+          "base": 411,
+          "w": 275,
+          "h": 230,
+          "floors": 2,
+          "wall": {
+            "left": 1098,
+            "right": 1357,
+            "top": 220,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 1070,
+            "right": 1385,
+            "top": 181,
+            "bottom": 214
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "present-street:house:3",
+              "floor": 0,
+              "left": 1116.375,
+              "right": 1144.375,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "present-street:house:3",
+              "floor": 0,
+              "left": 1181.125,
+              "right": 1209.125,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "present-street:house:3",
+              "floor": 0,
+              "left": 1245.875,
+              "right": 1273.875,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "present-street:house:3",
+              "floor": 0,
+              "left": 1310.625,
+              "right": 1338.625,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "present-street:house:3",
+              "floor": 1,
+              "left": 1116.375,
+              "right": 1144.375,
+              "top": 319.5,
+              "bottom": 353.5
+            },
+            {
+              "owner": "present-street:house:3",
+              "floor": 1,
+              "left": 1310.625,
+              "right": 1338.625,
+              "top": 319.5,
+              "bottom": 353.5
+            }
+          ],
+          "entrance": {
+            "owner": "present-street:house:3",
+            "left": 1209.5,
+            "right": 1245.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        }
+      ],
+      "trees": [
+        {
+          "x": 540,
+          "base": 435,
+          "size": 0.75
+        },
+        {
+          "x": 980,
+          "base": 430,
+          "size": 1.15,
+          "pink": true
+        }
+      ],
+      "utilities": [
+        {
+          "x": 520,
+          "top": 82,
+          "bottom": 458
+        },
+        {
+          "x": 1010,
+          "top": 82,
+          "bottom": 458
+        }
+      ],
+      "wires": [
+        {
+          "left": 520,
+          "right": 1010,
+          "top": 82,
+          "bottom": 100
+        }
+      ],
+      "era": "late-1990s",
+      "objects": [
+        {
+          "id": "finish",
+          "buildingId": null,
+          "type": 5,
+          "x": 1053,
+          "y": 348,
+          "width": 74,
+          "height": 110
+        },
+        {
+          "id": "present-lamp",
+          "buildingId": null,
+          "type": 5,
+          "x": 620,
+          "y": 268,
+          "width": 80,
+          "height": 190
+        }
+      ]
+    },
+    {
+      "stage": "alley",
+      "buildings": [
+        {
+          "wallColor": "#d7c69e",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "alley:house:0",
+          "x": -50,
+          "base": 411,
+          "w": 245,
+          "h": 224,
+          "floors": 2,
+          "wall": {
+            "left": -42,
+            "right": 187,
+            "top": 226,
+            "bottom": 403
+          },
+          "roof": {
+            "left": -70,
+            "right": 215,
+            "top": 187,
+            "bottom": 220
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "alley:house:0",
+              "floor": 0,
+              "left": -27.375,
+              "right": 0.625,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "alley:house:0",
+              "floor": 0,
+              "left": 29.875,
+              "right": 57.875,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "alley:house:0",
+              "floor": 0,
+              "left": 87.125,
+              "right": 115.125,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "alley:house:0",
+              "floor": 0,
+              "left": 144.375,
+              "right": 172.375,
+              "top": 234,
+              "bottom": 268
+            },
+            {
+              "owner": "alley:house:0",
+              "floor": 1,
+              "left": -27.375,
+              "right": 0.625,
+              "top": 322.5,
+              "bottom": 356.5
+            },
+            {
+              "owner": "alley:house:0",
+              "floor": 1,
+              "left": 144.375,
+              "right": 172.375,
+              "top": 322.5,
+              "bottom": 356.5
+            }
+          ],
+          "entrance": {
+            "owner": "alley:house:0",
+            "left": 54.5,
+            "right": 90.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#e7d4ac",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "alley:house:1",
+          "x": 235,
+          "base": 411,
+          "w": 235,
+          "h": 210,
+          "floors": 2,
+          "wall": {
+            "left": 243,
+            "right": 462,
+            "top": 240,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 215,
+            "right": 490,
+            "top": 201,
+            "bottom": 234
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "alley:house:1",
+              "floor": 0,
+              "left": 265.5,
+              "right": 293.5,
+              "top": 248,
+              "bottom": 282
+            },
+            {
+              "owner": "alley:house:1",
+              "floor": 0,
+              "left": 338.5,
+              "right": 366.5,
+              "top": 248,
+              "bottom": 282
+            },
+            {
+              "owner": "alley:house:1",
+              "floor": 0,
+              "left": 411.5,
+              "right": 439.5,
+              "top": 248,
+              "bottom": 282
+            },
+            {
+              "owner": "alley:house:1",
+              "floor": 1,
+              "left": 265.5,
+              "right": 293.5,
+              "top": 329.5,
+              "bottom": 363.5
+            },
+            {
+              "owner": "alley:house:1",
+              "floor": 1,
+              "left": 411.5,
+              "right": 439.5,
+              "top": 329.5,
+              "bottom": 363.5
+            }
+          ],
+          "entrance": {
+            "owner": "alley:house:1",
+            "left": 334.5,
+            "right": 370.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#cbd0ad",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "alley:house:2",
+          "x": 635,
+          "base": 411,
+          "w": 234,
+          "h": 195,
+          "floors": 2,
+          "wall": {
+            "left": 643,
+            "right": 861,
+            "top": 255,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 615,
+            "right": 889,
+            "top": 216,
+            "bottom": 249
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "alley:house:2",
+              "floor": 0,
+              "left": 665.3333333333334,
+              "right": 693.3333333333334,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "alley:house:2",
+              "floor": 0,
+              "left": 738,
+              "right": 766,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "alley:house:2",
+              "floor": 0,
+              "left": 810.6666666666666,
+              "right": 838.6666666666666,
+              "top": 263,
+              "bottom": 297
+            },
+            {
+              "owner": "alley:house:2",
+              "floor": 1,
+              "left": 665.3333333333334,
+              "right": 693.3333333333334,
+              "top": 337,
+              "bottom": 371
+            },
+            {
+              "owner": "alley:house:2",
+              "floor": 1,
+              "left": 810.6666666666666,
+              "right": 838.6666666666666,
+              "top": 337,
+              "bottom": 371
+            }
+          ],
+          "entrance": {
+            "owner": "alley:house:2",
+            "left": 734,
+            "right": 770,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#e0c7a1",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "alley:house:3",
+          "x": 1090,
+          "base": 411,
+          "w": 275,
+          "h": 230,
+          "floors": 2,
+          "wall": {
+            "left": 1098,
+            "right": 1357,
+            "top": 220,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 1070,
+            "right": 1385,
+            "top": 181,
+            "bottom": 214
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "alley:house:3",
+              "floor": 0,
+              "left": 1116.375,
+              "right": 1144.375,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "alley:house:3",
+              "floor": 0,
+              "left": 1181.125,
+              "right": 1209.125,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "alley:house:3",
+              "floor": 0,
+              "left": 1245.875,
+              "right": 1273.875,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "alley:house:3",
+              "floor": 0,
+              "left": 1310.625,
+              "right": 1338.625,
+              "top": 228,
+              "bottom": 262
+            },
+            {
+              "owner": "alley:house:3",
+              "floor": 1,
+              "left": 1116.375,
+              "right": 1144.375,
+              "top": 319.5,
+              "bottom": 353.5
+            },
+            {
+              "owner": "alley:house:3",
+              "floor": 1,
+              "left": 1310.625,
+              "right": 1338.625,
+              "top": 319.5,
+              "bottom": 353.5
+            }
+          ],
+          "entrance": {
+            "owner": "alley:house:3",
+            "left": 1209.5,
+            "right": 1245.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        },
+        {
+          "wallColor": "#d9cfac",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "alley:house:4",
+          "x": 1552,
+          "base": 411,
+          "w": 245,
+          "h": 216,
+          "floors": 2,
+          "wall": {
+            "left": 1560,
+            "right": 1789,
+            "top": 234,
+            "bottom": 403
+          },
+          "roof": {
+            "left": 1532,
+            "right": 1817,
+            "top": 195,
+            "bottom": 228
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "alley:house:4",
+              "floor": 0,
+              "left": 1574.625,
+              "right": 1602.625,
+              "top": 242,
+              "bottom": 276
+            },
+            {
+              "owner": "alley:house:4",
+              "floor": 0,
+              "left": 1631.875,
+              "right": 1659.875,
+              "top": 242,
+              "bottom": 276
+            },
+            {
+              "owner": "alley:house:4",
+              "floor": 0,
+              "left": 1689.125,
+              "right": 1717.125,
+              "top": 242,
+              "bottom": 276
+            },
+            {
+              "owner": "alley:house:4",
+              "floor": 0,
+              "left": 1746.375,
+              "right": 1774.375,
+              "top": 242,
+              "bottom": 276
+            },
+            {
+              "owner": "alley:house:4",
+              "floor": 1,
+              "left": 1574.625,
+              "right": 1602.625,
+              "top": 326.5,
+              "bottom": 360.5
+            },
+            {
+              "owner": "alley:house:4",
+              "floor": 1,
+              "left": 1746.375,
+              "right": 1774.375,
+              "top": 326.5,
+              "bottom": 360.5
+            }
+          ],
+          "entrance": {
+            "owner": "alley:house:4",
+            "left": 1656.5,
+            "right": 1692.5,
+            "top": 341,
+            "bottom": 403
+          },
+          "sign": null,
+          "signText": null
+        }
+      ],
+      "trees": [
+        {
+          "x": 540,
+          "base": 435,
+          "size": 0.75
+        },
+        {
+          "x": 980,
+          "base": 430,
+          "size": 1.15,
+          "pink": true
+        },
+        {
+          "x": 1460,
+          "base": 435,
+          "size": 1.1
+        }
+      ],
+      "utilities": [
+        {
+          "x": 520,
+          "top": 82,
+          "bottom": 458
+        },
+        {
+          "x": 1010,
+          "top": 82,
+          "bottom": 458
+        },
+        {
+          "x": 1450,
+          "top": 82,
+          "bottom": 458
+        }
+      ],
+      "wires": [
+        {
+          "left": 520,
+          "right": 1010,
+          "top": 82,
+          "bottom": 100
+        },
+        {
+          "left": 1010,
+          "right": 1450,
+          "top": 82,
+          "bottom": 100
+        }
+      ],
+      "era": "late-1990s",
+      "objects": [
+        {
+          "id": "back",
+          "buildingId": null,
+          "type": 5,
+          "x": 39,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        },
+        {
+          "id": "lamp",
+          "buildingId": null,
+          "type": 5,
+          "x": 880,
+          "y": 268,
+          "width": 80,
+          "height": 190
+        },
+        {
+          "id": "out",
+          "buildingId": null,
+          "type": 5,
+          "x": 1519,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        }
+      ]
+    },
+    {
+      "stage": "playground",
+      "buildings": [],
+      "trees": [
+        {
+          "x": 160,
+          "base": 435,
+          "size": 1.6
+        },
+        {
+          "x": 1190,
+          "base": 434,
+          "size": 1.5,
+          "pink": true
+        }
+      ],
+      "utilities": [],
+      "wires": [],
+      "era": "late-1990s",
+      "objects": [
+        {
+          "id": "back",
+          "buildingId": null,
+          "type": 5,
+          "x": 39,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        },
+        {
+          "id": "swing",
+          "buildingId": null,
+          "type": 5,
+          "x": 695,
+          "y": 283,
+          "width": 170,
+          "height": 175
+        },
+        {
+          "id": "out",
+          "buildingId": null,
+          "type": 5,
+          "x": 1209,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        }
+      ]
+    },
+    {
+      "stage": "store",
+      "buildings": [],
+      "trees": [],
+      "utilities": [],
+      "wires": [],
+      "era": "late-1990s",
+      "objects": [
+        {
+          "id": "back",
+          "buildingId": null,
+          "type": 5,
+          "x": 39,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        },
+        {
+          "id": "pencil",
+          "buildingId": null,
+          "type": 5,
+          "x": 770,
+          "y": 364,
+          "width": 100,
+          "height": 94
+        },
+        {
+          "id": "out",
+          "buildingId": null,
+          "type": 5,
+          "x": 1119,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        }
+      ]
+    },
+    {
+      "stage": "school",
+      "buildings": [
+        {
+          "wallColor": "#d7c69e",
+          "roofType": "tile",
+          "era": "late-1990s",
+          "id": "school:house:0",
+          "x": 650,
+          "base": 406,
+          "w": 580,
+          "h": 265,
+          "floors": 3,
+          "wall": {
+            "left": 658,
+            "right": 1222,
+            "top": 180,
+            "bottom": 398
+          },
+          "roof": {
+            "left": 630,
+            "right": 1250,
+            "top": 141,
+            "bottom": 174
+          },
+          "roofHeight": 33,
+          "windows": [
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 672.2,
+              "right": 700.2,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 728.6,
+              "right": 756.6,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 785,
+              "right": 813,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 841.4,
+              "right": 869.4,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 897.8,
+              "right": 925.8,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 954.2,
+              "right": 982.2,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 1010.5999999999999,
+              "right": 1038.6,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 1067,
+              "right": 1095,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 1123.4,
+              "right": 1151.4,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 0,
+              "left": 1179.8,
+              "right": 1207.8,
+              "top": 188,
+              "bottom": 222
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 672.2,
+              "right": 700.2,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 728.6,
+              "right": 756.6,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 785,
+              "right": 813,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 841.4,
+              "right": 869.4,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 897.8,
+              "right": 925.8,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 954.2,
+              "right": 982.2,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 1010.5999999999999,
+              "right": 1038.6,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 1067,
+              "right": 1095,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 1123.4,
+              "right": 1151.4,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 1,
+              "left": 1179.8,
+              "right": 1207.8,
+              "top": 260.6666666666667,
+              "bottom": 294.6666666666667
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 672.2,
+              "right": 700.2,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 728.6,
+              "right": 756.6,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 785,
+              "right": 813,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 841.4,
+              "right": 869.4,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 897.8,
+              "right": 925.8,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 954.2,
+              "right": 982.2,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 1010.5999999999999,
+              "right": 1038.6,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 1067,
+              "right": 1095,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 1123.4,
+              "right": 1151.4,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            },
+            {
+              "owner": "school:house:0",
+              "floor": 2,
+              "left": 1179.8,
+              "right": 1207.8,
+              "top": 333.33333333333337,
+              "bottom": 367.33333333333337
+            }
+          ],
+          "entrance": null,
+          "sign": null,
+          "signText": null
+        }
+      ],
+      "trees": [
+        {
+          "x": 350,
+          "base": 440,
+          "size": 1.5,
+          "pink": true
+        },
+        {
+          "x": 1320,
+          "base": 440,
+          "size": 1.1
+        }
+      ],
+      "utilities": [],
+      "wires": [],
+      "era": "late-1990s",
+      "objects": [
+        {
+          "id": "back",
+          "buildingId": null,
+          "type": 5,
+          "x": 39,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        },
+        {
+          "id": "bag",
+          "buildingId": null,
+          "type": 5,
+          "x": 819,
+          "y": 396,
+          "width": 62,
+          "height": 62
+        },
+        {
+          "id": "homeward",
+          "buildingId": null,
+          "type": 5,
+          "x": 1219,
+          "y": 355,
+          "width": 62,
+          "height": 103
+        }
+      ]
+    }
+  ],
+  "real_galaxy_device": false,
+  "screenshots": 71
+}
