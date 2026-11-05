@@ -29,7 +29,8 @@
 
 ## 실행·설치
 
-웹: https://hayoo74-ops.github.io/life-story-game/  
+웹: https://hayoo74-ops.github.io/life-story-game/
+
 Android 빌드·갤럭시 설치·저장 이동: [ANDROID.md](ANDROID.md).
 
 ## 검증과 배포 기록
@@ -48,8 +49,10 @@ Android 빌드·갤럭시 설치·저장 이동: [ANDROID.md](ANDROID.md).
 | APK | **서명 v2 검증 성공**, ZIP CRC 정상, 내장 웹 파일 **26개** 로컬 빌드와 바이트 일치, 외부 게임 `server.url` 없음 |
 | Android 설치 검사 | **API 35, Pixel 6 프로필 에뮬레이터 6개 그룹 통과**. Wi-Fi/데이터를 끄고 첫 시작/실제 터치 이동/세로 버튼 배치/백그라운드 복귀/화면 절전·깨우기/프로세스 재시작/같은 서명 덮어쓰기/뒤로 가기 검사. 원시 네이티브 Preferences 저장 위치 454, 스키마 4 유지. 잡힌 JS/네이티브 치명 오류 0 |
 
-웹 배포 커밋: `7df1ff7cfb0e332c61860b31c804e2e68a931a7e`.  
-APK 빌드 커밋: `dd63f69abf1304abd088ecae7d1e91e4a0578cb7` (이후 변경은 시작 로고 리소스뿐이며 웹 핵심 소스는 같습니다).  
+웹 배포 커밋: `7df1ff7cfb0e332c61860b31c804e2e68a931a7e`.
+
+APK 빌드 커밋: `dd63f69abf1304abd088ecae7d1e91e4a0578cb7` (이후 변경은 시작 로고 리소스뿐이며 웹 핵심 소스는 같습니다).
+
 전체 챕터 회귀 검사는 `1d95c20`에서 수행했고, 이후 비 창문/중립 표기/기존 저장의 앨범 진입/오디오 복귀 보강은 최종 CI와 공개 사이트에서 별도 검사했습니다. 실험용 저장 fixture를 사용하는 집중 검사와 처음부터 진행한 전체 경로 검사를 혼동하지 않습니다.
 
 - [성공한 Pages 빌드·배포](https://github.com/hayoo74-ops/life-story-game/actions/runs/41948945433)
@@ -58,14 +61,15 @@ APK 빌드 커밋: `dd63f69abf1304abd088ecae7d1e91e4a0578cb7` (이후 변경은 
 
 ### APK 다운로드
 
-**[LIFE-STORY-DEMO-v1.5.apk 다운로드](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.0/LIFE-STORY-DEMO-v1.5.apk)** — 4,576,943 bytes, 약 4.6MB.  
+**[LIFE-STORY-DEMO-v1.5.apk 다운로드](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.0/LIFE-STORY-DEMO-v1.5.apk)** — 4,576,943 bytes, 약 4.6MB.
+
 [SHA256SUMS.txt](../downloads/v1.5.0/SHA256SUMS.txt), [설치 방법](ANDROID.md).
 
 ```text
 cfc2a1f70337db146bf6485b3480afed2e9f5ca77f31399781a2438443770cd8
 ```
 
-Actions에서도 위 APK 실행의 **LIFE-STORY-DEMO-v1.5** 아티팩트를 받을 수 있습니다(로그인 필요, 30일 보관). 아티팩트 ZIP의 SHA-256은 GitHub의 업로드 digest와 같았으며 실제 다운로드·압축 해제에 성공했습니다. 최종 APK를 다시 내려받아 해시와 바이트 수를 검사했습니다.
+Actions에서도 위 APK 실행의 **LIFE-STORY-DEMO-v1.5** 아티팩트를 받을 수 있습니다(로그인 필요, 30일 보관). 아티팩트 ZIP의 SHA-256은 GitHub의 업로드 digest와 같았으며 실제 다운로드·압축 해제에 성공했습니다. 최종 APK를 다시 내려받아 해시와 바이트 수를 검사했습니다. [공개 다운로드 검사](validation/v1.5/public-apk-download.json)에서도 HTTP 200과 동일한 SHA-256을 확인했습니다.
 
 GitHub `uploads.github.com`의 릴리스 첨부 업로드는 **HTTP 401: Bad credentials**로 거절됐습니다. 저장소/Actions API 인증과 main 푸시는 정상입니다. 인증 범위의 원인을 추정해 단정하지 않으며, 동일한 검증 APK를 버전별 `downloads/v1.5.0/`에 보관해 만료되지 않는 공개 파일 경로로 전달합니다. 릴리스 설명도 이 파일을 안내합니다.
 
