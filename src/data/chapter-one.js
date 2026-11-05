@@ -62,6 +62,7 @@ export const MEMORIES=[
   memory('workbook','공부가 중심이던 집','대연동 공부방','▤',FACTS.study),
   memory('cane','회초리에 관한 기억','대연동 공부방','╱',FACTS.cane),
   memory('tv','거실의 텔레비전','학장동 거실','▤','부모님이 텔레비전을 보고 있었다는 것은 실제 기억입니다. TV의 외형과 화면 속 풍경은 새로 그린 연출이며 실제 방송 화면은 사용하지 않았습니다.'),
+  memory('console64','거실의 닌텐도64','학장동 거실','▣','부모님과 함께한 첫 콘솔게임기와 가족이 슈퍼마리오64를 함께 했다는 사용자의 기억입니다. 본체와 두 게임팩의 외형·심볼·배치는 재구성이며 공식 패키지아트는 사용하지 않습니다.'),
   memory('toy','작은 장난감의 자리','학장동 집','♜','집을 탐험하기 위해 더한 창작 사물입니다. 이 장난감을 실제로 소유했다는 기록이나 구체적인 놀이 사건을 뜻하지 않습니다.','fiction'),
   memory('lamp','골목의 가로등','학장동 동네 맵','♧','두 집 사이의 시간을 천천히 생각해 보는 창작 탐험 공간입니다. 이 가로등이나 이 길에서 실제로 일어난 사건을 주장하지 않습니다.','fiction'),
   memory('swing','그네 옆의 여백','선택 탐험 놀이터','♧','빈 그네를 바라보는 선택 탐험입니다. 실제로 제공되지 않은 친구와의 약속이나 놀이 사건을 인생의 사실로 추가하지 않습니다.','fiction'),
@@ -378,6 +379,7 @@ export const OBJECTS=Object.fromEntries(objectMeta.map(o=>[o.id,{...o,sourceType
 
 // Optional everyday props are staged interactions, not additional biographical facts.
 OBJECTS.shoes.art='shoes';
+OBJECTS.console64={id:'console64',title:'닌텐도64와 게임팩',art:'console64',memory:'console64',sourceType:'dramatic_reconstruction',kinds:['fact','staged','fiction'],lines:OBJECT_TEXT.console64};
 OBJECTS.drawer={id:'drawer',title:'작은 서랍',art:'drawer',sourceType:'dramatic_reconstruction',kinds:['staged','fiction'],lines:[{speaker:'재원',character:'child',text:'뭐가 들어 있을까?',sourceType:'fictional_dialogue'}]};
 OBJECTS.bed={id:'bed',title:'잠깐 쉬기',art:'bed',sourceType:'dramatic_reconstruction',kinds:['staged','fiction'],lines:[{speaker:'재원',character:'child',text:'눈 좀 붙였다가 다시 일어날까.',sourceType:'fictional_dialogue'}]};
 for(const [id,interaction]of Object.entries({tv:'television',toy:'toy',photo:'photo',desk:'read',drawer:'drawer',bed:'rest',books:'read',workbook:'read'}))OBJECTS[id].interaction=interaction;
@@ -386,10 +388,10 @@ const object=(id,x,key,extra={})=>({id,x,label:OBJECTS[key].title,type:'object',
 const event=(id,x,label,action,art='finish')=>({id,x,label,type:'event',event:action,art});
 const npc=(id,x,label,character,dialogue,kind='fact')=>({id,x,label:label.replace(' · 창작',''),type:'npc',character,dialogue,kinds:[kind,'staged'],sourceType:'fictional_dialogue'});
 const portal=(id,x,label,target,spawn)=>({id,x,label,type:'portal',target,spawn});
-const homeProps=()=>[object('photo',170,'photo'),object('toy',360,'toy'),object('sofa',660,'sofa',{scale:.85}),object('tv',900,'tv'),object('mask',485,'mask',{mount:'wall',y:310}),object('shoes',1050,'shoes'),object('drawer',1150,'drawer'),object('plain-door',1390,'plain-door')];
+const homeProps=()=>[object('photo',170,'photo'),object('toy',360,'toy'),object('sofa',660,'sofa',{scale:.85}),object('tv',900,'tv'),object('console64',864,'console64',{mount:'attachment',y:448,parentId:'tv'}),object('mask',485,'mask',{mount:'wall',y:310}),object('shoes',1050,'shoes'),object('drawer',1150,'drawer'),object('plain-door',1390,'plain-door')];
 export const STAGES=[
   {id:'brother-room',name:'막간 · 종이 한 장',location:'시기와 거처를 지정하지 않는 막간',year:'기억 사이',width:1180,spawn:230,kind:'interior',variant:'brother',music:'childhood',sourceType:'dramatic_reconstruction',entities:[npc('brother',650,'형','brother','brother','staged'),object('brother-paper',460,'brother-paper',{action:'brother-fold'}),event('brother-exit',1040,'다시 사진 속으로','brother-exit','portal')]},
-  {id:'home',name:'학장동 · 부모님과 살던 집',location:'부산 사하구 학장동',year:'어린 시절',width:1580,spawn:250,kind:'interior',variant:'family',music:'childhood',entities:[...homeProps(),npc('father',620,'아버지','father','father'),npc('mother',790,'어머니','mother','mother'),object('folded-paper',1270,'folded-paper',{action:'brother-enter',scale:.8}),portal('out',1510,'동네 둘러보기','alley',150)]},
+  {id:'home',name:'학장동 · 부모님과 살던 집',location:'부산 사하구 학장동',year:'어린 시절',width:1580,spawn:250,kind:'interior',variant:'family',music:'childhood',entities:[...homeProps(),{...npc('father',620,'아버지','father','father'),pose:'seated',seatId:'sofa'},{...npc('mother',730,'어머니','mother','mother'),pose:'seated',seatId:'sofa'},object('folded-paper',1270,'folded-paper',{action:'brother-enter',scale:.8}),portal('out',1510,'동네 둘러보기','alley',150)]},
   {id:'interval',name:'학장동 · 같은 집',location:'부산 사하구 학장동',year:'약 1~2년 뒤',width:1360,spawn:340,kind:'interior',variant:'interval',music:'quiet',entities:[object('calendar',820,'calendar',{action:'interval'}),object('window',460,'window',{mount:'wall',y:300})]},
   {id:'door-home',name:'학장동 · 방문 앞',location:'부산 사하구 학장동',year:'어린 시절',width:1360,spawn:900,kind:'interior',variant:'tension',music:'quiet',entities:[npc('father-door',1060,'아버지','father','doorFather'),event('door',1215,'방문 · 목격한 기억','door','door')]},
   {id:'farewell',name:'학장동 · 집',location:'학장동 · 어린 시절',year:'어린 시절',width:1200,spawn:685,kind:'interior',variant:'farewell',music:'quiet',transient:true,entities:[object('farewell-toy',550,'toy'),object('farewell-tv',420,'tv'),npc('farewell-mother',800,'엄마','mother','mother'),event('farewell-door',900,'현관문','farewell','door')]},

@@ -45,8 +45,9 @@ def wait_save(predicate,timeout=20):
 def run():
  passed=[]
  def check(s):passed.append(s);print('PASS:',s,flush=True)
- adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');adb('logcat','-c');adb('shell','svc','wifi','disable');adb('shell','svc','data','disable');launch()
- tap('새 게임');before=wait_save(lambda s:s['storyScene']==0);x,y=find('오른쪽 이동');adb('shell','input','swipe',str(x),str(y),str(x),str(y),'1200');time.sleep(3);after=wait_save(lambda s:s['x']>before['x']+30)
+ adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.1.apk');adb('logcat','-c');adb('shell','svc','wifi','disable');adb('shell','svc','data','disable');launch()
+ tap('새 게임');before=wait_save(lambda s:s['storyScene']==0);x,y=find('오른쪽 이동');adb('shell','input','swipe',str(x),str(y),str(x),str(y),'2500');time.sleep(3);after=wait_save(lambda s:s['x']>before['x']+30)
+ assert not any(n.get('package') in ['android','com.android.systemui'] and n.get('text') in ['Copy','Select all','복사','모두 선택'] for n in dump().iter('node'))
  position=after['x'];screenshot('apk-game');check('Installed bundled APK starts with Wi-Fi/data disabled; real Android touch changes Phaser position and native save')
  # Actual device bounds and accessibility button regions, not a desktop viewport.
  size=adb('shell','wm','size');width,height=map(int,re.findall(r'(\d+)x(\d+)',size)[-1]);assert height>width
@@ -56,10 +57,10 @@ def run():
  adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2);launch();time.sleep(2);resume_game();time.sleep(1);assert abs(saved()['x']-position)<8;check('Background and resume retain progress')
  adb('shell','input','keyevent','KEYCODE_SLEEP');time.sleep(1);adb('shell','input','keyevent','KEYCODE_WAKEUP');adb('shell','wm','dismiss-keyguard');launch();time.sleep(2);resume_game();time.sleep(1)
  adb('shell','am','force-stop',APP);launch();tap('이어하기');find('오른쪽 이동');assert abs(saved()['x']-position)<8;screenshot('apk-restored');check('Screen sleep/wake and process restart restore native Preferences without network')
- adb('shell','am','force-stop',APP);adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');launch();tap('이어하기');find('오른쪽 이동');assert abs(saved()['x']-position)<8;check('Same-signer APK update preserves save')
+ adb('shell','am','force-stop',APP);adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.1.apk');launch();tap('이어하기');find('오른쪽 이동');assert abs(saved()['x']-position)<8;check('Same-signer APK update preserves save')
  adb('shell','input','keyevent','KEYCODE_BACK');find('이야기 계속하기');adb('shell','input','keyevent','KEYCODE_BACK');time.sleep(1);find('오른쪽 이동');assert not any('이야기 계속하기' in n.get('text','') for n in dump().iter('node'));screenshot('apk-after-back');check('Hardware Back opens the pause menu and returns to the game')
  log=adb('logcat','-d');errors=[l for l in log.splitlines() if ('Capacitor/Console' in l and ('Uncaught' in l or 'Game startup failed' in l)) or 'FATAL EXCEPTION' in l];assert not errors,errors
- report={'passed':passed,'javascript_log_errors':errors,'android_emulator':True,'real_galaxy_device':False,'api':adb('shell','getprop','ro.build.version.sdk'),'model':adb('shell','getprop','ro.product.model'),'network_disabled':True,'saved_position':position,'save_schema':saved()['version'],'automation':'UIAutomator + Android input + actual Preferences readback'}
+ report={'passed':passed,'javascript_log_errors':errors,'android_emulator':True,'real_galaxy_device':False,'api':adb('shell','getprop','ro.build.version.sdk'),'model':adb('shell','getprop','ro.product.model'),'network_disabled':True,'saved_position':position,'save_schema':saved()['version'],'long_press_seconds':2.5,'physical_haptic_actuator_tested':False,'automation':'UIAutomator + Android input + actual Preferences readback'}
  (OUT/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
 if __name__=='__main__':
  try:run()

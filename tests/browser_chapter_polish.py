@@ -32,10 +32,14 @@ async def run():
    fixtures=layout['objects']+layout['decorations']
    for obj in layout['objects']:
     if obj['mount']=='floor':assert abs(obj['bottom']-layout['floor'])<1,obj
+    elif obj['mount']=='attachment':
+     parent=next(p for p in layout['objects'] if p['id']==obj['parentId']);assert obj['left']>=parent['left'] and obj['right']<=parent['right'] and obj['top']>=parent['top'] and obj['bottom']<=parent['bottom']
     else:assert obj['bottom']<=315,obj
     assert obj['depth']<layout['playerDepth']
    for i,a in enumerate(fixtures):
-    for other in fixtures[i+1:]:assert not overlap(a,other),(stage,a,other)
+    for other in fixtures[i+1:]:
+     if a.get('parentId')==other['id'] or other.get('parentId')==a['id']:continue
+     assert not overlap(a,other),(stage,a,other)
    layouts.append(layout)
    if stage in ['home','study']:
     await q.set_viewport_size({'width':1440,'height':1000});await q.wait_for_timeout(1400);await q.screenshot(path=str(OUT/f'polish-{stage}.png'))

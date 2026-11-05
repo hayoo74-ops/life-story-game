@@ -12,6 +12,8 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        getBridge().getWebView().setHapticFeedbackEnabled(false);
+        getBridge().getWebView().setLongClickable(false);
         View content = findViewById(android.R.id.content);
         ViewCompat.setOnApplyWindowInsetsListener(content, (view, insets) -> {
             Insets cutout = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.displayCutout());

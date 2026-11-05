@@ -66,10 +66,11 @@ jobs:
           npm run test:pages
           python tests/browser_chapter_polish.py
           python tests/browser_v15.py
+          python tests/browser_chapter151.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Web-validation-v1.5
+          name: Web-validation-v1.5.1
           path: test-results/
           retention-days: 30
       - name: Prepare Pages artifact only for a requested deployment

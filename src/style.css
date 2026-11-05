@@ -50,3 +50,7 @@ body[data-text-size=xlarge] .choice-button{font-size:17px}
 .native-app .page-footer,.native-app .header-caption{display:none}
 .farewell-epilogue .farewell-skip{bottom:12px;right:12px;font-size:12px;padding:10px}
 @media(max-width:700px){.farewell-card{top:84px;max-height:42%}.farewell-epilogue .farewell-skip{bottom:82px}}
+
+/* Long holds are input, not selectable text or browser gestures. */
+button,.control{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+.control{touch-action:none;overscroll-behavior:contain;-webkit-user-drag:none}

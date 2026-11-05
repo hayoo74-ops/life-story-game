@@ -25,9 +25,9 @@ async def run():
    c,q,_=await seeded({'storyScene':9,'stage':'study','x':380,'dialogueVisits':{'grandma:9':1,'grandpa:9':1}})
    await interact(q,380,answer);await expected(q,10);assert (await snap(q))['choices']['study-answer'] in ['4','먼저 그림을 볼래요'];await c.close()
   passed.append('공부 오답·그림부터 보기의 자연스러운 반응과 동일 진행')
-  c,q,_=await seeded({'storyScene':3,'stage':'home','x':790,'events':['mask-equipped','brother:paper']})
+  c,q,_=await seeded({'storyScene':3,'stage':'home','x':730,'events':['mask-equipped','brother:paper']})
   await q.keyboard.press('e');await q.wait_for_timeout(70);assert '가면 썼네' in (await snap(q))['dialogue']['text'];await settle(q)
-  await interact(q,790);assert (await snap(q))['dialogueVisits']['mother:3']==2
+  await interact(q,730);assert (await snap(q))['dialogueVisits']['mother:3']==2
   passed.append('가면 착용 후 어머니 대사와 반복 대화 변화');await c.close()
   c,q,_=await seeded({'storyScene':5,'stage':'door-home','x':1215})
   await q.keyboard.press('e');await q.wait_for_function('lifeStory.getSnapshot().overlay==="cutscene"')

@@ -86,12 +86,12 @@ async def run():
   check('이동·점프 멀티터치, 해제 후 정지, 일시정지·재개')
   await interact(page,650);await expected(page,1,'home')
   await interact(page,170);await expected(page,1);assert 'photo' not in (await snap(page))['inspected']
-  await walk(page,790);await page.keyboard.press('e');await page.wait_for_timeout(80)
+  await walk(page,730);await page.keyboard.press('e');await page.wait_for_timeout(80)
   assert (await snap(page))['dialogue']['speaker']=='어머니';await page.screenshot(path=str(OUT/'natural-mother.png'));await settle(page)
   first=await snap(page);assert first['dialogueVisits']['mother:1']==1
-  await walk(page,790);await page.keyboard.press('e');await page.wait_for_timeout(60);assert '사진 찾았나' in (await snap(page))['dialogue']['text'];await settle(page)
+  await walk(page,730);await page.keyboard.press('e');await page.wait_for_timeout(60);assert '사진 찾았나' in (await snap(page))['dialogue']['text'];await settle(page)
   await interact(page,170);await expected(page,2)
-  await interact(page,620);await interact(page,620);await interact(page,790)
+  await interact(page,620);await interact(page,620);await interact(page,730);await interact(page,864)
   await interact(page,485);await expected(page,2);assert 'mask-equipped' not in (await snap(page))['events']
   check('엄마 필수 대화, 가족 반복 대사·선택 반응, 사물만으로 진행 불가')
   await interact(page,1300);assert (await snap(page))['stage']=='brother-room'
@@ -168,12 +168,12 @@ async def run():
   await settle(page);await expected(page,12)
   await interact(page,1090);assert 'chapter-1-complete' in (await snap(page))['events']
   await page.locator('#ending-next').click();await page.locator('#ending-explore').click()
-  final=await snap(page);assert len(final['memories'])==17,final['memories']
-  check('12장면과 형제 막간 포함 전체 완료·기억 17개·형의 후기 대화')
-  await page.locator('#album-button').click();assert await page.locator('.memory-card.found').count()==17
+  final=await snap(page);assert len(final['memories'])==18,final['memories']
+  check('12장면과 형제 막간 포함 전체 완료·기억 18개·형의 후기 대화')
+  await page.locator('#album-button').click();assert await page.locator('.memory-card.found').count()==18
   await page.locator('#album-family').click();assert '형' in await page.locator('.modal').inner_text() and '동거 시기' in await page.locator('.modal').inner_text();await page.screenshot(path=str(OUT/'family-source-notes.png'));await page.locator('.close-modal').click()
   await page.locator('#menu-button').click();await page.locator('#menu-settings').click();await page.locator('#setting-large').click();await page.locator('.close-modal').click()
-  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==17 and (await snap(page))['dialogueVisits']['brother:2']==2
+  await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==18 and (await snap(page))['dialogueVisits']['brother:2']==2
   await walk(page,1100);await page.keyboard.press('e');await page.wait_for_timeout(80)
   for w,h in [(360,740),(412,915),(915,412),(1440,1000)]:
    await page.set_viewport_size({'width':w,'height':h});await page.wait_for_timeout(180)
@@ -182,7 +182,7 @@ async def run():
    await page.screenshot(path=str(OUT/f'natural-layout-{w}x{h}.png'),full_page=True)
   await settle(page)
   check('출처는 기록 메뉴에서만 확인, 가족·선택·반복 이력 저장, 모바일·가로·데스크톱 UI')
-  await page.evaluate('navigator.serviceWorker.ready');await page.wait_for_function('navigator.serviceWorker.controller!==null');await context.set_offline(True);await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==17
+  await page.evaluate('navigator.serviceWorker.ready');await page.wait_for_function('navigator.serviceWorker.controller!==null');await context.set_offline(True);await page.reload();await page.wait_for_selector('#loading',state='hidden');await page.locator('#continue-game').click();assert len((await snap(page))['memories'])==18
   check('오프라인 리소스와 최신 저장으로 이어하기')
   assert not errors,errors
   report={'passed':passed,'javascript_exceptions':errors,'full_route':{'memories':len(final['memories']),'choices':len(final['choices']),'dialogue_visits':final['dialogueVisits']},'hero_beats':len(hero_lines),'checked_play_text_screens':len(PLAY_TEXT),'automated_seconds':round(time.monotonic()-started),'human_playtime_measured':False,'real_android_device':False}

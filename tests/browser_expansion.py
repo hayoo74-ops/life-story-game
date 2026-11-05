@@ -12,7 +12,7 @@ async def run():
    c=await b.new_context(viewport={'width':412,'height':915},accept_downloads=True);q=await c.new_page();q.on('pageerror',lambda e:(errors.append(str(e)),print('JSERROR:',str(e),flush=True)))
    await q.add_init_script("if(!localStorage.getItem('life-story:save'))localStorage.setItem('life-story:save',"+json.dumps(json.dumps(raw))+')')
    await q.goto(BASE);await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();await q.wait_for_timeout(150);return c,q
-  c,q=await seed(storyScene=1,x=790,settings={'sound':False,'textSpeed':15})
+  c,q=await seed(storyScene=1,x=730,settings={'sound':False,'textSpeed':15})
   await q.keyboard.press('e');await q.wait_for_timeout(150);assert (await snap(q))['typing']
   await q.keyboard.press('Escape');before=await q.locator('.dialogue-text').inner_text();await q.wait_for_timeout(650);assert before==await q.locator('.dialogue-text').inner_text()
   await q.locator('#menu-resume').click();await q.keyboard.press('Enter');assert not (await snap(q))['typing']
@@ -30,7 +30,7 @@ async def run():
   await interact(q,900);assert (await snap(q))['objectStates']['home:tv']['on'] is False
   await q.reload();await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();assert (await snap(q))['objectStates']['home:tv']['on'] is False
   await interact(q,1150);assert (await snap(q))['objectStates']['home:drawer']['opened']
-  await interact(q,790);await interact(q,790);await q.keyboard.press('e');assert '서랍' in (await snap(q))['dialogue']['text'];await settle(q)
+  await interact(q,730);await interact(q,730);await q.keyboard.press('e');assert '서랍' in (await snap(q))['dialogue']['text'];await settle(q)
   await interact(q,1150);assert not (await snap(q))['objectStates']['home:drawer']['opened']
   await interact(q,360);assert 'toy' in (await snap(q))['inspected']
   check('TV 저장·서랍 열고 닫기·후속 대화·장난감 동작');await c.close()

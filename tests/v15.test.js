@@ -13,7 +13,7 @@ test('building openings belong to their facade at every hillside and street scal
 });
 test('every outdoor stage uses nonoverlapping architecture and gap landscaping',()=>{
  for(const stage of STAGES){const {buildings,trees}=stageArchitecture(stage);for(const b of buildings)for(const t of trees)assert.ok(t.x+57*t.size<=b.x-20||t.x-55*t.size>=b.x+b.w+20);}
- const d=stageArchitecture(STAGES.find(s=>s.id==='daeyeon'));assert.equal(d.buildings.length,2);
+ const d=stageArchitecture(STAGES.find(s=>s.id==='daeyeon'));assert.equal(d.buildings.length,3);assert.ok(d.buildings.every(b=>b.roofType==='flat'));
 });
 test('farewell distinguishes exact remembered quote from artistic voice-over',()=>{
  assert.equal(MOTHER_FAREWELL.quote.sourceType,'real_memory');assert.equal(MOTHER_FAREWELL.quote.text,'엄마 나갔다올게 건강하게 잘있어');

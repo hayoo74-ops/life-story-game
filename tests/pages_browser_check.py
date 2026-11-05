@@ -62,7 +62,7 @@ async def run():
   stopped=await snap(page);await page.wait_for_timeout(250);assert abs((await snap(page))['x']-stopped['x'])<1
   check('412×915 모바일 터치 이동·점프 동시 입력·해제 후 정지')
   await interact(page,650);await expected(page,1,'home')
-  await interact(page,790);assert (await snap(page))['dialogueVisits']['mother:1']==1
+  await interact(page,730);assert (await snap(page))['dialogueVisits']['mother:1']==1
   await interact(page,170);await expected(page,2,'home');assert 'family' in (await snap(page))['memories']
   check('새 게임·오프닝·NPC 대화·선택지·기억 획득·다음 장면')
   await interact(page,1510);assert (await snap(page))['stage']=='alley'
