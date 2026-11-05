@@ -1,0 +1,12 @@
+{
+  "node": "v24.19.0",
+  "npm": "11.9.0",
+  "python": "Python 3.12.14",
+  "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)",
+  "physical_galaxy_tested": false,
+  "runtime_commit": "7df1ff7cfb0e332c61860b31c804e2e68a931a7e",
+  "full_route_commit": "1d95c20bdbbe85878801429a9c6d432d8eb62a4c",
+  "full_route_note": "이후 컷신의 중립적 장소 표기·비 창문 위치·기존 진행 앨범 진입·앱 여백 및 오디오 복귀 보강은 최종 웹/Android 검사로 별도 검증합니다.",
+  "web_deployment_commit": "7df1ff7cfb0e332c61860b31c804e2e68a931a7e",
+  "apk_build_commit": "dd63f69abf1304abd088ecae7d1e91e4a0578cb7"
+}

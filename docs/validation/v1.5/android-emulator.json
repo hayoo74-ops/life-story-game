@@ -1,0 +1,19 @@
+{
+  "passed": [
+    "Installed bundled APK starts with Wi-Fi/data disabled; real Android touch changes Phaser position and native save",
+    "Portrait screen has visible and reachable movement, jump, interact and menu controls",
+    "Background and resume retain progress",
+    "Screen sleep/wake and process restart restore native Preferences without network",
+    "Same-signer APK update preserves save",
+    "Hardware Back opens the pause menu and returns to the game"
+  ],
+  "javascript_log_errors": [],
+  "android_emulator": true,
+  "real_galaxy_device": false,
+  "api": "35",
+  "model": "sdk_gphone64_x86_64",
+  "network_disabled": true,
+  "saved_position": 454,
+  "save_schema": 4,
+  "automation": "UIAutomator + Android input + actual Preferences readback"
+}

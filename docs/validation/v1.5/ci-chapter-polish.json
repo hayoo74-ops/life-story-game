@@ -1,0 +1,540 @@
+{
+  "tested_url": "http://127.0.0.1:4173/life-story-game/",
+  "passed": [
+    "TV 첫 조사만 기억 팝업·재조사 한 줄·앨범 재열람·새로고침 후 유지",
+    "실내 8곳의 실제 표시 경계: 창문 벽면·바닥 정렬·가구 비중첩·캐릭터 레이어",
+    "이혼 기록→현관 작별→아버지 단둘이: 정확한 대사·비·정지/재개·암전·문구·모바일 UI·앨범",
+    "이미 조사한 진행 사물도 작별 장면 연결 유지·중단 후 체크포인트 복원"
+  ],
+  "javascript_exceptions": [],
+  "layouts": [
+    {
+      "stage": "home",
+      "floor": 458,
+      "width": 1580,
+      "windows": [
+        {
+          "x": 250,
+          "y": 160,
+          "w": 176,
+          "h": 132,
+          "left": 250,
+          "right": 426,
+          "top": 160,
+          "bottom": 292
+        }
+      ],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "photo",
+          "mount": "floor",
+          "left": 130,
+          "right": 210,
+          "top": 325,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "toy",
+          "mount": "floor",
+          "left": 326.5,
+          "right": 393.5,
+          "top": 431,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "sofa",
+          "mount": "floor",
+          "left": 515.5,
+          "right": 804.5,
+          "top": 374.7,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "tv",
+          "mount": "floor",
+          "left": 847.5,
+          "right": 952.5,
+          "top": 337,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "mask",
+          "mount": "wall",
+          "left": 445,
+          "right": 525,
+          "top": 240,
+          "bottom": 310,
+          "depth": 2
+        },
+        {
+          "id": "shoes",
+          "mount": "floor",
+          "left": 1010,
+          "right": 1090,
+          "top": 364,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "drawer",
+          "mount": "floor",
+          "left": 1114,
+          "right": 1186,
+          "top": 386,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "plain-door",
+          "mount": "floor",
+          "left": 1330,
+          "right": 1450,
+          "top": 188,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "folded-paper",
+          "mount": "floor",
+          "left": 1222,
+          "right": 1318,
+          "top": 382,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "out",
+          "mount": "floor",
+          "left": 1479,
+          "right": 1541,
+          "top": 355,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "interval",
+      "floor": 458,
+      "width": 1360,
+      "windows": [],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "calendar",
+          "mount": "floor",
+          "left": 780,
+          "right": 860,
+          "top": 326,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "window",
+          "mount": "wall",
+          "left": 399,
+          "right": 521,
+          "top": 160,
+          "bottom": 300,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "door-home",
+      "floor": 458,
+      "width": 1360,
+      "windows": [
+        {
+          "x": 280,
+          "y": 160,
+          "w": 160,
+          "h": 130,
+          "left": 280,
+          "right": 440,
+          "top": 160,
+          "bottom": 290
+        }
+      ],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "door",
+          "mount": "floor",
+          "left": 1155,
+          "right": 1275,
+          "top": 188,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "changed-home",
+      "floor": 458,
+      "width": 1360,
+      "windows": [
+        {
+          "x": 280,
+          "y": 160,
+          "w": 160,
+          "h": 130,
+          "left": 280,
+          "right": 440,
+          "top": 160,
+          "bottom": 290
+        }
+      ],
+      "decorations": [
+        {
+          "id": "low-bench",
+          "kind": "bench",
+          "x": 320,
+          "w": 220,
+          "h": 80,
+          "left": 210,
+          "right": 430,
+          "top": 378,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "family-record",
+          "mount": "floor",
+          "left": 800,
+          "right": 900,
+          "top": 358,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "broken-door",
+          "mount": "floor",
+          "left": 1155,
+          "right": 1275,
+          "top": 188,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "father-home",
+      "floor": 458,
+      "width": 1200,
+      "windows": [
+        {
+          "x": 250,
+          "y": 160,
+          "w": 150,
+          "h": 130,
+          "left": 250,
+          "right": 400,
+          "top": 160,
+          "bottom": 290
+        }
+      ],
+      "decorations": [
+        {
+          "id": "meal-table",
+          "kind": "table",
+          "x": 560,
+          "w": 126,
+          "h": 72,
+          "left": 497,
+          "right": 623,
+          "top": 386,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "bed",
+          "mount": "floor",
+          "left": 52,
+          "right": 188,
+          "top": 386,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "two-chairs",
+          "mount": "floor",
+          "left": 337.5,
+          "right": 462.5,
+          "top": 373,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "father-record",
+          "mount": "floor",
+          "left": 740,
+          "right": 820,
+          "top": 326,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "blank-note",
+          "mount": "floor",
+          "left": 950,
+          "right": 1030,
+          "top": 366,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "father-next",
+          "mount": "floor",
+          "left": 1083,
+          "right": 1157,
+          "top": 348,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "brother-room",
+      "floor": 458,
+      "width": 1180,
+      "windows": [
+        {
+          "x": 230,
+          "y": 157,
+          "w": 160,
+          "h": 130,
+          "left": 230,
+          "right": 390,
+          "top": 157,
+          "bottom": 287
+        }
+      ],
+      "decorations": [
+        {
+          "id": "background-shelf",
+          "kind": "shelf",
+          "x": 870,
+          "w": 100,
+          "h": 200,
+          "left": 820,
+          "right": 920,
+          "top": 258,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "brother-paper",
+          "mount": "floor",
+          "left": 400,
+          "right": 520,
+          "top": 363,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "brother-exit",
+          "mount": "floor",
+          "left": 1009,
+          "right": 1071,
+          "top": 355,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "study",
+      "floor": 458,
+      "width": 1660,
+      "windows": [
+        {
+          "x": 740,
+          "y": 154,
+          "w": 160,
+          "h": 128,
+          "left": 740,
+          "right": 900,
+          "top": 154,
+          "bottom": 282
+        },
+        {
+          "x": 1080,
+          "y": 154,
+          "w": 130,
+          "h": 128,
+          "left": 1080,
+          "right": 1210,
+          "top": 154,
+          "bottom": 282
+        }
+      ],
+      "decorations": [],
+      "objects": [
+        {
+          "id": "desk",
+          "mount": "floor",
+          "left": 314,
+          "right": 446,
+          "top": 354,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "workbook",
+          "mount": "floor",
+          "left": 496,
+          "right": 584,
+          "top": 353,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "eraser",
+          "mount": "floor",
+          "left": 805,
+          "right": 875,
+          "top": 378,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "study-pencil",
+          "mount": "floor",
+          "left": 930,
+          "right": 1030,
+          "top": 364,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "cane",
+          "mount": "floor",
+          "left": 1195,
+          "right": 1265,
+          "top": 326,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "clock",
+          "mount": "wall",
+          "left": 1360,
+          "right": 1440,
+          "top": 170,
+          "bottom": 310,
+          "depth": 2
+        },
+        {
+          "id": "study-end",
+          "mount": "floor",
+          "left": 1510,
+          "right": 1590,
+          "top": 366,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "books",
+          "mount": "floor",
+          "left": 33,
+          "right": 147,
+          "top": 238,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    },
+    {
+      "stage": "present",
+      "floor": 458,
+      "width": 1200,
+      "windows": [
+        {
+          "x": 260,
+          "y": 154,
+          "w": 176,
+          "h": 132,
+          "left": 260,
+          "right": 436,
+          "top": 154,
+          "bottom": 286
+        },
+        {
+          "x": 780,
+          "y": 154,
+          "w": 170,
+          "h": 132,
+          "left": 780,
+          "right": 950,
+          "top": 154,
+          "bottom": 286
+        }
+      ],
+      "decorations": [
+        {
+          "id": "reading-bench",
+          "kind": "bench",
+          "x": 290,
+          "w": 240,
+          "h": 86,
+          "left": 170,
+          "right": 410,
+          "top": 372,
+          "bottom": 458,
+          "role": "decoration"
+        }
+      ],
+      "objects": [
+        {
+          "id": "album",
+          "mount": "floor",
+          "left": 600,
+          "right": 700,
+          "top": 358,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "note-present",
+          "mount": "floor",
+          "left": 1060,
+          "right": 1140,
+          "top": 366,
+          "bottom": 458,
+          "depth": 2
+        },
+        {
+          "id": "folded-paper-present",
+          "mount": "floor",
+          "left": 860,
+          "right": 980,
+          "top": 363,
+          "bottom": 458,
+          "depth": 2
+        }
+      ],
+      "playerDepth": 5
+    }
+  ],
+  "fixture_based": true,
+  "real_galaxy_device": false
+}

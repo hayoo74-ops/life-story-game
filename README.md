@@ -9,6 +9,8 @@
 
 [변경 파일·검증·APK 다운로드 기록](docs/RELEASE_V1_5.md) · [갤럭시 APK 설치](docs/ANDROID.md)
 
+**[Android APK 다운로드 — v1.5](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.0/LIFE-STORY-DEMO-v1.5.apk)** (약 4.6MB, 디버그 빌드). [웹 게임 실행](https://hayoo74-ops.github.io/life-story-game/) / [검증 스크린샷](docs/screenshots/v1.5/all-stages.png). 웹 업데이트 전 탭이 열려 있었다면 게임 탭을 모두 닫고 다시 접속하세요. 저장 데이터는 삭제하지 않아도 됩니다.
+
 ## 실행
 
 Node.js 22.12 이상을 권장합니다.

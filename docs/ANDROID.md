@@ -7,7 +7,7 @@ ID: `com.hayoo74.lifestory`
 
 ## 갤럭시에 설치하기
 
-1. 최종 [v1.5 배포·검증 기록](RELEASE_V1_5.md)에 있는 APK 다운로드 링크를 엽니다.
+1. [APK 다운로드](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.0/LIFE-STORY-DEMO-v1.5.apk) 링크를 엽니다. [v1.5 배포·검증 기록](RELEASE_V1_5.md)에 SHA-256과 실제 검사 결과가 있습니다.
 2. `LIFE-STORY-DEMO-v1.5.apk`를 내려받아 **내 파일 → 다운로드**에서 엽니다.
 3. 요청되면 해당 브라우저 또는 내 파일의 **출처를 알 수 없는 앱 설치** 권한을 허용한 뒤 설치합니다. 기기 관리 정책이나 삼성 보안 위험 자동 차단이 설치를 막는 경우에는 기기에 표시되는 안내를 확인해야 합니다.
 4. 홈 화면/앱스의 LIFE STORY 아이콘을 누릅니다. Chrome이나 삼성 인터넷을 따로 열지 않습니다.
