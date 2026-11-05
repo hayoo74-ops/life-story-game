@@ -28,6 +28,7 @@ test('visible casual options retain prior saved choice values and old progress',
 test('N64 memory is optional, factual recollection with staged art, using the existing save schema',()=>{
  const memory=MEMORIES.find(m=>m.id==='console64');assert.ok(memory.kinds.includes('fact'));assert.ok(memory.kinds.includes('staged'));assert.match(memory.text,/부모님과.*첫 콘솔게임기/);assert.match(memory.text,/슈퍼마리오64/);
  const object=STAGES.find(s=>s.id==='home').entities.find(e=>e.id==='console64');assert.equal(object.parentId,'tv');assert.equal(object.mount,'attachment');
+ const previousIds=['family','hero','interval','door','family-change','father','daeyeon','workbook','cane','tv','toy','lamp','swing','pencil','desk','brother','album'];const oldComplete=normalizeSave({...freshSave(),storyScene:12,stage:'present-street',memories:previousIds,chapterProgress:{1:{scenes:[1,2,3,4,5,6,7,8,9,10,11,12],complete:true}}});assert.deepEqual(oldComplete.memories,previousIds);assert.equal(oldComplete.chapterProgress[1].complete,true);assert.ok(!oldComplete.memories.includes('console64'));
  const s=normalizeSave({...freshSave(),storyScene:2,stage:'home',memories:['console64'],inspected:['console64']});assert.deepEqual(s.memories,['console64']);assert.deepEqual(s.inspected,['console64']);
 });
 test('parents have explicit sofa seats within the cushion rather than cropped standing frames',()=>{

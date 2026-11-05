@@ -8,15 +8,19 @@ BASE=os.environ.get('GAME_URL','http://localhost:4173/life-story-game/')
 OUT=Path('test-results');OUT.mkdir(exist_ok=True)
 async def snap(page):return await page.evaluate('lifeStory.getSnapshot()')
 async def walk(page,x):
- s=await snap(page)
- if abs(s['x']-x)<9:return
- key='ArrowRight' if s['x']<x else 'ArrowLeft'
- await page.keyboard.down(key)
- try:await page.wait_for_function('(x)=>Math.abs(lifeStory.getSnapshot().x-x)<9',arg=x,timeout=int(abs(s['x']-x)/95*1000+4000))
- except Exception:
-  print('Movement failure',await snap(page),flush=True);await page.screenshot(path=str(OUT/'failure.png'));raise
- finally:await page.keyboard.up(key)
- await page.wait_for_timeout(45)
+ # Poll a crossing, not a narrow interval that a slow rendered frame may skip.
+ # Release the real key, let drag stop the body, then correct with fresh input.
+ for attempt in range(8):
+  s=await snap(page)
+  if abs(s['x']-x)<9:return
+  direction=1 if s['x']<x else -1;key='ArrowRight' if direction==1 else 'ArrowLeft'
+  await page.keyboard.down(key)
+  try:
+   await page.wait_for_function('(a)=>a.direction*(lifeStory.getSnapshot().x-a.x)>=-7',arg={'x':x,'direction':direction},polling=20,timeout=int(abs(s['x']-x)/75*1000+8000))
+  finally:await page.keyboard.up(key)
+  await page.wait_for_timeout(220)
+ print('Movement failure',await snap(page),flush=True);await page.screenshot(path=str(OUT/'failure.png'));raise AssertionError('Could not settle at requested interaction position '+str(x))
+
 PLAY_TEXT=[]
 BANNED=re.compile(r'실제 발언|확인되지|재구성입니다|사용자가 제공|실제 기록|사실로|제작|창작|실제 기억|연출입니다|기록을 확인|추가하지 않|지정하지 않')
 async def check_text(page):

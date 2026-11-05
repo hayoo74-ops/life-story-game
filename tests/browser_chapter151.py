@@ -49,7 +49,7 @@ async def run():
   after=(await snap(q))['x'];assert after>before+80;await q.wait_for_timeout(200);assert abs((await snap(q))['x']-after)<3
   assert await button.evaluate('(e)=>{const s=getComputedStyle(e);return s.userSelect==="none"&&s.touchAction==="none"}')
   assert not await button.evaluate('(e)=>e.dispatchEvent(new MouseEvent("contextmenu",{bubbles:true,cancelable:true}))')
-  assert await q.evaluate('__vibrations.length')==0 and await q.evaluate('getSelection().toString()')=='';await c.close();check('Chromium Android 터치: 2.2초 롱프레스 이동 유지/해제 정지, 선택·contextmenu 취소, JS 진동 호출 없음')
+  assert await q.evaluate('__vibrations.length')==0 and await q.evaluate('getSelection().toString()')=='';await c.close();check('모바일 Chromium 터치 에뮬레이션: 2.2초 롱프레스 이동 유지/해제 정지, 선택·contextmenu 취소, JS 진동 호출 없음')
   for stage,story in [('alley',2),('daeyeon',8)]:
    c,q=await seed(stage,story,760);await q.set_viewport_size({'width':1440,'height':1000});await q.wait_for_timeout(400);layout=(await snap(q))['layout'];assert all(b['sign'] is None for b in layout['buildings']);await q.screenshot(path=str(OUT/(stage+'-district.png')));await c.close()
   check('학장동 기와 주택/생활 골목과 대연동 평지붕 중층 주거·포장도로 실제 렌더, 임의 상호 없음')
