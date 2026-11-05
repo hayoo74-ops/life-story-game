@@ -51,6 +51,9 @@ async def run():
    await q.wait_for_timeout(50)
   await q.wait_for_function('lifeStory.getSnapshot().farewell.phase==="quote"')
   assert await q.locator('.farewell-quote').inner_text()=='엄마 나갔다올게 건강하게 잘있어';s=await snap(q);assert s['visualStage']=='farewell' and s['storyScene']==6;assert s['audio']['cinematicAmbience']=='rain' and s['audio']['ambientLoops']>=2
+  assert s['camera']['left']<s['x']<s['camera']['right'],'child must share the portrait frame'
+  assert all(s['camera']['left']<a['x']<s['camera']['right'] for a in s['actors']),'mother must share the portrait frame'
+  assert await q.locator('[data-control]:disabled').count()==4
   assert (await q.evaluate("JSON.parse(localStorage.getItem('life-story:save')).stage"))=='changed-home'
   await q.screenshot(path=str(OUT/'farewell-quote.png'))
   await q.locator('#farewell-next').click();await q.wait_for_function('lifeStory.getSnapshot().farewell.phase==="silence"');assert (await snap(q))['audio']['rainOpenness']==1

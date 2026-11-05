@@ -157,7 +157,7 @@ export class LifeScene extends Phaser.Scene{
     g.lineStyle(1,0xc5d0d4,.55);
     const t=this.bridge.settings.reducedMotion?0:time;
     for(let i=0;i<26;i++){const x=b.door-46+(i*27+t*.02)%90,y=202+(i*31+t*.24)%240;g.lineBetween(x,y,x-4,Math.min(456,y+13));}
-    g.lineStyle(1,0xb6c6cc,.35);for(let i=0;i<17;i++){const x=270+(i*21+t*.012)%128,y=168+(i*17+t*.15)%104;g.lineBetween(x,y,x-3,Math.min(y+9,278));}
+    g.lineStyle(1,0xb6c6cc,.35);for(const v of roomLayout(this.stage)?.windows||[])for(let i=0;i<17;i++){const x=v.x+10+(i*21+t*.012)%(v.w-22),y=v.y+10+(i*17+t*.15)%(v.h-22);g.lineBetween(x,y,x-3,Math.min(y+9,v.y+v.h-8));}
     g.fillStyle(0xc3dbd6,.12+.03*Math.sin(t*.01));g.fillRect(384,350,70,48);
     if(this.farewellDoorOpen){g.fillStyle(0x9aafbd,.15);g.fillTriangle(b.door-49,455,b.door+50,455,b.child-45,455-70);}
   }
