@@ -1,6 +1,8 @@
-# 챕터 1 v1.3 검증 기록
+# 챕터 1 검증 기록
 
-최신 v1.4 수정 결과는 [기억·실내 배치·현관 작별 검증](docs/CHAPTER_POLISH_V1_4.md)을 참조하세요. 아래는 이전 v1.3 검증 기록입니다.
+최신 v1.5 결과는 [배경·사운드·시네마틱·APK 검증](docs/RELEASE_V1_5.md)을 참조하세요.
+
+v1.4 수정 결과는 [기억·실내 배치·현관 작별 검증](docs/CHAPTER_POLISH_V1_4.md)을 참조하세요. 아래는 이전 v1.3 검증 기록입니다.
 
 실제 GitHub Pages 배포·외부 모바일 브라우저 검증은 [Pages 배포 기록](docs/PAGES_RELEASE.md), 이전 준비 단계는 [Pages 경로 검증](docs/PAGES_VALIDATION.md)을 참조하세요. 아래는 게임 v1.3 구현 당시의 검증 기록입니다.
 

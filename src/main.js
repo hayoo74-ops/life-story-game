@@ -36,7 +36,7 @@ const bridge={get suspended(){return modalOpen||document.hidden||nativeSuspended
  locked:()=>mode!=='playing'||modalOpen||Boolean(overlay)||Boolean(dialogue)||document.hidden||nativeSuspended,
  onReady:s=>{scene=s;$('#loading').hidden=true;updateSettings();sound.configure(settings);if(loaded.error)toast(loaded.error==='future-version'?'더 새로운 버전의 저장입니다.':'저장을 읽지 못했습니다. 브라우저 저장 설정을 확인해 주세요.');},
  onNearest:data=>{nearest=data;renderHint();},
- onStage:s=>{$('#location-text').textContent=s.name;$('#year-text').textContent=s.year;sound.setMood(s.music);updateQuest();},
+ onStage:s=>{$('#location-text').textContent=s.name;$('#year-text').textContent=s.year;sound.setMood(s.music);updateQuest();if(s.id==='farewell'){$('#scene-label').textContent='SCENE 06 · 비 오는 날';$('#quest-text').textContent='잠시, 집 안의 소리에 귀를 기울입니다.';}},
  onTick:delta=>{if(state&&mode==='playing'&&!document.hidden&&!modalOpen){state.playtime+=delta/1000;saveElapsed+=delta;if(saveElapsed>2500){saveElapsed=0;save();}}},
  onPosition:x=>{if(state&&mode==='playing')state.x=Math.round(x);},
  interact,advance:()=>{if(modalOpen)return false;if(overlay==='farewell'){farewell.advance();return true;}if(dialogue){if(dialogue.lines[dialogue.index].choices&&!textPlayer.typing)return false;advanceDialogue();return true;}if(overlay==='cutscene'){$('#visual-next')?.click();return true;}return false;},escape:()=>{if(modalOpen)closeModal();else if(mode==='playing')openMenu();}

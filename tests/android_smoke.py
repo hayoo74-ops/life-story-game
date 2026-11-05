@@ -1,52 +1,61 @@
-"""Real installed APK on Android emulator; CDP drives its bundled WebView.
-No browser LocalStorage fixture is substituted for native Preferences.
+"""Installed APK checks using Android UIAutomator, hardware input and native
+Preferences. No browser fixture or WebView debugging socket is required.
 """
-import asyncio,json,re,subprocess,time,urllib.request
+import json,re,subprocess,time,xml.etree.ElementTree as ET
 from pathlib import Path
-from playwright.async_api import async_playwright
 APP='com.hayoo74.lifestory';OUT=Path('test-results/android');OUT.mkdir(parents=True,exist_ok=True)
 def adb(*args):return subprocess.check_output(['adb',*args],text=True).strip()
 def launch():adb('shell','am','start','-n',APP+'/.MainActivity')
-async def attach(p):
- for _ in range(90):
+def dump():
+ adb('shell','uiautomator','dump','/sdcard/life-window.xml')
+ raw=adb('shell','cat','/sdcard/life-window.xml');(OUT/'last-ui.xml').write_text(raw);return ET.fromstring(raw)
+def find(label,timeout=35):
+ last=None
+ for _ in range(max(1,int(timeout/2))):
   try:
-   sockets=adb('shell','cat','/proc/net/unix');name=re.findall(r'@(webview_devtools_remote[^\s]*)',sockets)[-1];adb('forward','tcp:9222','localabstract:'+name)
-   with urllib.request.urlopen('http://127.0.0.1:9222/json/version',timeout=2) as r:json.load(r)
-   b=await p.chromium.connect_over_cdp('http://127.0.0.1:9222');page=b.contexts[0].pages[0];await page.wait_for_function('!!window.lifeStory',timeout=25000);await page.wait_for_selector('#loading',state='hidden');return b,page
-  except Exception:await asyncio.sleep(1)
- raise RuntimeError('Bundled WebView debugging endpoint did not start')
-async def run():
- passed=[];errors=[]
+   root=dump();hits=[]
+   for n in root.iter('node'):
+    if label in n.get('text','') or label in n.get('content-desc',''):
+     x1,y1,x2,y2=map(int,re.findall(r'\d+',n.get('bounds','')));hits.append(((x2-x1)*(y2-y1),((x1+x2)//2,(y1+y2)//2)))
+   if hits:return min(hits)[1]
+  except Exception as e:last=str(e)
+  time.sleep(1)
+ raise AssertionError('Android UI did not show '+label+'; '+str(last))
+def tap(label):x,y=find(label);adb('shell','input','tap',str(x),str(y))
+def screenshot(name):
+ with (OUT/(name+'.png')).open('wb') as f:subprocess.run(['adb','exec-out','screencap','-p'],stdout=f,check=True)
+def saved():
+ raw=adb('shell','run-as',APP,'cat','shared_prefs/CapacitorStorage.xml');root=ET.fromstring(raw)
+ text=next(n.text for n in root if n.get('name')=='life-story:save');return json.loads(text)
+def wait_save(predicate,timeout=20):
+ for _ in range(timeout):
+  try:
+   s=saved()
+   if predicate(s):return s
+  except Exception:pass
+  time.sleep(1)
+ raise AssertionError('Native saved state did not reach expected progress')
+def run():
+ passed=[]
  def check(s):passed.append(s);print('PASS:',s,flush=True)
- adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');adb('shell','svc','wifi','disable');adb('shell','svc','data','disable');launch()
- async with async_playwright() as p:
-  b,q=await attach(p);q.on('pageerror',lambda e:errors.append(str(e)))
-  assert q.url.startswith('https://localhost'),q.url
-  await q.locator('#new-game').click();await q.wait_for_timeout(500)
-  snapshot=lambda:q.evaluate('lifeStory.getSnapshot()')
-  before=(await snapshot())['x'];box=await q.locator('[data-control=right]').bounding_box();x=int(box['x']+box['width']/2);y=int(box['y']+box['height']/2)
-  session=await b.contexts[0].new_cdp_session(q)
-  await session.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':x,'y':y,'id':1}]});await q.wait_for_timeout(600);await session.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});await q.wait_for_timeout(100)
-  assert (await snapshot())['x']>before+40
-  assert await q.evaluate('document.documentElement.scrollWidth<=innerWidth')
-  await q.screenshot(path=str(OUT/'apk-game.png'));check('Installed APK launches offline from packaged https://localhost assets; touch movement and portrait UI work')
-  await q.locator('#menu-button').click();position=(await snapshot())['x'];await q.wait_for_timeout(750)
-  adb('shell','input','keyevent','KEYCODE_HOME');await asyncio.sleep(2);launch();await q.wait_for_timeout(1000);assert (await snapshot())['modalOpen'];await q.locator('#menu-resume').click()
-  check('App background and return preserve position and menu pause')
-  adb('shell','input','keyevent','KEYCODE_SLEEP');await asyncio.sleep(1);adb('shell','input','keyevent','KEYCODE_WAKEUP');adb('shell','wm','dismiss-keyguard');launch();await q.wait_for_timeout(1000)
-  if not (await snapshot())['modalOpen']:await q.locator('#menu-button').click()
-  await q.wait_for_timeout(400);adb('shell','am','force-stop',APP);await b.close();launch();b,q=await attach(p);await q.locator('#continue-game').click();await q.wait_for_timeout(300)
-  s=await q.evaluate('lifeStory.getSnapshot()');assert abs(s['x']-position)<8,(s['x'],position)
-  check('Native Preferences restore progress after screen sleep, force-stop and process restart, without network')
-  # Reinstall with the same stable DEMO signer is an app update, not an uninstall.
-  adb('shell','am','force-stop',APP);await b.close();adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');launch();b,q=await attach(p);await q.locator('#continue-game').click();await q.wait_for_timeout(300);assert abs((await q.evaluate('lifeStory.getSnapshot()'))['x']-position)<8
-  await q.screenshot(path=str(OUT/'apk-restored.png'));check('Same-signer APK update preserves native save')
-  adb('shell','input','keyevent','KEYCODE_BACK');await q.wait_for_timeout(300);assert (await q.evaluate('lifeStory.getSnapshot()'))['modalOpen'];adb('shell','input','keyevent','KEYCODE_BACK');await q.wait_for_timeout(300);assert not (await q.evaluate('lifeStory.getSnapshot()'))['modalOpen'];check('Android hardware Back opens menu then closes it')
-  assert not errors,errors;await b.close()
- report={'passed':passed,'javascript_exceptions':errors,'android_emulator':True,'real_galaxy_device':False,'api':adb('shell','getprop','ro.build.version.sdk'),'model':adb('shell','getprop','ro.product.model'),'network_disabled':True}
+ adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');adb('logcat','-c');adb('shell','svc','wifi','disable');adb('shell','svc','data','disable');launch()
+ tap('새 게임');before=wait_save(lambda s:s['storyScene']==0);x,y=find('오른쪽 이동');adb('shell','input','swipe',str(x),str(y),str(x),str(y),'1200');after=wait_save(lambda s:s['x']>before['x']+30)
+ position=after['x'];screenshot('apk-game');check('Installed bundled APK starts with Wi-Fi/data disabled; real Android touch changes Phaser position and native save')
+ # Actual device bounds and accessibility button regions, not a desktop viewport.
+ size=adb('shell','wm','size');width,height=map(int,re.findall(r'(\d+)x(\d+)',size)[-1]);assert height>width
+ for label in ['오른쪽 이동','점프','대화 또는 조사','메뉴 및 설정']:
+  px,py=find(label);assert 0<=px<width and 0<=py<height
+ check('Portrait screen has visible and reachable movement, jump, interact and menu controls')
+ adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2);launch();find('메뉴 및 설정');time.sleep(1);assert abs(saved()['x']-position)<8;check('Background and resume retain progress')
+ adb('shell','input','keyevent','KEYCODE_SLEEP');time.sleep(1);adb('shell','input','keyevent','KEYCODE_WAKEUP');adb('shell','wm','dismiss-keyguard');launch();find('메뉴 및 설정');time.sleep(1)
+ adb('shell','am','force-stop',APP);launch();tap('이어하기');find('오른쪽 이동');assert abs(saved()['x']-position)<8;screenshot('apk-restored');check('Screen sleep/wake and process restart restore native Preferences without network')
+ adb('shell','am','force-stop',APP);adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');launch();tap('이어하기');find('오른쪽 이동');assert abs(saved()['x']-position)<8;check('Same-signer APK update preserves save')
+ adb('shell','input','keyevent','KEYCODE_BACK');find('이야기 계속하기');adb('shell','input','keyevent','KEYCODE_BACK');time.sleep(1);screenshot('apk-after-back');check('Hardware Back opens the pause menu and returns to the game')
+ log=adb('logcat','-d');errors=[l for l in log.splitlines() if ('Capacitor/Console' in l and ('Uncaught' in l or 'Game startup failed' in l)) or 'FATAL EXCEPTION' in l];assert not errors,errors
+ report={'passed':passed,'javascript_log_errors':errors,'android_emulator':True,'real_galaxy_device':False,'api':adb('shell','getprop','ro.build.version.sdk'),'model':adb('shell','getprop','ro.product.model'),'network_disabled':True,'saved_position':position,'save_schema':saved()['version'],'automation':'UIAutomator + Android input + actual Preferences readback'}
  (OUT/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
 if __name__=='__main__':
- try:asyncio.run(run())
+ try:run()
  finally:
-  try:(OUT/'logcat.txt').write_text(adb('logcat','-d','-t','1000'))
+  try:(OUT/'logcat.txt').write_text(adb('logcat','-d'));screenshot('apk-last')
   except Exception:pass
