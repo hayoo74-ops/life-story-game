@@ -14,6 +14,9 @@ def find(label,timeout=35):
  for _ in range(max(1,int(timeout/2))):
   try:
    root=dump();hits=[]
+   prompt=next((n for n in root.iter('node') if n.get('resource-id')=='android:id/ok' and n.get('package')=='android'),None)
+   if prompt is not None:
+    x1,y1,x2,y2=map(int,re.findall(r'\d+',prompt.get('bounds','')));adb('shell','input','tap',str((x1+x2)//2),str((y1+y2)//2));time.sleep(1);continue
    for n in root.iter('node'):
     if label in n.get('text','') or label in n.get('content-desc',''):
      x1,y1,x2,y2=map(int,re.findall(r'\d+',n.get('bounds','')));hits.append(((x2-x1)*(y2-y1),((x1+x2)//2,(y1+y2)//2)))
@@ -22,6 +25,10 @@ def find(label,timeout=35):
   time.sleep(1)
  raise AssertionError('Android UI did not show '+label+'; '+str(last))
 def tap(label):x,y=find(label);adb('shell','input','tap',str(x),str(y))
+def resume_game():
+ root=dump()
+ if any('이야기 계속하기' in n.get('text','') or '이야기 계속하기' in n.get('content-desc','') for n in root.iter('node')):tap('이야기 계속하기')
+ find('오른쪽 이동')
 def screenshot(name):
  with (OUT/(name+'.png')).open('wb') as f:subprocess.run(['adb','exec-out','screencap','-p'],stdout=f,check=True)
 def saved():
@@ -39,15 +46,15 @@ def run():
  passed=[]
  def check(s):passed.append(s);print('PASS:',s,flush=True)
  adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');adb('logcat','-c');adb('shell','svc','wifi','disable');adb('shell','svc','data','disable');launch()
- tap('새 게임');before=wait_save(lambda s:s['storyScene']==0);x,y=find('오른쪽 이동');adb('shell','input','swipe',str(x),str(y),str(x),str(y),'1200');after=wait_save(lambda s:s['x']>before['x']+30)
+ tap('새 게임');before=wait_save(lambda s:s['storyScene']==0);x,y=find('오른쪽 이동');adb('shell','input','swipe',str(x),str(y),str(x),str(y),'1200');time.sleep(3);after=wait_save(lambda s:s['x']>before['x']+30)
  position=after['x'];screenshot('apk-game');check('Installed bundled APK starts with Wi-Fi/data disabled; real Android touch changes Phaser position and native save')
  # Actual device bounds and accessibility button regions, not a desktop viewport.
  size=adb('shell','wm','size');width,height=map(int,re.findall(r'(\d+)x(\d+)',size)[-1]);assert height>width
  for label in ['오른쪽 이동','점프','대화 또는 조사','메뉴 및 설정']:
   px,py=find(label);assert 0<=px<width and 0<=py<height
  check('Portrait screen has visible and reachable movement, jump, interact and menu controls')
- adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2);launch();find('메뉴 및 설정');time.sleep(1);assert abs(saved()['x']-position)<8;check('Background and resume retain progress')
- adb('shell','input','keyevent','KEYCODE_SLEEP');time.sleep(1);adb('shell','input','keyevent','KEYCODE_WAKEUP');adb('shell','wm','dismiss-keyguard');launch();find('메뉴 및 설정');time.sleep(1)
+ adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2);launch();time.sleep(2);resume_game();time.sleep(1);assert abs(saved()['x']-position)<8;check('Background and resume retain progress')
+ adb('shell','input','keyevent','KEYCODE_SLEEP');time.sleep(1);adb('shell','input','keyevent','KEYCODE_WAKEUP');adb('shell','wm','dismiss-keyguard');launch();time.sleep(2);resume_game();time.sleep(1)
  adb('shell','am','force-stop',APP);launch();tap('이어하기');find('오른쪽 이동');assert abs(saved()['x']-position)<8;screenshot('apk-restored');check('Screen sleep/wake and process restart restore native Preferences without network')
  adb('shell','am','force-stop',APP);adb('install','-r','apk-output/LIFE-STORY-DEMO-v1.5.apk');launch();tap('이어하기');find('오른쪽 이동');assert abs(saved()['x']-position)<8;check('Same-signer APK update preserves save')
  adb('shell','input','keyevent','KEYCODE_BACK');find('이야기 계속하기');adb('shell','input','keyevent','KEYCODE_BACK');time.sleep(1);screenshot('apk-after-back');check('Hardware Back opens the pause menu and returns to the game')

@@ -16,7 +16,7 @@ public class MainActivity extends BridgeActivity {
         ViewCompat.setOnApplyWindowInsetsListener(content, (view, insets) -> {
             Insets cutout = insets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.displayCutout());
             view.setPadding(cutout.left, cutout.top, cutout.right, cutout.bottom);
-            return insets;
+            return WindowInsetsCompat.CONSUMED;
         });
         ViewCompat.requestApplyInsets(content);
         immersive();
