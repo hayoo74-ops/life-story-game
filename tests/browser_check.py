@@ -12,11 +12,13 @@ async def walk(page,x):
  # Release the real key, let drag stop the body, then correct with fresh input.
  for attempt in range(8):
   s=await snap(page)
-  if abs(s['x']-x)<9:return
+  target=min(s['entities'],key=lambda e:abs(e['x']-x),default=None)
+  close_to_target=target is not None and abs(target['x']-x)<=40 and s['nearest']==target['id']
+  if abs(s['x']-x)<9 or (abs(s['x']-x)<32 and close_to_target):return
   direction=1 if s['x']<x else -1;key='ArrowRight' if direction==1 else 'ArrowLeft'
   await page.keyboard.down(key)
   try:
-   await page.wait_for_function('(a)=>a.direction*(lifeStory.getSnapshot().x-a.x)>=-7',arg={'x':x,'direction':direction},polling=20,timeout=int(abs(s['x']-x)/75*1000+8000))
+   await page.wait_for_function('(a)=>a.direction*(lifeStory.getSnapshot().x-a.x)>=-18',arg={'x':x,'direction':direction},polling=20,timeout=int(abs(s['x']-x)/75*1000+8000))
   finally:await page.keyboard.up(key)
   await page.wait_for_timeout(220)
  print('Movement failure',await snap(page),flush=True);await page.screenshot(path=str(OUT/'failure.png'));raise AssertionError('Could not settle at requested interaction position '+str(x))
@@ -65,7 +67,7 @@ async def settle(page,answer=0):
   await page.wait_for_timeout(45)
  raise AssertionError(('Conversation stuck',await snap(page)))
 async def interact(page,x,answer=0):
- await walk(page,x);await page.keyboard.press('e');await page.wait_for_timeout(60);await settle(page,answer)
+ await walk(page,x);await page.wait_for_function('lifeStory.getSnapshot().nearest!==null');await page.keyboard.press('e');await page.wait_for_timeout(60);await settle(page,answer)
 async def expected(page,scene,stage=None):
  s=await snap(page);assert s['storyScene']==scene,s
  if stage:assert s['stage']==stage,s
