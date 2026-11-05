@@ -113,6 +113,7 @@ A	docs/validation/v1.5.1/npm-ci.txt
 A	docs/validation/v1.5.1/pages-browser.json
 A	docs/validation/v1.5.1/pages-deployment.json
 A	docs/validation/v1.5.1/patch-browser.json
+A	docs/validation/v1.5.1/public-apk-download.json
 A	docs/validation/v1.5.1/unit-tests.txt
 A	docs/validation/v1.5.1/web-build.txt
 M	downloads/README.md

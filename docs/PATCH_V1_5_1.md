@@ -98,7 +98,7 @@ v1.5 위에 적용하는 패치입니다. 저장 스키마 **v4**, 저장 키, �
 
 [**LIFE-STORY-DEMO-v1.5.1.apk 다운로드**](https://raw.githubusercontent.com/hayoo74-ops/life-story-game/main/downloads/v1.5.1/LIFE-STORY-DEMO-v1.5.1.apk) — 4,579,667 bytes (약 4.6MB). [설치 안내](ANDROID.md).
 
-기존과 동일한 `com.hayoo74.lifestory` ID/데모 서명을 유지하고 versionCode를 **10501**로 올렸습니다. 앱을 지우지 않고 덮어 설치하세요. 웹 저장과 Android 저장은 자동 공유되지 않으며 기존 JSON 보관 기능을 사용합니다. APK 아티팩트를 실제 다운로드·압축 해제해 GitHub의 아카이브 SHA-256과도 일치함을 확인했습니다. 과거 릴리스 첨부 업로드 호스트의 인증 문제를 반복하지 않고 검증된 파일을 버전별 저장소 경로에 보관합니다. v1.5.0 APK도 삭제하지 않았습니다.
+기존과 동일한 `com.hayoo74.lifestory` ID/데모 서명을 유지하고 versionCode를 **10501**로 올렸습니다. 앱을 지우지 않고 덮어 설치하세요. 웹 저장과 Android 저장은 자동 공유되지 않으며 기존 JSON 보관 기능을 사용합니다. APK 아티팩트를 실제 다운로드·압축 해제해 GitHub의 아카이브 SHA-256과도 일치함을 확인했습니다. 과거 릴리스 첨부 업로드 호스트의 인증 문제를 반복하지 않고 검증된 파일을 버전별 저장소 경로에 보관합니다. v1.5.0 APK도 삭제하지 않았습니다. [공개 다운로드 검사](validation/v1.5.1/public-apk-download.json)에서 HTTP 200과 검증된 APK의 SHA-256/전체 바이트 일치를 다시 확인했습니다.
 
 ```text
 SHA-256: 6fb4d22a1448719df0dc05121fd0650c430d3af16ca09dd4e4b5e35e7a09173c
