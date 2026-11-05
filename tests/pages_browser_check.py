@@ -4,6 +4,20 @@ from urllib.parse import urljoin,urlsplit,unquote
 from playwright.async_api import async_playwright
 from browser_check import BASE,OUT,snap,start,interact,expected
 
+def external_proxy_options(url):
+ local_preview=urlsplit(url).hostname in {'localhost','127.0.0.1','::1'}
+ proxy_options={}
+ proxy_url=(os.environ.get('HTTPS_PROXY') or os.environ.get('https_proxy') or os.environ.get('HTTP_PROXY')) if not local_preview else None
+ if proxy_url:
+  configured=urlsplit(proxy_url);host=configured.hostname
+  authority=f'[{host}]' if ':' in host else host
+  if configured.port:authority+=f':{configured.port}'
+  proxy={'server':f'{configured.scheme}://{authority}'}
+  if configured.username is not None:proxy['username']=unquote(configured.username)
+  if configured.password is not None:proxy['password']=unquote(configured.password)
+  proxy_options={'proxy':proxy}
+ return proxy_options
+
 async def run():
  deadline=time.monotonic()+40
  while True:
@@ -18,16 +32,7 @@ async def run():
  async with async_playwright() as p:
   executable=os.environ.get('CHROMIUM_PATH') or shutil.which('chromium')
   local_preview=urlsplit(BASE).hostname in {'localhost','127.0.0.1','::1'}
-  proxy_options={}
-  proxy_url=(os.environ.get('HTTPS_PROXY') or os.environ.get('https_proxy') or os.environ.get('HTTP_PROXY')) if not local_preview else None
-  if proxy_url:
-   configured=urlsplit(proxy_url);host=configured.hostname
-   authority=f'[{host}]' if ':' in host else host
-   if configured.port:authority+=f':{configured.port}'
-   proxy={'server':f'{configured.scheme}://{authority}'}
-   if configured.username is not None:proxy['username']=unquote(configured.username)
-   if configured.password is not None:proxy['password']=unquote(configured.password)
-   proxy_options={'proxy':proxy}
+  proxy_options=external_proxy_options(BASE)
   browser=await p.chromium.launch(**({'executable_path':executable} if executable else {}),**proxy_options,headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader'])
   context=await browser.new_context(**proxy_options,viewport={'width':412,'height':915},is_mobile=True,has_touch=True,device_scale_factor=1)
   page=await context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))

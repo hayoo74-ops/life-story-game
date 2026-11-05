@@ -1,0 +1,113 @@
+{
+  "url": "https://hayoo74-ops.github.io/life-story-game/",
+  "http_status": 200,
+  "title_verified": true,
+  "runtime_files_sha256_match": true,
+  "files": [
+    {
+      "path": "assets/index-BB7tJX5N.css",
+      "status": 200,
+      "bytes": 29384,
+      "content_type": "text/css; charset=utf-8",
+      "sha256": "34a021763b5ec190eb22af32a46f13e0b2f5bb8a315fb71267c3094f7ebde93d"
+    },
+    {
+      "path": "assets/index-JdzLfEJe.js",
+      "status": 200,
+      "bytes": 177715,
+      "content_type": "application/javascript; charset=utf-8",
+      "sha256": "682548fd056d56c57eb5541a5404cfe46e2c3cf9a9d1be30a2f6ddd74c800d85"
+    },
+    {
+      "path": "assets/phaser-DFK5Ua9d.js",
+      "status": 200,
+      "bytes": 1208056,
+      "content_type": "application/javascript; charset=utf-8",
+      "sha256": "f9025c1a29bc3ae097dd886ce07717b297466da1ce8f032c8294252ce6cf5cdb"
+    },
+    {
+      "path": "assets/workbox-window.prod.es5-BBnX5xw4.js",
+      "status": 200,
+      "bytes": 5748,
+      "content_type": "application/javascript; charset=utf-8",
+      "sha256": "cadd21be4a88598a4dec91a26a025df0a5790ff6baec54a884e401c3f5c95557"
+    },
+    {
+      "path": "icon-192.png",
+      "status": 200,
+      "bytes": 691,
+      "content_type": "image/png",
+      "sha256": "e1208f2153315ccced02039d27a7da71752862577657122bc94aaa6d161b6047"
+    },
+    {
+      "path": "icon-512.png",
+      "status": 200,
+      "bytes": 2047,
+      "content_type": "image/png",
+      "sha256": "6a06e4c0c9d6f9b11943190e3796285f036b48c0365c390bff46f69351521243"
+    },
+    {
+      "path": "icon.svg",
+      "status": 200,
+      "bytes": 327,
+      "content_type": "image/svg+xml",
+      "sha256": "03a63fedc38a49c8519f5602ea6942daade3917d5de491f7d77c994b78fbe92b"
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 5245,
+      "content_type": "text/html; charset=utf-8",
+      "sha256": "626d6857cdc49bd7059b67164f76f5a7b953fe982b087f65560700314aacdb07"
+    },
+    {
+      "path": "licenses/Phaser.txt",
+      "status": 200,
+      "bytes": 1120,
+      "content_type": "text/plain; charset=utf-8",
+      "sha256": "080f3d5539e766bb556df5b8e86c4f5d581ece35c692b80956ca352b84d29134"
+    },
+    {
+      "path": "licenses/Vite.txt",
+      "status": 200,
+      "bytes": 101176,
+      "content_type": "text/plain; charset=utf-8",
+      "sha256": "a77a1c089806b39ad339535bdf3677f636c91d96693e8ad7b11fe733f650ea64"
+    },
+    {
+      "path": "licenses/Workbox.txt",
+      "status": 200,
+      "bytes": 1050,
+      "content_type": "text/plain; charset=utf-8",
+      "sha256": "aee9670e09b75ca8a2a1fe62d545ae38a6797970caf0335628e3a4dd15bc9b6c"
+    },
+    {
+      "path": "licenses/vite-plugin-pwa.txt",
+      "status": 200,
+      "bytes": 1102,
+      "content_type": "text/plain; charset=utf-8",
+      "sha256": "05c365176db3cc00e951c44b921c809c75b8e99d2d724f7daf00381e26fb0850"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "bytes": 487,
+      "content_type": "application/manifest+json; charset=utf-8",
+      "sha256": "e8a14f33a68ffa714912710754d543b93a538dc002a9226d13dfd074075e58be"
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "bytes": 1582,
+      "content_type": "application/javascript; charset=utf-8",
+      "sha256": "1829a2da22fce49db038b7bb3498b65a16d4301c96292654c4d469b74b9dbbe9"
+    },
+    {
+      "path": "workbox-2fbc6a65.js",
+      "status": 200,
+      "bytes": 15026,
+      "content_type": "application/javascript; charset=utf-8",
+      "sha256": "39c2e6ae44c3f29666f6a328b6523bf13a053a1d95c74af8ddea82b1045b0b6e"
+    }
+  ]
+}

@@ -3,14 +3,16 @@ import asyncio,json,os,shutil
 from pathlib import Path
 from playwright.async_api import async_playwright
 from browser_check import BASE,OUT,snap,interact,settle,walk,expected
+from pages_browser_check import external_proxy_options
 async def run():
  passed=[];errors=[];layouts=[]
  def check(t):passed.append(t);print('PASS:',t,flush=True)
  async with async_playwright() as p:
-  b=await p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH') or shutil.which('chromium'),headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader'])
+  proxy_options=external_proxy_options(BASE)
+  b=await p.chromium.launch(**proxy_options,executable_path=os.environ.get('CHROMIUM_PATH') or shutil.which('chromium'),headless=True,args=['--no-sandbox','--enable-unsafe-swiftshader'])
   async def seed(**values):
    raw={'version':4,'chapter':1,'storyScene':2,'stage':'home','x':900,'events':[],'memories':[],'inspected':[],'quests':[],'choices':{},'dialogueVisits':{},'cutscenesSeen':[],'settings':{'sound':False,'textSpeed':0},**values}
-   c=await b.new_context(viewport={'width':412,'height':915});q=await c.new_page();q.on('pageerror',lambda e:(errors.append(str(e)),print('JSERROR',str(e),flush=True)))
+   c=await b.new_context(**proxy_options,viewport={'width':412,'height':915});q=await c.new_page();q.on('pageerror',lambda e:(errors.append(str(e)),print('JSERROR',str(e),flush=True)))
    await q.add_init_script("if(!localStorage.getItem('life-story:save'))localStorage.setItem('life-story:save',"+json.dumps(json.dumps(raw))+')')
    await q.goto(BASE);await q.wait_for_selector('#loading',state='hidden');await q.locator('#continue-game').click();await q.wait_for_timeout(500);return c,q
   c,q=await seed()
@@ -73,5 +75,5 @@ async def run():
   await q.locator('#continue-game').click();await q.wait_for_timeout(250);await expected(q,6,'changed-home');await interact(q,850);await expected(q,7,'father-home')
   check('이미 조사한 진행 사물도 작별 장면 연결 유지·중단 후 체크포인트 복원');await c.close()
   assert not errors,errors
-  report={'passed':passed,'javascript_exceptions':errors,'layouts':layouts,'fixture_based':True,'real_galaxy_device':False};(OUT/'chapter-polish-browser.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps({'passed':passed,'javascript_exceptions':errors},ensure_ascii=False,indent=2));await b.close()
+  report={'tested_url':BASE,'passed':passed,'javascript_exceptions':errors,'layouts':layouts,'fixture_based':True,'real_galaxy_device':False};(OUT/'chapter-polish-browser.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps({'passed':passed,'javascript_exceptions':errors},ensure_ascii=False,indent=2));await b.close()
 if __name__=='__main__':asyncio.run(run())
